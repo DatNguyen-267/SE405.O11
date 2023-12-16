@@ -5,6 +5,7 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -21,6 +22,10 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    InterMedium: require("../assets/fonts/Inter-Medium.ttf"),
+    InterBold: require("../assets/fonts/Inter-Bold.ttf"),
+    InterRegular: require("../assets/fonts/Inter-Regular.ttf"),
+    InterLight: require("../assets/fonts/Inter-Light.ttf"),
     ...FontAwesome.font,
   });
 
@@ -54,3 +59,4 @@ function RootLayoutNav() {
     </ThemeProvider>
   );
 }
+
