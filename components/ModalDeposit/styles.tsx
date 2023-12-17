@@ -98,6 +98,8 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: 22,
         fontWeight: '700',
+        alignItems: 'center',
+        gap:10,
     },
 
     modalDepositTitleImg: {
