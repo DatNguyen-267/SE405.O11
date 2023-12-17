@@ -10,8 +10,9 @@ type ApproveNFTParams = {
   spenderAddress: string
   tokenId: number
 }
-export async function useApproveSpenderToAccessNft() {
+export function useApproveSpenderToAccessNft() {
   const provider = useConnectorProvider()
+
   return useCallback(
     async ({ cltAddress, spenderAddress, tokenId }: ApproveNFTParams) => {
       try {
@@ -36,7 +37,7 @@ type MintNFTParams = {
   tokenUri: string
 }
 
-export async function useMintNFT() {
+export function useMintNFT() {
   const provider = useConnectorProvider()
   const { chain } = useNetwork()
   return useCallback(
@@ -71,7 +72,7 @@ type GetTokenURIParams = {
   tokenId: number
 }
 
-export async function useGetTokenURI() {
+export function useGetTokenURI() {
   const provider = useRPCProvider()
   return useCallback(
     async ({ cltAddress, tokenId }: GetTokenURIParams) => {
@@ -95,7 +96,7 @@ type GetOwnerParams = {
   tokenId: number
 }
 
-export async function useGetOwnerOfNFT() {
+export function useGetOwnerOfNFT() {
   const provider = useRPCProvider()
   return useCallback(
     async ({ cltAddress, tokenId }: GetOwnerParams) => {
@@ -122,7 +123,7 @@ export type GetNFTsOfCollectionResponse = {
   owner: string
 }[]
 // !!! warning performance
-export async function useGetNFTsOfCollection() {
+export function useGetNFTsOfCollection() {
   const provider = useRPCProvider()
   return useCallback(
     async ({ cltAddress }: GetNFTOfCollectionParams) => {
@@ -166,7 +167,7 @@ type TransferNFTParams = {
   to: string
   tokenId: string
 }
-export async function useTransferNFT() {
+export function useTransferNFT() {
   const provider = useConnectorProvider()
   return useCallback(
     async ({ cltAddress, from, to, tokenId }: TransferNFTParams) => {
@@ -189,7 +190,7 @@ type GetOwnerOfCollectionParams = {
   cltAddress: string
 }
 
-export async function useGetOwnerOfCollection() {
+export function useGetOwnerOfCollection() {
   const provider = useRPCProvider()
   return useCallback(
     async ({ cltAddress }: GetOwnerOfCollectionParams) => {
@@ -212,7 +213,7 @@ type GetNameOfCollectionParams = {
   cltAddress: string
 }
 
-export async function useGetNameOfCollection() {
+export function useGetNameOfCollection() {
   const provider = useRPCProvider()
   return useCallback(
     async ({ cltAddress }: GetNameOfCollectionParams) => {
@@ -235,7 +236,7 @@ type GetTotalSupplyOfCollectionParams = {
   cltAddress: string
 }
 
-export async function useGetTotalSupplyOfCollection() {
+export function useGetTotalSupplyOfCollection() {
   const provider = useRPCProvider()
   return useCallback(
     async ({ cltAddress }: GetTotalSupplyOfCollectionParams) => {
