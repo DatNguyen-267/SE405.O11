@@ -16,7 +16,9 @@ const Explore = ({navigation}) => {
             >
                 <View style={styles.container}>
                     <View style={styles.headLine}>
-
+                        {/* <Button style={styles.createBtn}onPress={() => navigation.navigate('Collection')} >
+                            <Text>Go to Collection</Text>
+                        </Button> */}
                         <Text style={styles.headLineContent}>
                             Explore Collections
                         </Text>
