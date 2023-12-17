@@ -5,11 +5,9 @@ import { W3mButton } from '@web3modal/wagmi-react-native'
 import { useAccount, useNetwork } from 'wagmi'
 import EditScreenInfo from '../components/EditScreenInfo'
 import { Text, View } from '../components/Themed'
-import { useProvider } from '../src/hooks/useProvider'
 
 export default function ModalScreen() {
   const { address } = useAccount()
-  const provider = useProvider()
   const { chain } = useNetwork()
   const { connector } = useAccount()
 

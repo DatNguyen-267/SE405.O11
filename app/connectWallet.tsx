@@ -1,18 +1,16 @@
 import { StatusBar } from 'expo-status-bar'
 import { Platform, StyleSheet } from 'react-native'
 
-import { useProvider } from '../src/hooks/useProvider'
 import { useAccount, useNetwork } from 'wagmi'
 import EditScreenInfo from '../components/EditScreenInfo'
 import { Text, View } from '../components/Themed'
 import WagmiProvider from '../src/components/provider/Wagmi'
 
 export default function ConnectWalletScreen() {
-  const provider = useProvider()
   const { chain } = useNetwork()
   const accounts = useAccount()
 
-  console.warn({ chain, provider })
+  console.warn({ chain })
   console.warn({ accounts })
 
   return (
