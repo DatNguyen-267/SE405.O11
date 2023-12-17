@@ -9,6 +9,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Colors } from '../../constants/Colors';
 import Home from '../../screens/home';
 import Explore from '../../screens/explore';
+import Create from '../../screens/create';
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -59,7 +60,7 @@ export default function TabLayout() {
 const TabArr = [
   { name: 'PageHome', label: 'Home', activeIcon: 'home', component: Home  },
   { name: 'PageExplore', label: 'Explore', activeIcon: 'appstore-o', component: Explore },
-
+  { name: 'Create', label: 'Create', activeIcon: 'form', component: Create },
 ];
 
 const TabButton = (props:any) => {
