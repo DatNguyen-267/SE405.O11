@@ -10,10 +10,30 @@ import { Colors } from '../../constants/Colors';
 import Home from '../../screens/home';
 import Explore from '../../screens/explore';
 import Create from '../../screens/create';
+import Setting from '../../screens/setting';
+import Connect from '../../screens/connect';
+import Chains from '../../screens/chains';
+import Author from '../../screens/author';
+
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
+const Stack = createNativeStackNavigator();
+function SettingCustom() {
+  return (
+      <Stack.Navigator>
+          <Stack.Screen options={{headerShown: false}} name='Setting' component={Setting}></Stack.Screen>
+          <Stack.Screen name='Connect Wallet' component={Connect}></Stack.Screen>
+          <Stack.Screen name='Chains' component={Chains}></Stack.Screen>
+          <Stack.Screen name='My Collection' component={Author}></Stack.Screen>
+      </Stack.Navigator>
+
+  );
+}
+
+
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
@@ -61,6 +81,7 @@ const TabArr = [
   { name: 'PageHome', label: 'Home', activeIcon: 'home', component: Home  },
   { name: 'PageExplore', label: 'Explore', activeIcon: 'appstore-o', component: Explore },
   { name: 'Create', label: 'Create', activeIcon: 'form', component: Create },
+  { name: 'Setting', label: 'Setting', activeIcon: 'contacts', component: SettingCustom },
 ];
 
 const TabButton = (props:any) => {
