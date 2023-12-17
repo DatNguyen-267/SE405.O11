@@ -8,12 +8,12 @@ import * as ImagePicker from 'expo-image-picker';
 import styles from './styles'
 import { Platform } from 'react-native'
 import NFTCard from '../../components/NFTCard'
-// import ModalDeposit from '../../components/ModalDeposit'
-// import ModalImport from '../../components/ModalImport'
-// import ModalSend from '../../components/ModalSend'
+import ModalDeposit from '../../components/ModalDeposit'
+import ModalImport from '../../components/ModalImport'
+import ModalDelist from '../../components/ModalDelist'
+import ModalSell from '../../components/ModalSell'
 import Tabs from '../../components/Tabs'
-// import ModalDelist from '../../components/ModalDelist'
-// import ModalSell from '../../components/ModalSell'
+
 const Author = ({ navigation }) => {
     const [isDeposit, setIsDeposit] = useState(false)
     const [isImport, setIsImport] = useState(false)
@@ -65,10 +65,10 @@ const Author = ({ navigation }) => {
 
     return (
         <View style={styles.createScreen}>
-            {/* <ModalDeposit isVisible={isDeposit} setIsVisible={setIsDeposit}></ModalDeposit>
+            <ModalDeposit isVisible={isDeposit} setIsVisible={setIsDeposit}></ModalDeposit>
             <ModalImport isVisible={isImport} setIsVisible={setIsImport}></ModalImport>
             <ModalDelist  isVisible={isDelist} setIsVisible={setIsDelist}></ModalDelist>
-            <ModalSell  isVisible={isSell} setIsVisible={setIsSell}></ModalSell> */}
+            <ModalSell  isVisible={isSell} setIsVisible={setIsSell}></ModalSell>
             {/* <ModalSend></ModalSend> */}
             {/* <Header
                 title={"Create NFT"}
