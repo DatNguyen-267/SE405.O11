@@ -59,7 +59,7 @@ const TabArr = [
   { name: 'PageHome', label: 'Home', activeIcon: 'home', component: Home  },
   { name: 'PageExplore', label: 'Explore', activeIcon: 'appstore-o', component: ExploreCustom },
   { name: 'Create', label: 'Create', activeIcon: 'form', component: Create },
-  { name: 'Setting', label: 'Setting', activeIcon: 'contacts', component: SettingCustom },
+  { name: 'Setting', label: 'Setting', activeIcon: 'setting', component: SettingCustom },
 ];
 
 const TabButton = (props:any) => {

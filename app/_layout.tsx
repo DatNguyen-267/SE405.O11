@@ -6,6 +6,10 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { Provider } from 'react-redux';
 import store from '../redux/createStore';
+import Toast from 'react-native-toast-message';
+import Loading from '../components/Loading';
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from '../redux/createStore'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -45,14 +49,18 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <Provider store={store}>
+      <RootLayoutNav />
+    </Provider>  
+  );
 }
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-
+  const dispatch = useDispatch();
+  const {isLoading} = useSelector((state:RootState) => state.loading)
   return (
-    <Provider store={store}>
       <>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <Stack>
@@ -60,8 +68,9 @@ function RootLayoutNav() {
             <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
           </Stack>
         </ThemeProvider>
+        <Toast></Toast>
+        <Loading isVisible={isLoading}></Loading>
       </>
-    </Provider>
   );
 }
 

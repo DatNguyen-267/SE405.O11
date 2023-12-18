@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     headLine: {
         marginTop: 30,
         paddingVertical: 20,
+        width: '100%',
     },
     headLineBg: {
         height: 150,
@@ -56,6 +57,7 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: Colors.color_base_300,
         borderRadius: 10,
+        width: '100%',
     },
     headLineContent: {
         fontSize: 28,
@@ -75,7 +77,8 @@ const styles = StyleSheet.create({
     imgContainer: {
         marginTop: 20,
         width: '100%',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
+        alignItems: 'center',
         position: 'relative',
     },
 
