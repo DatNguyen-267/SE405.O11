@@ -13,7 +13,7 @@ interface ProfileCardProps{
 const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell }: ProfileCardProps) => {
     console.log(item)
     return (
-        <TouchableOpacity onPress={() => onShowModal(true)}>
+        <TouchableOpacity>
             <View style={styles.NFTCard}>
                 {/* <Image
                 resizeMode='cover'

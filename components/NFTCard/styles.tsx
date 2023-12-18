@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         marginVertical: 10,
         borderRadius: 8,
+        backgroundColor: Colors.color_base_100
     },
     // cardImage: {
     //     height: 150,
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
 
     // ===== Action =======
     cardAction: {
-        height: 28,
+    
         width: '100%',
         marginTop: 7,
         // marginBottom: 5,
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
 
     cardBtn: {
         width: '100%',
-        height: '100%',
+        height: 28,
         backgroundColor: Colors.color_base_300,
         justifyContent: 'center',
         alignItems: 'center',

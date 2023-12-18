@@ -149,13 +149,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     listNft: {
-        marginTop: 10,
+        // marginTop: 10,
         flex: 1,
         width: '100%',
     },
 
     nftItem: {
+        paddingHorizontal: 5,
         flex: 1,
+        maxWidth: '50%'
     }
 
 });
