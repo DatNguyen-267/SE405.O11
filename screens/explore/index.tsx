@@ -44,7 +44,7 @@ const Explore = ({navigation}) => {
                             <Text>Go to Collection</Text>
                         </Button> */}
                         <Text style={styles.headLineContent}>
-                            Explore Collections
+                            EXPLORE COLLECTIONS
                         </Text>
                     </View>
                     <View style={styles.search}>

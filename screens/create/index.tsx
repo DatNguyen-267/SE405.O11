@@ -53,7 +53,7 @@ const Create = ({ navigation }) => {
 
                         >
                             <Text style={styles.headLineContent}>
-                                Create NFT
+                                CREATE NFT
                             </Text>
                             <Text style={styles.headLineDes}>
                                 You can create a new NFT and add it in your collection

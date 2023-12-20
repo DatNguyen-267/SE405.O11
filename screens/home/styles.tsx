@@ -23,12 +23,14 @@ const styles = StyleSheet.create({
     headLine: {
         marginTop: 30,
         paddingVertical: 20,
+        height: 110,
+        marginBottom: 20,
     }, 
     headLineContent: {
         fontSize: 28,
         fontWeight: '700',
-        lineHeight:35,
-        marginBottom: 20,
+        lineHeight:40,
+      
     },
     // Search
     search: {
