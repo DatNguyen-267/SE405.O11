@@ -10,7 +10,7 @@ interface ProfileCardProps{
 }
 const Tabs = ({items, setTab}: ProfileCardProps) => {
   const [index, setIndex] = useState(0);
-  const handleSetTab = (i) => {
+  const handleSetTab = (i?: number) => {
     setIndex(i);
     setTab(items[i].title);
   }
@@ -18,7 +18,7 @@ const Tabs = ({items, setTab}: ProfileCardProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.tabs}>
-        {items.map((tab, i) => {
+        {items.map((tab?:any, i?:number) => {
           const active = index === i;
           return (
             <TouchableOpacity

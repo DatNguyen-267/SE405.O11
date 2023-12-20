@@ -4,11 +4,11 @@ import styles from './styles'
 
 interface ProfileCardProps{ 
     item?: any; 
-    index?: any; 
+    index?: number; 
     onShowModal?: any;
-    isDelist?: any; 
-    isBuy?: any; 
-    isSell?: any;
+    isDelist?: boolean; 
+    isBuy?: boolean; 
+    isSell?: boolean;
 }
 const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell }: ProfileCardProps) => {
     console.log(item)

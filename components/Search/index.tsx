@@ -5,7 +5,7 @@ import styles from './styles';
 import { Colors } from './../../constants/Colors';
 
 interface ProfileCardProps{ 
-  search?: any; 
+  search?: string; 
   setSearch?: any; 
 }
 const SearchInput = ({search, setSearch}: ProfileCardProps) => {
