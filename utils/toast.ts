@@ -12,7 +12,16 @@ export const onShowToastSuccess = (message?:string) => {
 export const onShowToastError = (message?:string) => {
     Toast.show({
         type: 'error',
-        text1: 'Success',
+        text1: 'Error',
+        text2: message,
+    })
+
+}
+
+export const onShowToastInfo = (message?:string) => {
+    Toast.show({
+        type: 'info',
+        text1: 'Info',
         text2: message,
     })
 

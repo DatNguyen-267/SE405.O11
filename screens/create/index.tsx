@@ -17,8 +17,7 @@ const Create = ({ navigation }) => {
     const imagePick = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
+            allowsEditing: false,
             quality: 1,
         });
 
@@ -70,7 +69,7 @@ const Create = ({ navigation }) => {
                         <TouchableOpacity onPress={imagePick}
                             style={styles.imgFrame}>
                            
-                            <Image style={profile ? styles.image : styles.iconAdd} source={profile ? { uri: profile } : require(imgPlaceHolder)} />
+                            <Image style={[profile ? styles.image : styles.iconAdd, Platform.OS !=='web' && {marginTop: 15}]} source={profile ? { uri: profile } : require(imgPlaceHolder)} />
                             {
                                 profile ? <Text></Text> : <Text style={styles.imgDes}>Choose a image in your device</Text>
                             }

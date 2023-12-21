@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     // Head line
     headLine: {
         marginTop: 30,
+        marginBottom: 20,
         paddingVertical: 20,
         width: '100%',
     },
@@ -75,18 +76,23 @@ const styles = StyleSheet.create({
 
     // Image
     imgContainer: {
-        marginTop: 20,
         width: '100%',
+        height: 220,
+        padding: 5,
         justifyContent: 'center',
         alignItems: 'center',
         position: 'relative',
+        borderRadius: 20,
+        borderColor: Colors.color_grey_700,
+        borderWidth: 3,
+        borderStyle: 'dashed',
     },
 
     clearImage: {
         position: 'absolute',
         right: 8,
         top: 8,
-        color: Colors.color_label_200,
+        color: Colors.color_label_400,
         fontSize: 22,
         backgroundColor: Colors.color_label_100,
         borderRadius: 11,
@@ -101,12 +107,7 @@ const styles = StyleSheet.create({
 
     imgFrame: {
         width: '100%',
-        height: 200,
-        borderRadius: 20,
-        borderColor: Colors.color_grey_700,
-        borderWidth: 3,
-        borderStyle: 'dashed',
-        padding: 15,
+        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -117,8 +118,16 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
     image: {
-        width: '100%',
-        height: '100%',
+        // flex: 1,
+        // minWidth: 150,
+        // objectFit: 'contain',
+       
+        resizeMode: 'cover',
+        width: 200,
+        height: 'auto',
+        aspectRatio: 1,
+        borderRadius: 8,
+    
     },
     iconAdd: {
         width: 40,
