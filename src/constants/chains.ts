@@ -1,3 +1,5 @@
+import { defineChain } from 'viem'
+
 export const CHAIN_IDS = {
   AIOZ: 4102,
   GOERLI: 5,
@@ -46,3 +48,28 @@ export const CHAINS = [
     },
   },
 ]
+
+export const aiozChain = defineChain({
+  id: 4102,
+  network: 'AIOZ Testnet',
+  name: 'AIOZ Testnet',
+  nativeCurrency: { name: 'AIOZ', symbol: 'AIOZ', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://eth-ds.testnet.aioz.network'],
+    },
+    public: {
+      http: ['https://eth-ds.testnet.aioz.network'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'AiozExplorer',
+      url: 'https://testnet.explorer.aioz.network',
+    },
+    default: {
+      name: 'AiozExplorer',
+      url: 'https://testnet.explorer.aioz.network',
+    },
+  },
+})

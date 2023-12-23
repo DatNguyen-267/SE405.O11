@@ -1,11 +1,11 @@
 import '@walletconnect/react-native-compat'
-import { Web3Modal, createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi-react-native'
+import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi-react-native'
 import { ReactNode } from 'react'
-import { arbitrum, mainnet, polygon } from 'viem/chains'
-import { WagmiConfig } from 'wagmi'
+import { arbitrum, goerli, mainnet, polygon } from 'viem/chains'
+import { aiozChain } from '../../constants/chains'
 
 // 1. Get projectId at https://cloud.walletconnect.com
-const projectId = '30b4c895f637ba0085b90cdb6d3ca803'
+const projectId = 'ad1c1b01e4ed93395ccd39aac437609a'
 
 // 2. Create config
 const metadata = {
@@ -15,7 +15,7 @@ const metadata = {
   icons: ['https://avatars.githubusercontent.com/u/37784886'],
 }
 
-const chains = [mainnet, polygon, arbitrum]
+const chains = [aiozChain, mainnet, polygon, arbitrum, goerli]
 
 const wagmiConfig = defaultWagmiConfig({
   chains,
@@ -28,13 +28,15 @@ createWeb3Modal({
   projectId,
   chains,
   wagmiConfig,
+  defaultChain: goerli,
 })
 
 export default function WagmiProvider({ children }: { children: ReactNode }) {
   return (
-    <WagmiConfig config={wagmiConfig}>
-      {children}
-      <Web3Modal />
-    </WagmiConfig>
+    <></>
+    // <WagmiConfig config={wagmiConfig}>
+    //   {children}
+    //   <Web3Modal />
+    // </WagmiConfig>
   )
 }

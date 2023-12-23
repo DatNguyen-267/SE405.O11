@@ -1,23 +1,23 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "ESNext",
-    "lib": [
-      "es2019",
-      "es2020.bigint",
-      "es2020.date",
-      "es2020.number",
-      "es2020.promise",
-      "es2020.string",
-      "es2020.symbol.wellknown",
-      "es2021.promise",
-      "es2021.string",
-      "es2021.weakref",
-      "es2022.array",
-      "es2022.object",
-      "es2022.string"
-    ],
+    "target": "ES6",
+    "module": "ES6",
+    // "lib": [
+    //   "es2019",
+    //   "es2020.bigint",
+    //   "es2020.date",
+    //   "es2020.number",
+    //   "es2020.promise",
+    //   "es2020.string",
+    //   "es2020.symbol.wellknown",
+    //   "es2021.promise",
+    //   "es2021.string",
+    //   "es2021.weakref",
+    //   "es2022.array",
+    //   "es2022.object",
+    //   "es2022.string"
+    // ],
     "allowJs": true,
     "jsx": "react-native",
     "noEmit": true,
@@ -40,10 +40,5 @@
       "@/*": ["./*"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }
