@@ -12,6 +12,7 @@ import { AntDesign } from '@expo/vector-icons';
 const Create = ({ navigation }) => {
     const [profile, setProfile] = useState(null)
     const [isFocused, setIsFocused] = useState(false);
+    const [addressDefault, setAddressDefault] = useState('0x634345357C9eA4B6e52765804d647048bd15e468');
 
     const imgPlaceHolder = './../../assets/images/addImage.png'
     const imagePick = async () => {
@@ -28,7 +29,7 @@ const Create = ({ navigation }) => {
     }
     const clearImage = async () => {
         setProfile("")
-        
+
     }
 
     return (
@@ -68,8 +69,8 @@ const Create = ({ navigation }) => {
 
                         <TouchableOpacity onPress={imagePick}
                             style={styles.imgFrame}>
-                           
-                            <Image style={[profile ? styles.image : styles.iconAdd, Platform.OS !=='web' && {marginTop: 15}]} source={profile ? { uri: profile } : require(imgPlaceHolder)} />
+
+                            <Image style={[profile ? styles.image : styles.iconAdd, Platform.OS !== 'web' && { marginTop: 15 }]} source={profile ? { uri: profile } : require(imgPlaceHolder)} />
                             {
                                 profile ? <Text></Text> : <Text style={styles.imgDes}>Choose a image in your device</Text>
                             }
@@ -96,6 +97,9 @@ const Create = ({ navigation }) => {
                             style={[styles.input, isFocused && Platform.OS === 'web' && { outline: 'none' }]}
                             placeholder='Ex: 0x000...000'>
                         </TextInput>
+                        <Text style={[styles.text, styles.inputDes]}>
+                            Explore the impressive collection address at <Text style={[styles.text, styles.addressDefault]}>{addressDefault? addressDefault:"0x00000000000000000000000000"}</Text> on our platform. If you don't have your own collection yet, kickstart your creative journey by using this address.
+                        </Text>
                     </View>
                     <View style={[styles.inputContainer]}>
                         <Text style={[styles.label]}>Description</Text>

@@ -24,7 +24,7 @@ const NFTCardHorital = ({ item, index }: ProfileCardProps) =>{
                 <View style={styles.cardHeadLine}>
                     <Text style={[styles.text, styles.cardAddress]}>0x000 ... 000</Text>
                     {/* <Text style={[styles.text, styles.cardStatus]}>Not For Sell</Text> */}
-                    <Text style={[styles.text, styles.cardPrice]}>0.002 WBNB</Text>
+                    <Text style={[styles.text, styles.cardPrice]}>0.002 WUIT</Text>
                 </View>
             </View>
             <View style={styles.cardContent}>

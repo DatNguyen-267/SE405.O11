@@ -7,9 +7,15 @@ const styles = StyleSheet.create({
         fontFamily: 'InterMedium',
         fontSize: 14,
     },
+    addressDefault: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: Colors.color_label_400,
+        lineHeight: 22,
+    },
     input: {
         width: '100%',
-        height: 70,
+        height: 60,
         borderRadius: 8,
         backgroundColor: '#FFFFFF',
         borderWidth: 2,
@@ -21,8 +27,16 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     inputContainer: {
-        flex: 1,
+        width: '100%',
         marginBottom: 25,
+    },
+    inputDes: {
+        textAlign: 'justify',
+        marginTop: 15,
+        fontSize: 14,
+        fontWeight: '500',
+        color: Colors.color_label_200,
+        lineHeight: 22,
     },
     label: {
         fontSize: 18,

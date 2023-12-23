@@ -47,11 +47,11 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible }:IModalBuy) => {
                                     <Text style={[styles.text, styles.modalBuyInfoItemTitle]}>Price</Text>
                                     <View style={[styles.modalBuyInfoItemValue]}>
                                         <Text numberOfLines={1} style={[styles.text, styles.number]}>0.02</Text>
-                                        <Text style={[styles.text, styles.unit]}>WBNB</Text>
+                                        <Text style={[styles.text, styles.unit]}>WUIT</Text>
                                     </View>
                                 </View>
                                 <View style={[styles.modalBuyInfoItem]}>
-                                    <Text style={[styles.text, styles.modalBuyInfoItemTitle]}>Rarible</Text>
+                                    <Text style={[styles.text, styles.modalBuyInfoItemTitle]}>Fee</Text>
                                     <View style={[styles.modalBuyInfoItemValue]}>
                                         <Text numberOfLines={1} style={[styles.text, styles.number]}>0</Text>
                                         <Text style={[styles.text, styles.unit]}>%</Text>
@@ -61,7 +61,7 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible }:IModalBuy) => {
                                     <Text style={[styles.text, styles.modalBuyInfoItemTitle]}>Total</Text>
                                     <View style={[styles.modalBuyInfoItemValue]}>
                                         <Text numberOfLines={1} style={[styles.text, styles.number]}>0.02</Text>
-                                        <Text style={[styles.text, styles.unit]}>WBNB</Text>
+                                        <Text style={[styles.text, styles.unit]}>WUIT</Text>
                                     </View>
                                 </View>
                             </View>

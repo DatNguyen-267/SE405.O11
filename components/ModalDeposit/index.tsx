@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, Modal, TextInput, ScrollView  } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Modal, TextInput, ScrollView } from 'react-native'
 import { Button } from 'react-native-paper';
 import React, { useState } from 'react'
 import styles from './styles'
@@ -6,7 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { Colors } from '../../constants/Colors';
 import { Platform } from 'react-native';
 
-interface IModal{
+interface IModal {
     item?: object;
     index?: number;
     isVisible?: boolean;
@@ -35,21 +35,25 @@ const ModalDeposit = ({ item, index, isVisible, setIsVisible }: IModal) => {
                                     source={require('./../../assets/images/deposit.png')}
                                 >
                                 </Image>
-                                <Text numberOfLines={1} style={[styles.text, styles.modalDepositTitleCont]}>Deposit WBNB</Text>
-                                <Text style={[styles.text, styles.modalDepositTitleDes]}>Enter value you want to deposit</Text>
+                                <Text numberOfLines={1} style={[styles.text, styles.modalDepositTitleCont]}>Deposit</Text>
+                                <Text style={[styles.text, styles.modalDepositTitleDes]}>Deposit your WUIT (Wrapped UIT Coin) tokens to the AIOZ Network effortlessly</Text>
                             </View>
                             <View style={styles.modalDepositInfo}>
                                 <View style={[styles.modalDepositInfoItem]}>
-                                    <Text style={[styles.text, styles.modalDepositInfoItemTitle]}>Price</Text>
+                                    <Text style={[styles.text, styles.modalDepositInfoItemTitle]}>Amount token (WUIT)</Text>
                                     <View style={[styles.modalDepositInfoItemValue]}>
                                         <TextInput
                                             placeholderTextColor={Colors.color_label_200}
                                             onFocus={() => setIsFocused(true)}
                                             style={[styles.input, isFocused && Platform.OS === 'web' && { outline: 'none' }]}
                                             placeholder='0'
-                                            keyboardType = 'number-pad'
+                                            keyboardType='number-pad'
                                         ></TextInput>
                                     </View>
+                                    <Text style={[styles.text, styles.modalDepositInfoDes]}>
+                                        The conversion is straightforward: 1 AIOZ equals 1 WUIT. Input your desired WUIT amount, confirm, and you're
+                                        done! Simple, transparent, and hassle-free.
+                                    </Text>
                                 </View>
                             </View>
 

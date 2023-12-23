@@ -59,7 +59,7 @@ const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell }: ProfileC
                             </Image>
                             <Text style={[styles.text, styles.cardCollectionAddress]}>0x000...000</Text>
                         </View>
-                        <Text style={[styles.text, styles.cardPrice]}>0.002 WBNB</Text>
+                        <Text style={[styles.text, styles.cardPrice]}>0.002 WUIT</Text>
                     </View>
                 </View>
                 <View style={styles.cardAction}>
