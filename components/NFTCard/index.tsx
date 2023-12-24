@@ -4,11 +4,11 @@ import styles from './styles'
 
 interface ProfileCardProps{ 
     item?: any; 
-    index?: any; 
+    index?: number; 
     onShowModal?: any;
-    isDelist?: any; 
-    isBuy?: any; 
-    isSell?: any;
+    isDelist?: boolean; 
+    isBuy?: boolean; 
+    isSell?: boolean;
 }
 const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell }: ProfileCardProps) => {
     console.log(item)
@@ -59,7 +59,7 @@ const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell }: ProfileC
                             </Image>
                             <Text style={[styles.text, styles.cardCollectionAddress]}>0x000...000</Text>
                         </View>
-                        <Text style={[styles.text, styles.cardPrice]}>0.002 WBNB</Text>
+                        <Text style={[styles.text, styles.cardPrice]}>0.002 WUIT</Text>
                     </View>
                 </View>
                 <View style={styles.cardAction}>

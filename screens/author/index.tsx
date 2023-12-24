@@ -175,7 +175,7 @@ const Author = ({ navigation }) => {
               </View>
               <View style={[styles.balanceContainer]}>
                 <Text style={[styles.label]}>Balance</Text>
-                <Text style={[styles.text, styles.balanceAZ]}>192.193139212329 AZIOD</Text>
+                <Text style={[styles.text, styles.balanceAZ]}>192.193139212329 AIOZ</Text>
                 <Text style={[styles.text, styles.balanceWB]}>192.193139212329 WBNB</Text>
               </View>
             </View>

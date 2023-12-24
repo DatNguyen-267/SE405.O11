@@ -7,9 +7,15 @@ const styles = StyleSheet.create({
     fontFamily: 'InterMedium',
     fontSize: 14,
   },
+  addressDefault: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: Colors.color_label_400,
+    lineHeight: 22,
+  },
   input: {
     width: '100%',
-    height: 70,
+    height: 60,
     borderRadius: 8,
     backgroundColor: '#FFFFFF',
     borderWidth: 2,
@@ -21,8 +27,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   inputContainer: {
-    flex: 1,
+    width: '100%',
     marginBottom: 25,
+  },
+  inputDes: {
+    textAlign: 'justify',
+    marginTop: 15,
+    fontSize: 14,
+    fontWeight: '500',
+    color: Colors.color_label_200,
+    lineHeight: 22,
   },
   label: {
     fontSize: 18,
@@ -48,6 +62,7 @@ const styles = StyleSheet.create({
   // Head line
   headLine: {
     marginTop: 30,
+    marginBottom: 20,
     paddingVertical: 20,
     width: '100%',
   },
@@ -75,18 +90,23 @@ const styles = StyleSheet.create({
 
   // Image
   imgContainer: {
-    marginTop: 20,
     width: '100%',
+    height: 220,
+    padding: 5,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
+    borderRadius: 20,
+    borderColor: Colors.color_grey_700,
+    borderWidth: 3,
+    borderStyle: 'dashed',
   },
 
   clearImage: {
     position: 'absolute',
     right: 8,
     top: 8,
-    color: Colors.color_label_200,
+    color: Colors.color_label_400,
     fontSize: 22,
     backgroundColor: Colors.color_label_100,
     borderRadius: 11,
@@ -101,12 +121,7 @@ const styles = StyleSheet.create({
 
   imgFrame: {
     width: '100%',
-    height: 200,
-    borderRadius: 20,
-    borderColor: Colors.color_grey_700,
-    borderWidth: 3,
-    borderStyle: 'dashed',
-    padding: 15,
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -117,8 +132,15 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   image: {
-    width: '100%',
-    height: '100%',
+    // flex: 1,
+    // minWidth: 150,
+    // objectFit: 'contain',
+
+    resizeMode: 'cover',
+    width: 200,
+    height: 'auto',
+    aspectRatio: 1,
+    borderRadius: 8,
   },
   iconAdd: {
     width: 40,
@@ -156,5 +178,4 @@ const styles = StyleSheet.create({
     color: Colors.color_label_100,
   },
 })
-
 export default styles

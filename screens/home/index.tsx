@@ -1,31 +1,19 @@
-import {
-  View,
-  Text,
-  FlatList,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  ActivityIndicator,
-  Modal,
-} from 'react-native'
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import styles from './styles'
-import { useState } from 'react'
-import SearchInput from '../../components/Search'
+import { default as React, useEffect, useState } from 'react'
+import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { useDispatch } from 'react-redux'
+import ModalBuy from '../../components/ModalBuy'
 import NFTCard from '../../components/NFTCard'
 import NFTCardHorital from '../../components/NFTCardHorital'
-import ModalBuy from '../../components/ModalBuy'
-import Loading from '../../components/Loading'
-import { RootState } from '../../redux/createStore'
+import SearchInput from '../../components/Search'
 import { onHideLoading, onShowLoading } from '../../utils'
+import styles from './styles'
+import TypingText from './typingText'
 
 interface ProfileCardProps {
   navigation?: any
 }
 const Home = ({ navigation }: ProfileCardProps) => {
   const dispatch = useDispatch()
-  const { isLoading } = useSelector((state: RootState) => state.loading)
   const [isVisible, setIsVisible] = useState(false)
   const [search, setSearch] = useState('')
   const data = [
@@ -51,6 +39,8 @@ const Home = ({ navigation }: ProfileCardProps) => {
     },
   ]
 
+  useEffect(() => {}, [])
+
   const handleLoading = () => {
     onShowLoading(dispatch)
     setTimeout(() => {
@@ -73,7 +63,12 @@ const Home = ({ navigation }: ProfileCardProps) => {
               {/* <TouchableOpacity style={styles.headLineContent} onPress={() => handleLoading()}>
                                 <Text>Loading</Text>
                             </TouchableOpacity> */}
-              <Text style={styles.headLineContent}>Wellcome To NFT Marketplace</Text>
+              {/* <Text style={styles.headLineContent} id=''>
+                                Wellcome To NFT Marketplace
+                            </Text> */}
+              <Text style={styles.headLineContent}>DISCOVER, COLLECT AND</Text>
+              {/* <Text style={styles.headLineContent} id='sentence'></Text> */}
+              <TypingText></TypingText>
             </View>
             {/* <View style={styles.search}>
                         <SearchInput />

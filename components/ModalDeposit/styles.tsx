@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    paddingTop: 35,
+    paddingTop: 20,
     paddingBottom: 50,
   },
   // heade line
@@ -112,10 +112,11 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: Colors.color_label_400,
     lineHeight: 24,
+    marginBottom: 10,
   },
   modalDepositTitleDes: {
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '500',
     color: Colors.color_label_200,
   },
@@ -150,6 +151,12 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   },
 
+  modalDepositInfoDes: {
+    textAlign: 'justify',
+    fontSize: 14,
+    fontWeight: '500',
+    color: Colors.color_label_200,
+  },
   // Actions
   modalDepositAction: {
     marginTop: 15,

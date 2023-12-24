@@ -4,7 +4,7 @@ import styles from './styles'
 
 interface ProfileCardProps {
     item?: any;
-    index?: any;
+    index?: number;
     navigation?: any;
 }
 const Collection = ({ item, index, navigation }: ProfileCardProps) => {

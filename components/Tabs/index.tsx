@@ -18,7 +18,7 @@ const Tabs = ({ items, setTab }: ProfileCardProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.tabs}>
-        {items.map((tab, i) => {
+        {items.map((tab?: any, i?: number) => {
           const active = index === i
           return (
             <TouchableOpacity key={i} onPress={() => handleSetTab(i)} style={styles.tab}>

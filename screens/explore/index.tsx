@@ -1,11 +1,8 @@
-import { View, Text, FlatList, ScrollView, Image } from 'react-native'
-import React from 'react'
-import styles from './styles'
-import { useState } from 'react'
-import SearchInput from '../../components/Search'
-import { Button, Caption, Paragraph, Surface, Title } from 'react-native-paper'
-import NFTCardHorital from '../../components/NFTCardHorital'
+import React, { useState } from 'react'
+import { Image, ScrollView, Text, View } from 'react-native'
 import Collection from '../../components/Collection'
+import SearchInput from '../../components/Search'
+import styles from './styles'
 const Explore = ({ navigation }) => {
   const [search, setSearch] = useState('')
   const data = [
@@ -43,7 +40,7 @@ const Explore = ({ navigation }) => {
             {/* <Button style={styles.createBtn}onPress={() => navigation.navigate('Collection')} >
                             <Text>Go to Collection</Text>
                         </Button> */}
-            <Text style={styles.headLineContent}>Explore Collections</Text>
+            <Text style={styles.headLineContent}>EXPLORE COLLECTIONS</Text>
           </View>
           <View style={styles.search}>
             <SearchInput search={search} setSearch={setSearch} />

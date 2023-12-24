@@ -67,11 +67,11 @@ const ModalSell = ({ item, index, isVisible, setIsVisible }: IModal) => {
                       placeholder="0"
                       keyboardType="number-pad"
                     ></TextInput>
-                    <Text style={[styles.text, styles.unit]}>WBNB</Text>
+                    <Text style={[styles.text, styles.unit]}>WUIT</Text>
                   </View>
                 </View>
                 <View style={[styles.modalSellInfoItem]}>
-                  <Text style={[styles.text, styles.modalSellInfoItemTitle]}>Rarible</Text>
+                  <Text style={[styles.text, styles.modalSellInfoItemTitle]}>Fee</Text>
                   <View style={[styles.modalSellInfoItemValue]}>
                     <Text numberOfLines={1} style={[styles.text, styles.number]}>
                       0
@@ -85,7 +85,7 @@ const ModalSell = ({ item, index, isVisible, setIsVisible }: IModal) => {
                     <Text numberOfLines={1} style={[styles.text, styles.number]}>
                       0.02
                     </Text>
-                    <Text style={[styles.text, styles.unit]}>WBNB</Text>
+                    <Text style={[styles.text, styles.unit]}>WUIT</Text>
                   </View>
                 </View>
               </View>

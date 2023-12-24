@@ -18,7 +18,7 @@ const Setting = ({navigation}) => {
                 <View style={styles.container}>
                     <View style={styles.headLine}>
                         <Text style={styles.headLineContent}>
-                            Setting
+                            SETTING
                         </Text>
                     </View>
                     <TouchableOpacity style={styles.catergory} onPress={() => navigation.navigate('Connect Wallet')} >
