@@ -1,93 +1,77 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
-import { useEffect } from "react";
-import { useColorScheme } from "react-native";
-import { Provider } from "react-redux";
-import store from "../redux/createStore";
-import Toast from "react-native-toast-message";
-import Loading from "../components/Loading";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../redux/createStore";
-import { WagmiConfig } from "wagmi";
-import WagmiProvider from "../components/__Provider/WagmiProvider";
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
+import { useFonts } from 'expo-font'
+import { SplashScreen, Stack } from 'expo-router'
+import { useEffect } from 'react'
+import { useColorScheme } from 'react-native'
+import { Provider } from 'react-redux'
+import store from '../redux/createStore'
+import Toast from 'react-native-toast-message'
+import Loading from '../components/Loading'
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from '../redux/createStore'
+import { WagmiConfig } from 'wagmi'
+import WagmiProvider from '../components/__Provider/WagmiProvider'
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
-} from "expo-router";
+} from 'expo-router'
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(tabs)",
-};
+  initialRouteName: '(tabs)',
+}
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-    InterMedium: require("../assets/fonts/Inter-Medium.ttf"),
-    InterBold: require("../assets/fonts/Inter-Bold.ttf"),
-    InterRegular: require("../assets/fonts/Inter-Regular.ttf"),
-    InterLight: require("../assets/fonts/Inter-Light.ttf"),
+    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    InterMedium: require('../assets/fonts/Inter-Medium.ttf'),
+    InterBold: require('../assets/fonts/Inter-Bold.ttf'),
+    InterRegular: require('../assets/fonts/Inter-Regular.ttf'),
+    InterLight: require('../assets/fonts/Inter-Light.ttf'),
     ...FontAwesome.font,
-  });
+  })
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
-    if (error) throw error;
-  }, [error]);
+    if (error) throw error
+  }, [error])
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync()
     }
-  }, [loaded]);
+  }, [loaded])
 
   if (!loaded) {
-    return null;
+    return null
   }
 
   return (
     <Provider store={store}>
       <RootLayoutNav />
     </Provider>
-  );
+  )
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-  const dispatch = useDispatch();
-  const { isLoading } = useSelector(
-    (state: RootState) => state.loading
-  );
+  const colorScheme = useColorScheme()
+  const dispatch = useDispatch()
+  const { isLoading } = useSelector((state: RootState) => state.loading)
   return (
     <WagmiProvider>
-      <ThemeProvider
-        value={
-          colorScheme === "dark" ? DarkTheme : DefaultTheme
-        }
-      >
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
-          <Stack.Screen
-            name="(tabs)"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="modal"
-            options={{ presentation: "modal" }}
-          />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         </Stack>
       </ThemeProvider>
       <Toast></Toast>
       <Loading isVisible={isLoading}></Loading>
     </WagmiProvider>
-  );
+  )
 }

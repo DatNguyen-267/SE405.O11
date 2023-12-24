@@ -1,10 +1,10 @@
 import { ethers } from 'ethers'
 import { useCallback } from 'react'
+import { writeContract } from 'wagmi/actions'
 import { TOKEN_EXCHANGE_ABI } from '../abis'
 import useAppAddress from './useAppAddress'
 import { usePublicClient } from './usePublicClient'
-import { useWalletClient } from 'wagmi'
-import { writeContract } from 'wagmi/actions'
+
 type ApproveTokenExchangeParams = {
   nftAddressGuy: string
   wad: string

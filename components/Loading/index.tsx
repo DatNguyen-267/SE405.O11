@@ -7,22 +7,21 @@ import { onHideLoading } from '../../utils'
 import { useDispatch } from 'react-redux'
 
 interface ILoading {
-    loadText?: string;
-    isVisible?: boolean;
+  loadText?: string
+  isVisible?: boolean
 }
-const Loading = ({ loadText, isVisible }:ILoading) => {
-    
-    // const dispatch = useDispatch();
-    return (
-        <Modal transparent={true} visible={isVisible}>
-           <View style={styles.container}>
-           <ActivityIndicator size="large" color={Colors.color_base_100}/>
-            {/* <TouchableOpacity onPress={()=>onHideLoading(dispatch)}>
+const Loading = ({ loadText, isVisible }: ILoading) => {
+  // const dispatch = useDispatch();
+  return (
+    <Modal transparent={true} visible={isVisible}>
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color={Colors.color_base_100} />
+        {/* <TouchableOpacity onPress={()=>onHideLoading(dispatch)}>
             </TouchableOpacity> */}
-            <Text style={styles.text}>{loadText? loadText: 'Loading...'}</Text>
-           </View>
-        </Modal>
-    )
+        <Text style={styles.text}>{loadText ? loadText : 'Loading...'}</Text>
+      </View>
+    </Modal>
+  )
 }
 
 export default Loading

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { ADDRESS_OF_CHAINS } from '../constants'
 import { CHAIN_IDS, DEFAULT_CHAIN_ID } from '../constants/chains'
-import { AppContractName } from './../constants/common'
+import { AppContractName } from '../constants/common'
 import useCurrentChain from './useCurrentChain'
 
 const useAppAddress = (contractName: keyof typeof AppContractName) => {

@@ -1,50 +1,44 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
-import { Animated } from 'react-native';
-import { Colors } from '../../constants/Colors';
-import { Easing } from 'react-native';
+import React, { useState } from 'react'
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
+import { Animated } from 'react-native'
+import { Colors } from '../../constants/Colors'
+import { Easing } from 'react-native'
 
-interface ProfileCardProps{ 
-  items?: any; 
-  setTab?: any; 
+interface ProfileCardProps {
+  items?: any
+  setTab?: any
 }
-const Tabs = ({items, setTab}: ProfileCardProps) => {
-  const [index, setIndex] = useState(0);
+const Tabs = ({ items, setTab }: ProfileCardProps) => {
+  const [index, setIndex] = useState(0)
   const handleSetTab = (i) => {
-    setIndex(i);
-    setTab(items[i].title);
+    setIndex(i)
+    setTab(items[i].title)
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.tabs}>
         {items.map((tab, i) => {
-          const active = index === i;
+          const active = index === i
           return (
-            <TouchableOpacity
-              key={i}
-              onPress={() => handleSetTab(i)}
-              style={styles.tab}>
-              {active && (
-                <Animated.View style={styles.dot} />
-              )}
+            <TouchableOpacity key={i} onPress={() => handleSetTab(i)} style={styles.tab}>
+              {active && <Animated.View style={styles.dot} />}
               <Text style={[styles.text, active ? styles.activeTabText : styles.tabText]}>
                 {tab.title}
               </Text>
             </TouchableOpacity>
-          );
+          )
         })}
       </View>
       {/* {items[index].content()} */}
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   text: {
     fontFamily: 'InterMedium',
     fontSize: 14,
-  
   },
   container: {
     marginTop: 10,
@@ -61,11 +55,10 @@ const styles = StyleSheet.create({
   },
   tabText: {
     color: Colors.color_label_200,
-
   },
   activeTabText: {
     color: Colors.color_label_400,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   dot: {
     position: 'absolute',
@@ -74,6 +67,6 @@ const styles = StyleSheet.create({
     height: 1.2,
     backgroundColor: Colors.color_label_400,
   },
-});
+})
 
-export default Tabs;
+export default Tabs

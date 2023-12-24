@@ -1,48 +1,59 @@
 import { View, Text, Image, TouchableOpacity, Modal, TextInput, ScrollView } from 'react-native'
-import { Button } from 'react-native-paper';
+import { Button } from 'react-native-paper'
 import React, { useState } from 'react'
 import styles from './styles'
-import { AntDesign } from '@expo/vector-icons';
-import { Colors } from '../../constants/Colors';
-import { Platform } from 'react-native';
-import { onShowToastSuccess } from '../../utils/toast';
-import Toast from 'react-native-toast-message';
+import { AntDesign } from '@expo/vector-icons'
+import { Colors } from '../../constants/Colors'
+import { Platform } from 'react-native'
+import { onShowToastSuccess } from '../../utils/toast'
+import Toast from 'react-native-toast-message'
 
-interface IModal{
-    item?: object;
-    index?: number;
-    isVisible?: boolean;
-    setIsVisible?: any;
+interface IModal {
+  item?: object
+  index?: number
+  isVisible?: boolean
+  setIsVisible?: any
 }
-const ModalDelist = ({ item, index, isVisible, setIsVisible }:IModal) => {
-    const [isFocused, setIsFocused] = useState(false);
-    return (
-        <Modal transparent={true} visible={isVisible}>
-            <View style={styles.container}>
-                <TouchableOpacity onPress={() => { setIsVisible(false) }} style={styles.modalOverlay}>
-                </TouchableOpacity>
-                <View style={styles.modalSellForm}>
-                    <ScrollView
-                        style={styles.scrollView}
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        <View style={styles.formContent}>
-
-                            <View style={styles.headLine}>
-                                <Text style={[styles.text, styles.modalSellTitle]}>Delist NFT</Text>
-                                <AntDesign name="closecircle" size={24} color={Colors.color_label_200} onPress={() => { setIsVisible(false) }} />
-                            </View>
-                            <View style={styles.modalSellNft}>
-                                <Image
-                                    style={styles.modalSellNftImg}
-                                    source={require('./../../assets/images/createBg.jpg')}
-                                >
-                                </Image>
-                                <Text numberOfLines={1} style={[styles.text, styles.modalSellNftName]}>NFT Name</Text>
-                                <Text style={[styles.text, styles.modalSellNftAdd]}>0x000 ... 000</Text>
-                            </View>
-                            {/* <View style={styles.modalSellInfo}>
+const ModalDelist = ({ item, index, isVisible, setIsVisible }: IModal) => {
+  const [isFocused, setIsFocused] = useState(false)
+  return (
+    <Modal transparent={true} visible={isVisible}>
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => {
+            setIsVisible(false)
+          }}
+          style={styles.modalOverlay}
+        ></TouchableOpacity>
+        <View style={styles.modalSellForm}>
+          <ScrollView
+            style={styles.scrollView}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+          >
+            <View style={styles.formContent}>
+              <View style={styles.headLine}>
+                <Text style={[styles.text, styles.modalSellTitle]}>Delist NFT</Text>
+                <AntDesign
+                  name="closecircle"
+                  size={24}
+                  color={Colors.color_label_200}
+                  onPress={() => {
+                    setIsVisible(false)
+                  }}
+                />
+              </View>
+              <View style={styles.modalSellNft}>
+                <Image
+                  style={styles.modalSellNftImg}
+                  source={require('./../../assets/images/createBg.jpg')}
+                ></Image>
+                <Text numberOfLines={1} style={[styles.text, styles.modalSellNftName]}>
+                  NFT Name
+                </Text>
+                <Text style={[styles.text, styles.modalSellNftAdd]}>0x000 ... 000</Text>
+              </View>
+              {/* <View style={styles.modalSellInfo}>
                                 <View style={[styles.modalSellInfoItem, styles.modalSellPrice]}>
                                     <Text style={[styles.text, styles.modalSellInfoItemTitle]}>Price</Text>
                                     <View style={[styles.modalSellInfoItemValue]}>
@@ -72,24 +83,34 @@ const ModalDelist = ({ item, index, isVisible, setIsVisible }:IModal) => {
                                     </View>
                                 </View>
                             </View> */}
-                            <Text style={[styles.text, styles.modalQuestion]}>Are you want to delist this NFT?</Text>
-                            <View style={styles.modalSellAction}>
-                                <Button style={[styles.btn, styles.modalSellBtnOk]} onPress={() => { onShowToastSuccess("Congratulation for you!!!")}}>
-                                    <Text style={[styles.btnText, styles.btnTextOk]} >OK</Text>
-                                </Button>
-                                <Button style={[styles.btn]} onPress={() => { setIsVisible(false) }} >
-                                    <Text style={styles.btnText}>Canncel</Text>
-                                </Button>
-                            </View>
-                        </View>
-                    </ScrollView>
-
-
-                </View>
+              <Text style={[styles.text, styles.modalQuestion]}>
+                Are you want to delist this NFT?
+              </Text>
+              <View style={styles.modalSellAction}>
+                <Button
+                  style={[styles.btn, styles.modalSellBtnOk]}
+                  onPress={() => {
+                    onShowToastSuccess('Congratulation for you!!!')
+                  }}
+                >
+                  <Text style={[styles.btnText, styles.btnTextOk]}>OK</Text>
+                </Button>
+                <Button
+                  style={[styles.btn]}
+                  onPress={() => {
+                    setIsVisible(false)
+                  }}
+                >
+                  <Text style={styles.btnText}>Canncel</Text>
+                </Button>
+              </View>
             </View>
-            <Toast></Toast>
-        </Modal>
-    )
+          </ScrollView>
+        </View>
+      </View>
+      <Toast></Toast>
+    </Modal>
+  )
 }
 
 export default ModalDelist
