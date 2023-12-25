@@ -9,11 +9,13 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Clipboard,
   View,
 } from 'react-native'
 import { Button } from 'react-native-paper'
 import { Colors } from 'src/constants/Colors'
 import styles from './styles'
+
 
 const Create = ({ }) => {
   const [profile, setProfile] = useState<string | null>(null)
@@ -38,6 +40,12 @@ const Create = ({ }) => {
   const clearImage = async () => {
     setProfile(null)
   }
+
+  const copyToClipboard = () => {
+    if(addressDefault){
+      Clipboard.setString(addressDefault);
+    }
+  };
 
   return (
     <View style={styles.createScreen}>
@@ -118,14 +126,16 @@ const Create = ({ }) => {
               ]}
               placeholder="Ex: 0x000...000"
             ></TextInput>
-            <Text style={[styles.text, styles.inputDes]}>
-              Explore the impressive collection address at{' '}
-              <Text style={[styles.text, styles.addressDefault]}>
-                {addressDefault ? addressDefault : '0x00000000000000000000000000'}
-              </Text>{' '}
-              on our platform. If you don't have your own collection yet, kickstart your
-              creative journey by using this address.
-            </Text>
+            <TouchableOpacity style={styles.clipboard} onPress={copyToClipboard}>
+              <Text style={[styles.text, styles.inputDes]}>
+                Explore the impressive collection address at{' '}
+                <Text style={[styles.text, styles.addressDefault]}>
+                  {addressDefault ? addressDefault : '0x00000000000000000000000000'}
+                </Text>{' '}
+                on our platform. If you don't have your own collection yet, kickstart your
+                creative journey by using this address.
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={[styles.inputContainer]}>
             <Text style={[styles.label]}>Description</Text>

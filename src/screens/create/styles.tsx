@@ -13,6 +13,10 @@ const styles = StyleSheet.create({
     color: Colors.color_label_400,
     lineHeight: 22,
   },
+  clipboard: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   input: {
     width: '100%',
     height: 60,
