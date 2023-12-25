@@ -15,7 +15,7 @@ const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell }: ProfileC
   return (
     <TouchableOpacity>
       <View style={styles.NFTCard}>
-        <Image
+        {/* <Image
           resizeMode="cover"
           style={styles.cardImage}
           source={{
@@ -23,7 +23,7 @@ const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell }: ProfileC
               ? item.img
               : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
           }}
-        ></Image>
+        ></Image> */}
         <View style={styles.cardHead}>
           <Image
             resizeMode="cover"

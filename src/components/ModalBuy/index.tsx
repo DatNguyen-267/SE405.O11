@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux'
 import styles from './styles'
 import { Colors } from 'src/constants/Colors'
 import { onShowToastSuccess } from 'src/utils/toast'
+import { StatusBar } from 'expo-status-bar'
 
 interface IModalBuy {
   item?: object
@@ -45,6 +46,11 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible }: IModalBuy) => {
               </View>
               <View style={styles.modalBuyNft}>
                 {/* <Image style={styles.modalBuyNftImg}></Image> */}
+                <Image
+                  style={styles.modalBuyNftImg}
+                  source={require('../../assets/images/createBg.jpg')}
+                >
+                </Image>
                 <Text numberOfLines={1} style={[styles.text, styles.modalBuyNftName]}>
                   NFT Name
                 </Text>

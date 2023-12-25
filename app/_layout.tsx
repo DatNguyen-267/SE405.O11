@@ -3,12 +3,12 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
 import { useEffect } from 'react'
-import { useColorScheme } from 'react-native'
+import { useColorScheme, StatusBar } from 'react-native'
 import Toast from 'react-native-toast-message'
 import { Provider, useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '../src/redux/createStore'
-import WagmiProvider from '@components/__Provider/WagmiProvider'
-import Loading from '@components/Loading'
+import WagmiProvider from '../src/components/__Provider/WagmiProvider'
+import Loading from '../src/components/Loading'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -61,7 +61,9 @@ function RootLayoutNav() {
   const { isLoading } = useSelector((state: RootState) => state.loading)
   return (
     <WagmiProvider>
+      <StatusBar backgroundColor="#fff" ></StatusBar>  
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />

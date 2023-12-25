@@ -134,9 +134,11 @@ const styles = StyleSheet.create({
 
   // List
   nftContent: {
+    borderTopColor: Colors.color_divider,
+    borderTopWidth: 1,
     paddingHorizontal: 15,
     marginTop: 30,
-    backgroundColor: Colors.color_base_200,
+    backgroundColor: Colors.color_base_100,
     paddingTop: 30,
   },
 
@@ -144,6 +146,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     alignItems: 'center',
+    marginBottom: 10,
   },
   listNft: {
     // marginTop: 10,

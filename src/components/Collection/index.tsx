@@ -39,15 +39,20 @@ const Collection = ({ item, index, navigation }: ProfileCardProps) => {
             </Text>
             <Text style={[styles.text, styles.collectionAddress]}>0x000...000</Text>
             <View style={styles.collectionOwner}>
-              {/* <Image resizeMode="cover" style={styles.collectionOwnerAvatar} source={''}></Image> */}
+              <Image
+                  resizeMode='cover'
+                  style={styles.collectionOwnerAvatar}
+                  source={require('./../../assets/images/avatarDefault.png')} 
+              >
+              </Image>
               <Text style={[styles.text, styles.collectionOwnerAdd]}>0x000...000</Text>
             </View>
             <View style={styles.collectionAmount}>
-              <Image
+              {/* <Image
                 resizeMode="cover"
                 style={styles.collectionAmountIcon}
                 source={require('../../assets/images/nft.png')}
-              ></Image>
+              ></Image> */}
               <Text style={[styles.text, styles.collectionAmountValue]}>NFTs: </Text>
               <Text style={[styles.text, styles.collectionAmountValue]}>34</Text>
             </View>

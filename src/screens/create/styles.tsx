@@ -31,8 +31,9 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   inputDes: {
+    textAlignVertical: 'bottom',
     textAlign: 'justify',
-    marginTop: 15,
+    marginTop: 5,
     fontSize: 14,
     fontWeight: '500',
     color: Colors.color_label_200,
