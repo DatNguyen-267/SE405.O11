@@ -4,7 +4,6 @@ import useCurrentChain from './useCurrentChain'
 
 export const usePublicClient = () => {
   const currentChain = useCurrentChain()
-  console.warn({ currentChain })
   const publicClient = useMemo(() => {
     return createPublicClient({
       chain: currentChain,

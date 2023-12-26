@@ -14,22 +14,16 @@ const Connect = ({ navigation }: { navigation?: any }) => {
   const chainId = useChainId()
 
   const handleClick = async () => {
-    console.warn({ chainId })
-    console.warn({ address, connector, isConnected })
-
     // const contract: any = await readContract({
     //   address: `0x${"13724882900FaaC30151419E6D8Cd6a96069Aec4"}`,
     //   abi: ABI_WRAP_TOKEN,
     //   functionName: "balanceOf",
     //   args: [address],
     // });
-
     // const balance = BigInt(contract).toString(10);
-
     // console.log({
     //   balance,
     // });
-
     // console.log(ethers.utils.formatEther(balance));
     // const publicContract = await publicClient.readContract({
     //   abi: ABI_WRAP_TOKEN,

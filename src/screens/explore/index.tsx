@@ -1,12 +1,49 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
-
 import Collection from 'src/components/Collection'
 import SearchInput from 'src/components/Search'
+import useAppAddress from 'src/hooks/useAppAddress'
+import { useViewAsksByCollection, useViewMarketCollections } from 'src/hooks/useMarket'
 import styles from './styles'
+import { Button } from 'react-native-paper'
 
 const Explore = ({ navigation }: { navigation: any }) => {
   const [search, setSearch] = useState('')
+
+  const {
+    mutate: handleGetAllCollection,
+    data: collections,
+    isLoading: isLoadingGetCollection,
+  } = useViewMarketCollections()
+
+  const marketAddress = useAppAddress('MARKET')
+
+  const listCollection = collections?.collectionDetails
+
+  const {
+    mutate: handleGetByCollectionAddress,
+    data: asks,
+    isLoading: isLoadingGetAsk,
+  } = useViewAsksByCollection()
+  console.log({ collections })
+
+  console.log({ asks })
+  useEffect(() => {
+    handleGetAllCollection({
+      marketAddress: marketAddress,
+      cursor: 0,
+      size: 20,
+    })
+  }, [])
+
+  const handleTestFunction = () => {
+    handleGetByCollectionAddress({
+      marketAddress: marketAddress,
+      collectionAddress: '0x1Def42fc65c3251087Bb61A410003981bE75e1d8',
+      cursor: 0,
+      size: 20,
+    })
+  }
   const data = [
     {
       img: 'https://th.bing.com/th/id/OIG.ey_KYrwhZnirAkSgDhmg',
@@ -39,10 +76,14 @@ const Explore = ({ navigation }: { navigation: any }) => {
       >
         <View style={styles.container}>
           <View style={styles.headLine}>
-            {/* <Button style={styles.createBtn}onPress={() => navigation.navigate('Collection')} >
-                            <Text>Go to Collection</Text>
-                        </Button> */}
             <Text style={styles.headLineContent}>EXPLORE COLLECTIONS</Text>
+            {isLoadingGetCollection && (
+              <Text style={styles.headLineContent}>Loading get collections</Text>
+            )}
+            <Button style={styles.createBtn} onPress={handleTestFunction}>
+              <Text>Get asks</Text>
+              {isLoadingGetAsk && <Text style={styles.headLineContent}>Loading get ask</Text>}
+            </Button>
           </View>
           <View style={styles.search}>
             <SearchInput search={search} setSearch={setSearch} />

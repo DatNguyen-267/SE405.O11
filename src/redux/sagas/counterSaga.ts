@@ -1,18 +1,9 @@
+import { takeEvery } from 'redux-saga/effects'
 
-import { takeEvery } from 'redux-saga/effects'; 
+function* increment() {}
 
-function* increment() {
-    console.log(`This is increment saga`);
-}
+export function* watchIncrement() {}
 
-export function* watchIncrement() {
-   
-}
+function* decrement() {}
 
-function* decrement() {
-    console.log(`This is decrement saga`);
-}
-
-export function* watchDecrement() {
-   
-}
+export function* watchDecrement() {}

@@ -1,12 +1,13 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import { MARKETPLACE_ABI } from 'src/abis'
+import { AppError, DEFAULT_ADDRESS } from 'src/constants'
+import { ethers } from 'src/utils'
 import { Address } from 'viem'
 import { writeContract } from 'wagmi/actions'
-import { AppError, DEFAULT_ADDRESS } from 'src/constants'
 import { useApproveErc20 } from './useErc20'
 import { useApproveSpenderToAccessNft } from './useNFT'
 import { usePublicClient } from './usePublicClient'
-import { MARKETPLACE_ABI } from 'src/abis'
-import { ethers } from 'src/utils'
+import { AskInfo } from 'src/types'
 
 export type CollectionDetail = {
   creatorAddress: string
@@ -21,7 +22,7 @@ export type ViewMarketCollectionsResponse = {
   collectionAddresses: string[]
 }
 
-type ViewMarketCollectionParams = {
+export type ViewMarketCollectionParams = {
   marketAddress: Address
   cursor?: number
   size?: number
@@ -31,12 +32,21 @@ type ViewMarketCollectionParams = {
  * @param cursor: cursor
  * @param size: size of the response
  */
+
 export function useViewMarketCollections() {
   const publicClient = usePublicClient()
+  const [isLoading, setIsLoading] = useState(false)
 
-  return useCallback(
-    async ({ marketAddress, cursor = 0, size = 10 }: ViewMarketCollectionParams) => {
+  const [data, setData] = useState<ViewMarketCollectionsResponse>()
+
+  const mutate = useCallback(
+    async ({
+      marketAddress,
+      cursor = 0,
+      size = 10,
+    }: ViewMarketCollectionParams): Promise<ViewMarketCollectionsResponse> => {
       try {
+        setIsLoading(() => true)
         const collectionsResponse: any = await publicClient.readContract({
           abi: MARKETPLACE_ABI,
           address: marketAddress,
@@ -44,43 +54,46 @@ export function useViewMarketCollections() {
           args: [cursor, size],
         })
 
-        const collectionDetails = collectionsResponse['collectionDetails'].map(
-          (collectionDetail: any) => {
-            return {
-              status: collectionDetail[0],
-              creatorAddress: collectionDetail[1],
-              whitelistChecker: collectionDetail[2],
-              tradingFee: Number(BigInt(collectionDetail[3]).toString()) / 100,
-              creatorFee: Number(BigInt(collectionDetail[4]).toString()) / 100,
-            }
-          },
-        )
+        const collectionDetails = collectionsResponse[1].map((collectionDetail: any) => {
+          return {
+            status: collectionDetail.status,
+            creatorAddress: collectionDetail.creatorAddress,
+            whitelistChecker: collectionDetail.whitelistChecker,
+            tradingFee: Number(BigInt(collectionDetail.tradingFee).toString(10)) / 100,
+            creatorFee: Number(BigInt(collectionDetail.creatorFee).toString(10)) / 100,
+          }
+        })
 
-        const collectionAddresses = collectionsResponse['collectionAddresses']
+        const collectionAddresses = collectionsResponse[0]
+        setData({
+          collectionDetails,
+          collectionAddresses,
+        })
+        setIsLoading(false)
         return {
           collectionDetails,
           collectionAddresses,
         }
       } catch (error) {
+        setIsLoading(false)
+        setData(undefined)
         throw error
       }
     },
     [publicClient],
   )
+
+  return {
+    isLoading,
+    data,
+    mutate,
+  }
 }
 
-export type AskInfo = {
-  price: BigInt
-  seller: string
-}
 export type TokenIds = BigInt[]
-export type AskInfoRaw = [string, BigInt][]
-export type ViewAsksByCollectionAndSellerRaw = [TokenIds, AskInfoRaw, BigInt]
-export type ViewAsksByCollectionAndSellerResponse = {
-  askInfo: AskInfo[]
-  tokenIds: TokenIds
-  size: BigInt
-}[]
+export type AskInfoRaw = { seller: string; price: BigInt }[]
+export type AsksResponse = [TokenIds, AskInfoRaw, BigInt]
+
 /**
  * @notice View ask orders for a given collection and a seller
  * @param collection: address of the collection
@@ -109,25 +122,31 @@ export function useViewAsksByCollectionAndSellerAddress() {
       size = 10,
     }: ViewAsksByCollectionAndSellerAddressParams) => {
       try {
-        const asks = (await publicClient.readContract({
+        const asksResponse = (await publicClient.readContract({
           abi: MARKETPLACE_ABI,
           address: marketAddress,
           functionName: 'viewAsksByCollectionAndSeller',
           args: [collectionAddress, sellerAddress, cursor, size],
-        })) as ViewAsksByCollectionAndSellerRaw
+        })) as AsksResponse
 
-        return {
-          askInfo: asks[1].map((ask) => {
-            return {
-              price: ethers.utils.formatEther(ask[1].toString(10)),
-              seller: ask[0],
-            }
-          }),
-          tokenIds: asks[0].map((tokenId) => {
-            return Number(tokenId.toString(10))
-          }),
-          size: Number(asks[2].toString(10)),
-        }
+        let asksInfo: AskInfo[] = asksResponse[0].map((tokenId) => {
+          return {
+            tokenId: tokenId.toString(10),
+            collectionAddress: collectionAddress,
+            price: '',
+            seller: '' as Address,
+            size: Number(asksResponse[2].toString(10)),
+          }
+        })
+        asksInfo = asksResponse[1].map((askInfo, index) => {
+          return {
+            ...asksInfo[index],
+            price: ethers.utils.formatEther(askInfo['price'].toString(10)),
+            seller: askInfo['seller'] as Address,
+          }
+        })
+
+        return asksInfo
       } catch (error) {
         throw error
       }
@@ -153,40 +172,55 @@ type ViewAsksByCollectionParams = {
 
 export function useViewAsksByCollection() {
   const publicClient = usePublicClient()
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState<AskInfo[]>()
 
-  return useCallback(
+  const mutate = useCallback(
     async ({
       marketAddress,
       collectionAddress,
       cursor = 0,
       size = 10,
-    }: ViewAsksByCollectionParams) => {
+    }: ViewAsksByCollectionParams): Promise<AskInfo[]> => {
       try {
-        const asks = (await publicClient.readContract({
+        setIsLoading(true)
+        const asksResponse = (await publicClient.readContract({
           abi: MARKETPLACE_ABI,
           address: marketAddress,
           functionName: 'viewAsksByCollection',
           args: [collectionAddress, cursor, size],
-        })) as ViewAsksByCollectionAndSellerRaw
+        })) as AsksResponse
 
-        return {
-          askInfo: asks[1].map((ask) => {
-            return {
-              price: ethers.utils.formatEther(ask[1].toString(10)),
-              seller: ask[0],
-            }
-          }),
-          tokenIds: asks[0].map((tokenId) => {
-            return Number(tokenId.toString(10))
-          }),
-          size: Number(asks[2].toString(10)),
-        }
+        let asksInfo: AskInfo[] = asksResponse[0].map((tokenId) => {
+          return {
+            tokenId: tokenId.toString(10),
+            collectionAddress: collectionAddress,
+            price: '',
+            seller: '' as Address,
+            size: Number(asksResponse[2].toString(10)),
+          }
+        })
+        asksInfo = asksResponse[1].map((askInfo, index) => {
+          return {
+            ...asksInfo[index],
+            price: ethers.utils.formatEther(askInfo['price'].toString(10)),
+            seller: askInfo['seller'] as Address,
+          }
+        })
+
+        setData(asksInfo)
+        setIsLoading(false)
+        return asksInfo
       } catch (error) {
+        setIsLoading(false)
+        setData(undefined)
         throw error
       }
     },
     [publicClient],
   )
+
+  return { mutate, data, isLoading }
 }
 
 /**

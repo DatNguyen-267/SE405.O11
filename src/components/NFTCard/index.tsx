@@ -11,7 +11,6 @@ interface ProfileCardProps {
   isSell?: boolean
 }
 const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell }: ProfileCardProps) => {
-  console.log(item)
   return (
     <TouchableOpacity>
       <View style={styles.NFTCard}>
