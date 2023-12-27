@@ -20,6 +20,8 @@ const styles = StyleSheet.create({
     height: 110,
     borderRadius: 8,
     position: 'relative',
+    overflow: 'hidden',
+    backgroundColor: Colors.color_base_300
   },
   collectionImage: {
     width: '100%',
@@ -50,8 +52,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   collectionName: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: '700',
     color: Colors.color_label_400,
   },
   collectionOwner: {
@@ -64,6 +66,8 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: Colors.color_base_300
   },
   collectionOwnerAdd: {
     fontSize: 14,
