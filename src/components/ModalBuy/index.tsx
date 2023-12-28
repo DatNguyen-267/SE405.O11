@@ -8,14 +8,16 @@ import styles from './styles'
 import { Colors } from 'src/constants/Colors'
 import { onShowToastSuccess } from 'src/utils/toast'
 import { StatusBar } from 'expo-status-bar'
+import { shorterAddress } from 'src/utils/common'
 
 interface IModalBuy {
-  item?: object
+  item?: any
   index?: number
   isVisible?: boolean
   setIsVisible?: any
 }
 const ModalBuy = ({ item, index, isVisible, setIsVisible }: IModalBuy) => {
+
   const dispatch = useDispatch()
   return (
     <Modal transparent={true} visible={isVisible}>
@@ -52,16 +54,16 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible }: IModalBuy) => {
                 >
                 </Image>
                 <Text numberOfLines={1} style={[styles.text, styles.modalBuyNftName]}>
-                  NFT Name
+                  {item && item.name ? item.name : "Undefined"}
                 </Text>
-                <Text style={[styles.text, styles.modalBuyNftAdd]}>0x000 ... 000</Text>
+                <Text style={[styles.text, styles.modalBuyNftAdd]}>{item && item.creatorAddress ? shorterAddress(item.collectionAddress, 10) : '0x000...000'}</Text>
               </View>
               <View style={styles.modalBuyInfo}>
                 <View style={[styles.modalBuyInfoItem]}>
                   <Text style={[styles.text, styles.modalBuyInfoItemTitle]}>Price</Text>
                   <View style={[styles.modalBuyInfoItemValue]}>
                     <Text numberOfLines={1} style={[styles.text, styles.number]}>
-                      0.02
+                      {item && item.price ? item.price : "Undefined"}
                     </Text>
                     <Text style={[styles.text, styles.unit]}>WUIT</Text>
                   </View>
@@ -70,7 +72,7 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible }: IModalBuy) => {
                   <Text style={[styles.text, styles.modalBuyInfoItemTitle]}>Fee</Text>
                   <View style={[styles.modalBuyInfoItemValue]}>
                     <Text numberOfLines={1} style={[styles.text, styles.number]}>
-                      0
+                      0.1
                     </Text>
                     <Text style={[styles.text, styles.unit]}>%</Text>
                   </View>
@@ -79,7 +81,7 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible }: IModalBuy) => {
                   <Text style={[styles.text, styles.modalBuyInfoItemTitle]}>Total</Text>
                   <View style={[styles.modalBuyInfoItemValue]}>
                     <Text numberOfLines={1} style={[styles.text, styles.number]}>
-                      0.02
+                      {item && item.price ?   ((Number(item.price) * 0.1) / 100 +Number(item.price)).toFixed(8) : "Undefined"}
                     </Text>
                     <Text style={[styles.text, styles.unit]}>WUIT</Text>
                   </View>

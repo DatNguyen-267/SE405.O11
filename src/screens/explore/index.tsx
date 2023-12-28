@@ -6,6 +6,7 @@ import useAppAddress from 'src/hooks/useAppAddress'
 import { useViewAsksByCollection, useViewMarketCollections } from 'src/hooks/useMarket'
 import styles from './styles'
 import { Button } from 'react-native-paper'
+import PageLoading from 'src/components/PageLoading'
 
 const Explore = ({ navigation }: { navigation: any }) => {
   const [search, setSearch] = useState('')
@@ -19,6 +20,7 @@ const Explore = ({ navigation }: { navigation: any }) => {
   const marketAddress = useAppAddress('MARKET')
 
   const listCollection = collections?.collectionDetails
+  const listAddress = collections?.collectionAddresses
 
   const {
     mutate: handleGetByCollectionAddress,
@@ -44,29 +46,7 @@ const Explore = ({ navigation }: { navigation: any }) => {
       size: 20,
     })
   }
-  const data = [
-    {
-      img: 'https://th.bing.com/th/id/OIG.ey_KYrwhZnirAkSgDhmg',
-      name: 'fox abc abc abc abc abc abc abc abc abc abc',
-      status: 'On Sale',
-    },
-    {
-      img: 'https://png.pngtree.com/background/20230411/original/pngtree-beautiful-moon-background-on-moon-night-picture-image_2392251.jpg',
-      name: 'moon',
-      status: 'On Sale',
-    },
-    {
-      img: 'https://statusneo.com/wp-content/uploads/2023/02/MicrosoftTeams-image551ad57e01403f080a9df51975ac40b6efba82553c323a742b42b1c71c1e45f1.jpg',
-      name: 'childreno',
-      status: 'Not For Sale',
-    },
-    {
-      img: 'https://deep-image.ai/blog/content/images/2022/09/underwater-magic-world-8tyxt9yz.jpeg',
-      name: 'water',
-      status: 'Not For Sale',
-    },
-  ]
-
+  
   return (
     <View style={styles.homeScreen}>
       <ScrollView
@@ -96,20 +76,23 @@ const Explore = ({ navigation }: { navigation: any }) => {
               source={require('../../assets/images/collection.png')}
             ></Image>
           </View>
-          <View>
+          <PageLoading isVisible={isLoadingGetCollection}></PageLoading>
+          {
+            !isLoadingGetCollection &&
+            <View>
             <ScrollView
               horizontal={false}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
             >
               <View style={styles.listContent}>
-                {data.map((item, index) => {
+                {listAddress && listCollection?.map((item, index) => {
                   if (search === '') {
-                    return <Collection key={index} navigation={navigation} item={item}></Collection>
+                    return <Collection key={index} navigation={navigation} item={item} address={listAddress[index]}></Collection>
                   } else {
-                    if (item.name.toLowerCase().includes(search.toLowerCase())) {
+                    if (listAddress[index].toLowerCase().includes(search.toLowerCase())) {
                       return (
-                        <Collection key={index} navigation={navigation} item={item}></Collection>
+                        <Collection key={index} navigation={navigation} item={item} address={listAddress[index]}></Collection>
                       )
                     }
                   }
@@ -120,6 +103,7 @@ const Explore = ({ navigation }: { navigation: any }) => {
               </View>
             </ScrollView>
           </View>
+          }
         </View>
       </ScrollView>
 

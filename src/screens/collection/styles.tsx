@@ -78,6 +78,8 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     borderWidth: 3,
     borderColor: Colors.color_base_200,
+    overflow: 'hidden',
+    backgroundColor: Colors.color_base_300,
   },
   headLineContent: {
     fontSize: 28,
