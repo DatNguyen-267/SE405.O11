@@ -44,7 +44,7 @@ function ExploreCustom() {
         name="Explore"
         component={Explore}
       ></Stack.Screen>
-      <Stack.Screen name="Collection" component={Collection}></Stack.Screen>
+      {/* <Stack.Screen name="Collection" component={Collection}></Stack.Screen> */}
     </Stack.Navigator>
   )
 }
