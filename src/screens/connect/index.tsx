@@ -3,6 +3,8 @@ import { W3mButton } from '@web3modal/wagmi-react-native'
 import React from 'react'
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Button } from 'react-native-paper'
+import { getMetadata } from 'src/hooks/useIPFS'
+import { useGetNameOfCollection, useGetTokenURI } from 'src/hooks/useNFT'
 import { useAccount, useChainId, useWalletClient } from 'wagmi'
 import styles from './styles'
 
@@ -11,28 +13,26 @@ const Connect = ({ navigation }: { navigation?: any }) => {
 
   const { data: walletClient } = useWalletClient()
 
+  const { mutate: getTokenURI } = useGetTokenURI()
   const chainId = useChainId()
 
-  const handleClick = async () => {
-    // const contract: any = await readContract({
-    //   address: `0x${"13724882900FaaC30151419E6D8Cd6a96069Aec4"}`,
-    //   abi: ABI_WRAP_TOKEN,
-    //   functionName: "balanceOf",
-    //   args: [address],
-    // });
-    // const balance = BigInt(contract).toString(10);
-    // console.log({
-    //   balance,
-    // });
-    // console.log(ethers.utils.formatEther(balance));
-    // const publicContract = await publicClient.readContract({
-    //   abi: ABI_WRAP_TOKEN,
-    //   address: WUIAddress,
-    //   functionName: 'balanceOf',
-    //   args: ['0x454574C8AD9706a8fC22dDA71Ce77Cb1CDd5fEB1'],
-    // })
-    // 0x454574C8AD9706a8fC22dDA71Ce77Cb1CDd5fEB1
-    // console.log({ publicContract })
+  const { mutate: handleGetNameOfCollection } = useGetNameOfCollection()
+  const handleGetMetadata = async () => {
+    getTokenURI({
+      cltAddress: '0x772b21c128f759F75A352568B1F7b4fF331d1162',
+      tokenId: 1,
+    }).then(async (res) => {
+      const metadata = await getMetadata(res).then((res) => res.json())
+      console.log({ metadata })
+    })
+  }
+
+  const handleGetNameCollection = async () => {
+    handleGetNameOfCollection({
+      cltAddress: '0x772b21c128f759F75A352568B1F7b4fF331d1162',
+    }).then((res) => {
+      console.log({ res })
+    })
   }
 
   return (
@@ -44,7 +44,8 @@ const Connect = ({ navigation }: { navigation?: any }) => {
       >
         <View style={styles.containerNoConnect}>
           <W3mButton />
-          <Button onPress={handleClick}>Click me</Button>
+          <Button onPress={handleGetMetadata}>Get metadata NFT</Button>
+          <Button onPress={handleGetNameCollection}>Get name collection</Button>
           <Image
             style={styles.connectImage}
             source={require('../../assets/images/wallet.png')}

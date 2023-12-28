@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { ABI_ERC721, ABI_PUBLIC_COLLECTION } from 'src/abis'
 import { ADDRESS_OF_CHAINS } from 'src/constants'
 import { Address, useWalletClient } from 'wagmi'
-import { readContract, writeContract } from 'wagmi/actions'
+import { multicall, readContract, writeContract } from 'wagmi/actions'
 import useCurrentChain from './useCurrentChain'
 import { usePublicClient } from './usePublicClient'
 
@@ -73,10 +73,44 @@ type GetTokenURIParams = {
   cltAddress: Address
   tokenId: number
 }
+type GetTokenURIsParams = {
+  listToken: GetTokenURIParams[]
+}
+export function useGetTokenURIs() {
+  const publicClient = usePublicClient()
+  const mutate = useCallback(
+    async ({ listToken }: GetTokenURIsParams) => {
+      try {
+        let contracts: any = []
+        listToken.forEach((element) => {
+          contracts.push({
+            abi: ABI_PUBLIC_COLLECTION,
+            address: element.cltAddress,
+            args: [element.tokenId],
+            functionName: 'tokenURI',
+          })
+        })
+
+        const data = await multicall({
+          contracts: contracts,
+        })
+
+        console.log({ data })
+        return data
+      } catch (error) {
+        throw error
+      }
+    },
+    [publicClient],
+  )
+
+  return { mutate }
+}
 
 export function useGetTokenURI() {
   const publicClient = usePublicClient()
-  return useCallback(
+
+  const mutate = useCallback(
     async ({ cltAddress, tokenId }: GetTokenURIParams) => {
       try {
         const tokenUri = await publicClient.readContract({
@@ -85,14 +119,17 @@ export function useGetTokenURI() {
           args: [tokenId],
           functionName: 'tokenURI',
         })
+        console.log({ tokenUri })
 
-        return tokenUri
+        return tokenUri as string
       } catch (error) {
         throw error
       }
     },
     [publicClient],
   )
+
+  return { mutate }
 }
 
 type GetOwnerParams = {
@@ -195,7 +232,8 @@ type GetNameOfCollectionParams = {
 
 export function useGetNameOfCollection() {
   const publicClient = usePublicClient()
-  return useCallback(
+
+  const mutate = useCallback(
     async ({ cltAddress }: GetNameOfCollectionParams) => {
       try {
         const addressOwner = await publicClient.readContract({
@@ -210,6 +248,8 @@ export function useGetNameOfCollection() {
     },
     [publicClient],
   )
+
+  return { mutate }
 }
 
 type GetTotalSupplyOfCollectionParams = {
