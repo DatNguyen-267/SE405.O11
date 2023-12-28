@@ -19,6 +19,7 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
   const [isFocused, setIsFocused] = useState(false)
   const [isConnected, setIsConnected] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
+  const [dataNFT, setDataNFT] = useState(undefined)
   // const item = route.params.item
   const params = useLocalSearchParams<{ address: string, item: any }>()
   const collectionAddress = params.address
@@ -62,15 +63,13 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
       size: 20,
     })
   }, [])
-  console.log(asks)
-
   const changeConnect = () => {
     setIsConnected(!isConnected)
   }
 
   return (
     <View style={styles.createScreen}>
-      <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible}></ModalBuy>
+      <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible} item={dataNFT}></ModalBuy>
       <ScrollView
         style={styles.createContent}
         showsVerticalScrollIndicator={false}
@@ -137,7 +136,7 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
 
                 return (
                   <View style={styles.nftItem}>
-                    <NFTCard item={item} onShowModal={setIsVisible} isBuy={true}></NFTCard>
+                    <NFTCard item={item} onShowModal={setIsVisible} isBuy={true} setDataNFT={setDataNFT}></NFTCard>
                   </View>
                 )
                 // if (item.status.toLowerCase() === 'on sale') {

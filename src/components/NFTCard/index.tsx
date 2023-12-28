@@ -12,8 +12,9 @@ interface ProfileCardProps {
   isDelist?: boolean
   isBuy?: boolean
   isSell?: boolean
+  setDataNFT?: any
 }
-const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell }: ProfileCardProps) => {
+const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell, setDataNFT }: ProfileCardProps) => {
 
   const getAvatarByAddress = (address: string) => {
     if (ethereumAddressRegex.test(address)) {
@@ -22,6 +23,13 @@ const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell }: ProfileC
       return `https://effigy.im/a/${"0x0000000000000000000000000000000000000000"}.svg`
     }
   }
+
+  const handleClick = () =>{
+    setDataNFT(item)
+    onShowModal(true)
+
+  }
+
   return (
     <TouchableOpacity>
       <View style={styles.NFTCard}>
@@ -95,14 +103,14 @@ const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell }: ProfileC
         </View>
         <View style={styles.cardAction}>
           {isBuy ? (
-            <TouchableOpacity onPress={() => onShowModal(true)} style={styles.cardBtn}>
+            <TouchableOpacity onPress={() => handleClick()} style={styles.cardBtn}>
               <Text style={[styles.text, styles.cardBtnText]}>Buy NFT</Text>
             </TouchableOpacity>
           ) : (
             <></>
           )}
           {isSell ? (
-            <TouchableOpacity onPress={() => onShowModal(true)} style={styles.cardBtn}>
+            <TouchableOpacity onPress={() => handleClick()} style={styles.cardBtn}>
               <Text style={[styles.text, styles.cardBtnText]}>Sell NFT</Text>
             </TouchableOpacity>
           ) : (
@@ -110,7 +118,7 @@ const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell }: ProfileC
           )}
           {isDelist ? (
             <TouchableOpacity
-              onPress={() => onShowModal(true)}
+              onPress={() => handleClick()}
               style={[styles.cardBtn, styles.cardBtnDelist]}
             >
               <Text style={[styles.text, styles.cardBtnText]}>Delist NFT</Text>
