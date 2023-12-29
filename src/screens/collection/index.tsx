@@ -24,35 +24,13 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
   const params = useLocalSearchParams<{ address: string, item: any }>()
   const collectionAddress = params.address
   const collectionDetail = params.item
-  const data = [
-    {
-      img: 'https://th.bing.com/th/id/OIG.ey_KYrwhZnirAkSgDhmg',
-      name: 'fox abc abc abc abc abc abc abc abc abc abc',
-      status: 'On Sale',
-    },
-    {
-      img: 'https://png.pngtree.com/background/20230411/original/pngtree-beautiful-moon-background-on-moon-night-picture-image_2392251.jpg',
-      name: 'moon',
-      status: 'On Sale',
-    },
-    {
-      img: 'https://statusneo.com/wp-content/uploads/2023/02/MicrosoftTeams-image551ad57e01403f080a9df51975ac40b6efba82553c323a742b42b1c71c1e45f1.jpg',
-      name: 'childreno',
-      status: 'Not For Sale',
-    },
-    {
-      img: 'https://deep-image.ai/blog/content/images/2022/09/underwater-magic-world-8tyxt9yz.jpeg',
-      name: 'water',
-      status: 'Not For Sale',
-    },
-  ]
+  
   const marketAddress = useAppAddress('MARKET')
   const {
     mutate: handleGetByCollectionAddress,
     data: asks,
     isLoading: isLoadingGetAsk,
   } = useViewAsksByCollection()
-
   useEffect(() => {
     const newAddress = collectionAddress.slice(2)
 

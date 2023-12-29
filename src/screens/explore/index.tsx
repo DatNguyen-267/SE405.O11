@@ -57,13 +57,13 @@ const Explore = ({ navigation }: { navigation: any }) => {
         <View style={styles.container}>
           <View style={styles.headLine}>
             <Text style={styles.headLineContent}>EXPLORE COLLECTIONS</Text>
-            {isLoadingGetCollection && (
+            {/* {isLoadingGetCollection && (
               <Text style={styles.headLineContent}>Loading get collections</Text>
             )}
             <Button style={styles.createBtn} onPress={handleTestFunction}>
               <Text>Get asks</Text>
               {isLoadingGetAsk && <Text style={styles.headLineContent}>Loading get ask</Text>}
-            </Button>
+            </Button> */}
           </View>
           <View style={styles.search}>
             <SearchInput search={search} setSearch={setSearch} />
@@ -87,15 +87,7 @@ const Explore = ({ navigation }: { navigation: any }) => {
             >
               <View style={styles.listContent}>
                 {listAddress && listCollection?.map((item, index) => {
-                  if (search === '') {
-                    return <Collection key={index} navigation={navigation} item={item} address={listAddress[index]}></Collection>
-                  } else {
-                    if (listAddress[index].toLowerCase().includes(search.toLowerCase())) {
-                      return (
-                        <Collection key={index} navigation={navigation} item={item} address={listAddress[index]}></Collection>
-                      )
-                    }
-                  }
+                   return <Collection key={index} navigation={navigation} item={item} address={listAddress[index]} search={search}></Collection>
                 })}
 
                 {/* <Collection navigation={navigation}></Collection>

@@ -1,17 +1,44 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './styles'
 import { getAvatarByAddress, shorterAddress } from 'src/utils'
 import { SvgUri } from 'react-native-svg'
+import { useGetNameOfCollection } from 'src/hooks/useNFT'
+import { Address } from 'viem'
 interface ProfileCardProps {
 item?: any
 index?: number
 navigation?: any
 address?: string
+search?: string
 }
-const Collection = ({ item, index, navigation, address }: ProfileCardProps) => {
+const Collection = ({ item, index, navigation, address, search }: ProfileCardProps) => {
+
+const [name, setName] = useState<string>('')
+const { 
+  mutate: handleGetNameOfCollection 
+} = useGetNameOfCollection()
+
+useEffect(() => {
+  if (item && address) {
+    handleGetNameCollection(`0x${address.slice(2)}`)
+  }
+}, [])
+
+const handleGetNameCollection = async (address: Address) => {
+  handleGetNameOfCollection({
+    cltAddress: address ,
+  }).then((res) => {
+    
+    if(res){
+      setName(res.toString())
+    }
+  })
+}
+
 return (
   <TouchableOpacity
+    style= {search === '' || search && name.toLowerCase().includes(search.toLowerCase())? {display: 'flex'}: {display: 'none'}}
     onPress={() =>
       navigation.navigate('Collection', {
         item: item,
@@ -46,9 +73,9 @@ return (
             ellipsizeMode="tail"
             style={[styles.text, styles.collectionName]}
           >
-            {address ? shorterAddress(address, 10) : '0x000...000'}
+            {name ? name : 'Collection Name'}
           </Text>
-          {/* <Text style={[styles.text, styles.collectionAddress]}>{address? shorterAddress(address, 7): '0x000...000'}</Text> */}
+          <Text style={[styles.text, styles.collectionAddress]}>{address? shorterAddress(address, 10): '0x000...000'}</Text>
           <View style={styles.collectionOwner}>
             <View style={styles.collectionOwnerAvatar}>
               {
