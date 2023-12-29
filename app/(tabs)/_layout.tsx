@@ -32,7 +32,7 @@ function SettingCustom() {
       ></Stack.Screen>
       <Stack.Screen name="Connect Wallet" component={Connect}></Stack.Screen>
       <Stack.Screen name="Chains" component={Chains}></Stack.Screen>
-      <Stack.Screen name="My Collection" component={Author}></Stack.Screen>
+      {/* <Stack.Screen name="My Collection" component={Author}></Stack.Screen> */}
     </Stack.Navigator>
   )
 }

@@ -25,7 +25,9 @@ const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell, setDataNFT
   }
 
   const handleClick = () =>{
-    setDataNFT(item)
+    if(setDataNFT !== undefined){
+      setDataNFT(item)
+    }
     onShowModal(true)
 
   }
