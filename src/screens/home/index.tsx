@@ -1,4 +1,4 @@
-import { default as React, useCallback, useEffect, useState } from 'react'
+import { default as React, useEffect, useState } from 'react'
 import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import ModalBuy from 'src/components/ModalBuy'
@@ -8,22 +8,13 @@ import SearchInput from 'src/components/Search'
 import { onHideLoading, onShowLoading } from 'src/utils/loading'
 import styles from './styles'
 import TypingText from './typingText'
-import { ViewMarketCollectionsResponse, useViewAsksByCollection, useViewMarketCollections } from 'src/hooks/useMarket'
-import useAppAddress from 'src/hooks/useAppAddress'
-import { AskInfo, NftItem } from 'src/types'
-import { DEFAULT_NFT_ITEM } from 'src/constants'
-import { useIsFocused } from '@react-navigation/native'
-import { useFocusEffect } from 'expo-router'
-import PageLoading from 'src/components/PageLoading'
 
 interface ProfileCardProps {
   navigation?: any
 }
 const Home = ({ navigation }: ProfileCardProps) => {
-  const isFocused = useIsFocused()
   const dispatch = useDispatch()
   const [isVisible, setIsVisible] = useState(false)
-  const [listNFTs, setListNFTs] = useState<AskInfo[]>([])
   const [search, setSearch] = useState('')
 
   const data = [
@@ -48,27 +39,8 @@ const Home = ({ navigation }: ProfileCardProps) => {
       status: 'Not For Sale',
     },
   ]
-  const [isLoading, setIsLoading] = useState(false)
 
-  const {
-    mutate: handleGetAllCollection,
-    data: collections,
-    isLoading: isLoadingGetCollection,
-  } = useViewMarketCollections()
-
-  const marketAddress = useAppAddress('MARKET')
-
-  const {
-    mutate: handleGetByCollectionAddress,
-    data: asks,
-    isLoading: isLoadingGetAsk,
-  } = useViewAsksByCollection()
-
-  useFocusEffect(
-    useCallback(() => {
-      handleLoadNFTs()
-    }, [])
-  )
+  useEffect(() => {}, [])
 
   const handleLoading = () => {
     onShowLoading(dispatch)
@@ -77,52 +49,6 @@ const Home = ({ navigation }: ProfileCardProps) => {
     }, 2000)
   }
 
-  const handleLoadNFTs = async () => {
-    try {
-      setIsLoading(true)
-      let listData: AskInfo[] = []
-      await handleGetAllCollection({
-        marketAddress: marketAddress,
-        cursor: 0,
-        size: 20,
-      }).then(async (res:any) => {
-        console.log("address: ",res.collectionAddresses)
-        await Promise.all(
-          res.collectionAddresses.map(async(collectionAddress: string)=>{
-            try{
-                console.log(collectionAddress)
-                const newAddress = collectionAddress.slice(2)
-                await handleGetByCollectionAddress({
-                  marketAddress: marketAddress,
-                  collectionAddress: `0x${newAddress}`,
-                  cursor: 0,
-                  size: 20,
-                }).then((item:any) => {
-                  if(item){
-                    item.forEach((element:AskInfo) => {
-                      listData.push(element)
-                    });
-                  }
-                })
-            }
-            catch(err){
-
-            }
-          })
-        )
-      })
-      setListNFTs(listData)
-      console.log("loadded")
-
-    }
-    catch (err) {
-      
-      console.log("err: ", err)
-    }
-    finally{
-      setIsLoading(false)
-    }
-  }
   return (
     <>
       <View style={styles.homeScreen}>
@@ -192,38 +118,33 @@ const Home = ({ navigation }: ProfileCardProps) => {
               <View style={styles.search}>
                 <SearchInput search={search} setSearch={setSearch} />
               </View>
-              <PageLoading isVisible={isLoading}></PageLoading>
-              {
-                !isLoading &&
-                <FlatList
-                  columnWrapperStyle={{
-                    justifyContent: 'space-between',
-                  }}
-                  scrollEnabled={false}
-                  style={styles.listNft}
-                  data={listNFTs}
-                  numColumns={2}
-                  renderItem={({ item }) => {
-                    if (search === '') {
+              <FlatList
+                columnWrapperStyle={{
+                  justifyContent: 'space-between',
+                }}
+                scrollEnabled={false}
+                style={styles.listNft}
+                data={data}
+                numColumns={2}
+                renderItem={({ item }) => {
+                  if (search === '') {
+                    return (
+                      <View style={styles.nftItem}>
+                        <NFTCard item={item} onShowModal={setIsVisible} isBuy={true}></NFTCard>
+                      </View>
+                    )
+                  } else {
+                    if (item.name.toLowerCase().includes(search.toLowerCase())) {
                       return (
                         <View style={styles.nftItem}>
                           <NFTCard item={item} onShowModal={setIsVisible} isBuy={true}></NFTCard>
                         </View>
                       )
                     }
-                    // else {
-                    //   if (item.name.toLowerCase().includes(search.toLowerCase())) {
-                    //     return (
-                    //       <View style={styles.nftItem}>
-                    //         <NFTCard item={item} onShowModal={setIsVisible} isBuy={true}></NFTCard>
-                    //       </View>
-                    //     )
-                    //   }
-                    // }
-                    return null
-                  }}
-                />
-              }
+                  }
+                  return null
+                }}
+              />
             </View>
           </View>
         </ScrollView>
