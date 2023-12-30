@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
 import Collection from 'src/components/Collection'
 import SearchInput from 'src/components/Search'
@@ -7,6 +7,7 @@ import { useViewAsksByCollection, useViewMarketCollections } from 'src/hooks/use
 import styles from './styles'
 import { Button } from 'react-native-paper'
 import PageLoading from 'src/components/PageLoading'
+import { useFocusEffect } from 'expo-router'
 
 const Explore = ({ navigation }: { navigation: any }) => {
   const [search, setSearch] = useState('')
@@ -27,16 +28,19 @@ const Explore = ({ navigation }: { navigation: any }) => {
     data: asks,
     isLoading: isLoadingGetAsk,
   } = useViewAsksByCollection()
-  console.log({ collections })
 
-  console.log({ asks })
-  useEffect(() => {
-    handleGetAllCollection({
-      marketAddress: marketAddress,
-      cursor: 0,
-      size: 20,
-    })
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      console.log({ collections })
+      console.log({ asks })
+      
+      handleGetAllCollection({
+        marketAddress: marketAddress,
+        cursor: 0,
+        size: 20,
+      })
+    }, [])
+  )
 
   const handleTestFunction = () => {
     handleGetByCollectionAddress({
@@ -46,7 +50,7 @@ const Explore = ({ navigation }: { navigation: any }) => {
       size: 20,
     })
   }
-  
+
   return (
     <View style={styles.homeScreen}>
       <ScrollView
@@ -80,21 +84,21 @@ const Explore = ({ navigation }: { navigation: any }) => {
           {
             !isLoadingGetCollection &&
             <View>
-            <ScrollView
-              horizontal={false}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-            >
-              <View style={styles.listContent}>
-                {listAddress && listCollection?.map((item, index) => {
-                   return <Collection key={index} navigation={navigation} item={item} address={listAddress[index]} search={search}></Collection>
-                })}
+              <ScrollView
+                horizontal={false}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+              >
+                <View style={styles.listContent}>
+                  {listAddress && listCollection?.map((item, index) => {
+                    return <Collection key={index} navigation={navigation} item={item} address={listAddress[index]} search={search}></Collection>
+                  })}
 
-                {/* <Collection navigation={navigation}></Collection>
+                  {/* <Collection navigation={navigation}></Collection>
                               <Collection navigation={navigation}></Collection> */}
-              </View>
-            </ScrollView>
-          </View>
+                </View>
+              </ScrollView>
+            </View>
           }
         </View>
       </ScrollView>
