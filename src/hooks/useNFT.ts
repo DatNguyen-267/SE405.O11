@@ -386,6 +386,7 @@ export function useGetNftsOfAddress() {
 
         console.log({ res: JSON.stringify(res, undefined, 4) })
         console.log({ res: res })
+        setData(res)
       } catch (error) {
         setData([])
         throw error

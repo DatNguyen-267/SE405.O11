@@ -37,7 +37,7 @@ const Setting = ({ navigation }: { navigation: any }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.catergory}
-            onPress={() => navigation.navigate('My Collection')}
+            onPress={() => navigation.navigate('MyCollection')}
           >
             <View style={styles.catergoryHead}>
               <Entypo name="wallet" size={24} color="black" />

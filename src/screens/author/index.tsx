@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { FlatList, Image, ImageBackground, ScrollView, Text, View } from 'react-native'
 
 import { useState } from 'react'
@@ -11,14 +11,27 @@ import Tabs from 'src/components/Tabs'
 import styles from './styles'
 import ModalDelist from 'src/components/ModalDelist'
 import { DEFAULT_ADDRESS } from 'src/constants'
+import { useGetNftsOfAddress } from 'src/hooks/useNFT'
+import { useFocusEffect } from 'expo-router'
+import { useAccount } from 'wagmi'
+import { shorterAddress } from 'src/utils'
 
-const Author = ({}) => {
+const Author = ({navigation}:{navigation?:any}) => {
+  const { address, connector, isConnected } = useAccount()
   const [isDeposit, setIsDeposit] = useState(false)
   const [isImport, setIsImport] = useState(false)
   const [isDelist, setIsDelist] = useState(false)
   const [isSell, setIsSell] = useState(false)
-  const [isConnected, setIsConnected] = useState(true)
+  // const [isConnected, setIsConnected] = useState(true)
   const [tab, setTab] = useState('All')
+  const { data: nfts, mutate: getAllNftOfAddress } = useGetNftsOfAddress()
+
+  const handleGetAllNftOfAddress = () => {
+   getAllNftOfAddress({
+      ownerAddress: '0x454574C8AD9706a8fC22dDA71Ce77Cb1CDd5fEB1',
+    })
+  }
+ 
 
   const data = [
     {
@@ -47,17 +60,23 @@ const Author = ({}) => {
       title: 'All',
     },
     {
-      title: 'On Sale',
+      title: 'Sale',
     },
     {
-      title: 'Not For Sale',
+      title: 'NotForSale',
     },
   ]
 
+  
   const changeConnect = () => {
-    setIsConnected(!isConnected)
+    // setIsConnected(!isConnected)
   }
-
+  useEffect(()=>{
+    if(isConnected){
+      handleGetAllNftOfAddress()
+    }
+  },[])
+  
   return (
     <View style={styles.createScreen}>
       <ModalDeposit isVisible={isDeposit} setIsVisible={setIsDeposit}></ModalDeposit>
@@ -112,7 +131,7 @@ const Author = ({}) => {
               </ImageBackground>
             </View>
             <View style={[styles.walletInfo]}>
-              <Text style={[styles.text, styles.walletAddress]}>{DEFAULT_ADDRESS}</Text>
+              <Text style={[styles.text, styles.walletAddress]}>{address && shorterAddress(address.toString())}</Text>
               {/* <View style={[styles.walletStatusContainer]}>
                                     <Text style={[styles.walletStatusTitle, styles.label]}>Status</Text>
                                     <Text style={[styles.walletStatusValue]}>Connected</Text>
@@ -155,24 +174,19 @@ const Author = ({}) => {
                 }}
                 scrollEnabled={false}
                 style={styles.listNft}
-                data={data}
+                data={nfts}
                 numColumns={2}
                 renderItem={({ item }) => {
                   if (tab.toLowerCase() === tabs[0].title.toLowerCase()) {
-                    if (item.status.toLowerCase() === tabs[1].title.toLowerCase()) {
-                      return (
-                        <View style={styles.nftItem}>
-                          <NFTCard item={item} isDelist={true} onShowModal={setIsDelist}></NFTCard>
-                        </View>
-                      )
-                    }
-                    if (item.status.toLowerCase() === tabs[2].title.toLowerCase()) {
-                      return (
-                        <View style={styles.nftItem}>
-                          <NFTCard item={item} isSell={true} onShowModal={setIsSell}></NFTCard>
-                        </View>
-                      )
-                    }
+                    return (
+                      <View style={styles.nftItem}>
+                        <NFTCard
+                          item={item}
+                          isDelist={item.status === 'Sale'}
+                          isSell={item.status !== 'Sale'}
+                        ></NFTCard>
+                      </View>
+                    )
                   } else {
                     if (
                       item.status.toLowerCase() === tab.toLowerCase() &&
