@@ -20,8 +20,7 @@ const Explore = ({ navigation }: { navigation: any }) => {
 
   const marketAddress = useAppAddress('MARKET')
 
-  const listCollection = collections?.collectionDetails
-  const listAddress = collections?.collectionAddresses
+  const listCollection = collections
 
   const {
     mutate: handleGetByCollectionAddress,
