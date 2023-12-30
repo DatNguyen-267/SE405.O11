@@ -10,6 +10,7 @@ import NFTCard from 'src/components/NFTCard'
 import Tabs from 'src/components/Tabs'
 import styles from './styles'
 import ModalDelist from 'src/components/ModalDelist'
+import { DEFAULT_ADDRESS } from 'src/constants'
 
 const Author = ({}) => {
   const [isDeposit, setIsDeposit] = useState(false)
@@ -111,7 +112,7 @@ const Author = ({}) => {
               </ImageBackground>
             </View>
             <View style={[styles.walletInfo]}>
-              <Text style={[styles.text, styles.walletAddress]}>0x000...000</Text>
+              <Text style={[styles.text, styles.walletAddress]}>{DEFAULT_ADDRESS}</Text>
               {/* <View style={[styles.walletStatusContainer]}>
                                     <Text style={[styles.walletStatusTitle, styles.label]}>Status</Text>
                                     <Text style={[styles.walletStatusValue]}>Connected</Text>

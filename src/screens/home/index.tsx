@@ -8,6 +8,7 @@ import SearchInput from 'src/components/Search'
 import { onHideLoading, onShowLoading } from 'src/utils/loading'
 import styles from './styles'
 import TypingText from './typingText'
+import { useGetNftsOfAddress } from 'src/hooks/useNFT'
 
 interface ProfileCardProps {
   navigation?: any
@@ -16,6 +17,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
   const dispatch = useDispatch()
   const [isVisible, setIsVisible] = useState(false)
   const [search, setSearch] = useState('')
+
   const data = [
     {
       img: 'https://th.bing.com/th/id/OIG.ey_KYrwhZnirAkSgDhmg',

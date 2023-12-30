@@ -19,17 +19,9 @@ const Explore = ({ navigation }: { navigation: any }) => {
 
   const marketAddress = useAppAddress('MARKET')
 
-  const listCollection = collections?.collectionDetails
-  const listAddress = collections?.collectionAddresses
-
-  const {
-    mutate: handleGetByCollectionAddress,
-    data: asks,
-    isLoading: isLoadingGetAsk,
-  } = useViewAsksByCollection()
+  const listCollection = collections
   console.log({ collections })
 
-  console.log({ asks })
   useEffect(() => {
     handleGetAllCollection({
       marketAddress: marketAddress,
@@ -38,15 +30,6 @@ const Explore = ({ navigation }: { navigation: any }) => {
     })
   }, [])
 
-  const handleTestFunction = () => {
-    handleGetByCollectionAddress({
-      marketAddress: marketAddress,
-      collectionAddress: '0x1Def42fc65c3251087Bb61A410003981bE75e1d8',
-      cursor: 0,
-      size: 20,
-    })
-  }
-  
   return (
     <View style={styles.homeScreen}>
       <ScrollView
@@ -57,13 +40,13 @@ const Explore = ({ navigation }: { navigation: any }) => {
         <View style={styles.container}>
           <View style={styles.headLine}>
             <Text style={styles.headLineContent}>EXPLORE COLLECTIONS</Text>
-            {isLoadingGetCollection && (
+            {/* {isLoadingGetCollection && (
               <Text style={styles.headLineContent}>Loading get collections</Text>
             )}
             <Button style={styles.createBtn} onPress={handleTestFunction}>
               <Text>Get asks</Text>
               {isLoadingGetAsk && <Text style={styles.headLineContent}>Loading get ask</Text>}
-            </Button>
+            </Button> */}
           </View>
           <View style={styles.search}>
             <SearchInput search={search} setSearch={setSearch} />
@@ -77,33 +60,33 @@ const Explore = ({ navigation }: { navigation: any }) => {
             ></Image>
           </View>
           <PageLoading isVisible={isLoadingGetCollection}></PageLoading>
-          {
-            !isLoadingGetCollection &&
+          {!isLoadingGetCollection && (
             <View>
-            <ScrollView
-              horizontal={false}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-            >
-              <View style={styles.listContent}>
-                {listAddress && listCollection?.map((item, index) => {
-                  if (search === '') {
-                    return <Collection key={index} navigation={navigation} item={item} address={listAddress[index]}></Collection>
-                  } else {
-                    if (listAddress[index].toLowerCase().includes(search.toLowerCase())) {
+              <ScrollView
+                horizontal={false}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+              >
+                <View style={styles.listContent}>
+                  {listCollection &&
+                    listCollection.map((item, index) => {
                       return (
-                        <Collection key={index} navigation={navigation} item={item} address={listAddress[index]}></Collection>
+                        <Collection
+                          key={index}
+                          navigation={navigation}
+                          item={item}
+                          address={item.collectionAddress}
+                          search={search}
+                        ></Collection>
                       )
-                    }
-                  }
-                })}
+                    })}
 
-                {/* <Collection navigation={navigation}></Collection>
+                  {/* <Collection navigation={navigation}></Collection>
                               <Collection navigation={navigation}></Collection> */}
-              </View>
-            </ScrollView>
-          </View>
-          }
+                </View>
+              </ScrollView>
+            </View>
+          )}
         </View>
       </ScrollView>
 

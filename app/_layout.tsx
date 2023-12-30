@@ -68,6 +68,7 @@ function RootLayoutNav() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
           <Stack.Screen name="Collection" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="MyCollection" options={{ presentation: 'modal', title: "My Collection" }} />
         </Stack>
       </ThemeProvider>
       <Toast></Toast>

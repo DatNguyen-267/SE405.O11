@@ -40,6 +40,15 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     borderTopLeftRadius: 8,
   },
+  cardImageDefault: {
+    height: '100%',
+    width: '100%',
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
+  },
   cardHeadLine: {
     position: 'absolute',
     width: '100%',

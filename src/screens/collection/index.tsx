@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { FlatList, Image, ImageBackground, ScrollView, Text, View } from 'react-native'
 
 import { useState } from 'react'
@@ -8,11 +8,12 @@ import styles from './styles'
 import { getAvatarByAddress } from 'src/utils/avatar'
 import { shorterAddress } from 'src/utils/common'
 import { useLocalSearchParams } from 'expo-router'
-import { useViewAsksByCollection } from 'src/hooks/useMarket'
+import { mappingAsksToNftList, useViewAsksByCollection } from 'src/hooks/useMarket'
 import useAppAddress from 'src/hooks/useAppAddress'
 import { SvgUri } from 'react-native-svg'
 import PageLoading from 'src/components/PageLoading'
 import { DEFAULT_ADDRESS } from 'src/constants'
+import { useGetNFTsOfCollection } from 'src/hooks/useNFT'
 
 const Collection = ({ navigation, route }: { navigation?: any; route?: any }) => {
   const [profile, setProfile] = useState(null)
@@ -24,34 +25,24 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
   const params = useLocalSearchParams<{ address: string; item: any }>()
   const collectionAddress = params.address
   const collectionDetail = params.item
-  const data = [
-    {
-      img: 'https://th.bing.com/th/id/OIG.ey_KYrwhZnirAkSgDhmg',
-      name: 'fox abc abc abc abc abc abc abc abc abc abc',
-      status: 'On Sale',
-    },
-    {
-      img: 'https://png.pngtree.com/background/20230411/original/pngtree-beautiful-moon-background-on-moon-night-picture-image_2392251.jpg',
-      name: 'moon',
-      status: 'On Sale',
-    },
-    {
-      img: 'https://statusneo.com/wp-content/uploads/2023/02/MicrosoftTeams-image551ad57e01403f080a9df51975ac40b6efba82553c323a742b42b1c71c1e45f1.jpg',
-      name: 'childreno',
-      status: 'Not For Sale',
-    },
-    {
-      img: 'https://deep-image.ai/blog/content/images/2022/09/underwater-magic-world-8tyxt9yz.jpeg',
-      name: 'water',
-      status: 'Not For Sale',
-    },
-  ]
+
   const marketAddress = useAppAddress('MARKET')
-  const {
-    mutate: handleGetByCollectionAddress,
-    data: asks,
-    isLoading: isLoadingGetAsk,
-  } = useViewAsksByCollection()
+  const { mutate: handleGetByCollectionAddress, data: asks } = useViewAsksByCollection()
+
+  const { mutate: handleGetAllNftOfCollection, data: nfts } = useGetNFTsOfCollection()
+
+  const mappingList = useMemo(() => {
+    if (nfts && asks) {
+      const res = mappingAsksToNftList(asks, nfts)
+      return res
+    } else return nfts
+  }, [nfts, asks])
+
+  console.log({ mappingList: JSON.stringify(mappingList, undefined, 4) })
+  console.log({ nfts: JSON.stringify(nfts, undefined, 4) })
+
+  const isLoadingGetAsk = !!!mappingList
+  console.log({ isLoadingGetAsk })
 
   useEffect(() => {
     const newAddress = collectionAddress.slice(2)
@@ -62,7 +53,12 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
       cursor: 0,
       size: 20,
     })
+
+    handleGetAllNftOfCollection({
+      cltAddress: `0x${newAddress}`,
+    })
   }, [])
+
   const changeConnect = () => {
     setIsConnected(!isConnected)
   }
@@ -131,7 +127,7 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
                 }}
                 scrollEnabled={false}
                 style={styles.listNft}
-                data={asks}
+                data={mappingList}
                 numColumns={2}
                 renderItem={({ item }) => {
                   return (
@@ -139,7 +135,7 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
                       <NFTCard
                         item={item}
                         onShowModal={setIsVisible}
-                        isBuy={true}
+                        isBuy={item.status === 'Sale'}
                         setDataNFT={setDataNFT}
                       ></NFTCard>
                     </View>
