@@ -5,7 +5,7 @@ import { useState } from 'react'
 import ModalBuy from 'src/components/ModalBuy'
 import NFTCard from 'src/components/NFTCard'
 import styles from './styles'
-import { getAvatarByAddress} from 'src/utils/avatar'
+import { getAvatarByAddress } from 'src/utils/avatar'
 import { shorterAddress } from 'src/utils/common'
 import { useLocalSearchParams } from 'expo-router'
 import { useViewAsksByCollection } from 'src/hooks/useMarket'
@@ -21,7 +21,7 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
   const [isVisible, setIsVisible] = useState(false)
   const [dataNFT, setDataNFT] = useState(undefined)
   // const item = route.params.item
-  const params = useLocalSearchParams<{ address: string, item: any }>()
+  const params = useLocalSearchParams<{ address: string; item: any }>()
   const collectionAddress = params.address
   const collectionDetail = params.item
   const data = [
@@ -83,24 +83,20 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
               resizeMode="cover"
               style={styles.headLineBg}
             >
-              <View
-                style={styles.headLineAvatar}
-              >
-                {
-                  collectionAddress ?
-                    <SvgUri
-                      width={'100%'}
-                      height={'100%'}
-                      uri={getAvatarByAddress(collectionAddress)}
-                    ></SvgUri>
-                    :
-                    <Image
-                      resizeMode='cover'
-                      style={{ width: '100%', height: '100%' }}
-                      source={require('./../../assets/images/avatarDefault.png')}
-                    >
-                    </Image>
-                }
+              <View style={styles.headLineAvatar}>
+                {collectionAddress ? (
+                  <SvgUri
+                    width={'100%'}
+                    height={'100%'}
+                    uri={getAvatarByAddress(collectionAddress)}
+                  ></SvgUri>
+                ) : (
+                  <Image
+                    resizeMode="cover"
+                    style={{ width: '100%', height: '100%' }}
+                    source={require('./../../assets/images/avatarDefault.png')}
+                  ></Image>
+                )}
               </View>
               {/* <Image
                 style={styles.headLineAvatar}
@@ -113,48 +109,57 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
             </ImageBackground>
           </View>
           <View style={[styles.walletInfo]}>
-            <Text style={[styles.text, styles.walletAddress]}>{collectionAddress ? shorterAddress(collectionAddress.toString(), 10) : '0x000...000'}</Text>
+            <Text style={[styles.text, styles.walletAddress]}>
+              {collectionAddress ? shorterAddress(collectionAddress.toString(), 10) : '0x000...000'}
+            </Text>
             <View style={[styles.walletOwnerContainer]}>
               <Text style={[styles.walletOwnerTitle, styles.label]}>Owner Of:</Text>
-              <Text style={[styles.text, styles.walletOwnerAddress]}>{collectionDetail ? shorterAddress(collectionDetail.creatorAddress, 10) : '0x000...000'}</Text>
+              <Text style={[styles.text, styles.walletOwnerAddress]}>
+                {collectionDetail
+                  ? shorterAddress(collectionDetail.creatorAddress, 10)
+                  : '0x000...000'}
+              </Text>
             </View>
           </View>
           <View style={styles.nftContent}>
             <Text style={[styles.text, styles.title]}>All NFT</Text>
             <PageLoading isVisible={isLoadingGetAsk}></PageLoading>
-            {
-              !isLoadingGetAsk &&
+            {!isLoadingGetAsk && (
               <FlatList
-              columnWrapperStyle={{
-                justifyContent: 'space-between',
-              }}
-              scrollEnabled={false}
-              style={styles.listNft}
-              data={asks}
-              numColumns={2}
-              renderItem={({ item }) => {
-
-                return (
-                  <View style={styles.nftItem}>
-                    <NFTCard item={item} onShowModal={setIsVisible} isBuy={true} setDataNFT={setDataNFT}></NFTCard>
-                  </View>
-                )
-                // if (item.status.toLowerCase() === 'on sale') {
-                //   return (
-                //     <View style={styles.nftItem}>
-                //       <NFTCard item={item} onShowModal={setIsVisible} isBuy={true}></NFTCard>
-                //     </View>
-                //   )
-                // } else {
-                //   return (
-                //     <View style={styles.nftItem}>
-                //       <NFTCard item={item}></NFTCard>
-                //     </View>
-                //   )
-                // }
-              }}
-            />
-            }
+                columnWrapperStyle={{
+                  justifyContent: 'space-between',
+                }}
+                scrollEnabled={false}
+                style={styles.listNft}
+                data={asks}
+                numColumns={2}
+                renderItem={({ item }) => {
+                  return (
+                    <View style={styles.nftItem}>
+                      <NFTCard
+                        item={item}
+                        onShowModal={setIsVisible}
+                        isBuy={true}
+                        setDataNFT={setDataNFT}
+                      ></NFTCard>
+                    </View>
+                  )
+                  // if (item.status.toLowerCase() === 'on sale') {
+                  //   return (
+                  //     <View style={styles.nftItem}>
+                  //       <NFTCard item={item} onShowModal={setIsVisible} isBuy={true}></NFTCard>
+                  //     </View>
+                  //   )
+                  // } else {
+                  //   return (
+                  //     <View style={styles.nftItem}>
+                  //       <NFTCard item={item}></NFTCard>
+                  //     </View>
+                  //   )
+                  // }
+                }}
+              />
+            )}
           </View>
         </View>
       </ScrollView>

@@ -7,7 +7,7 @@ import { writeContract } from 'wagmi/actions'
 import { useApproveErc20 } from './useErc20'
 import { useApproveSpenderToAccessNft } from './useNFT'
 import { usePublicClient } from './usePublicClient'
-import { AskInfo } from 'src/types'
+import { AskInfo, NftItem } from 'src/types'
 
 export type CollectionDetail = {
   creatorAddress: string
@@ -168,6 +168,33 @@ type ViewAsksByCollectionParams = {
   collectionAddress: Address
   cursor: number
   size: number
+}
+
+export const mappingAsksToNftList = (asksResponse: AskInfo[], nfts: NftItem[]) => {
+  let flattenAsks: {
+    [key: string]: AskInfo
+  } = {}
+  asksResponse.forEach((ask, index) => {
+    flattenAsks = {
+      ...flattenAsks,
+      [`${ask.collectionAddress}${ask.tokenId}`]: ask,
+    }
+  })
+
+  const resNftList = nfts.map((nft) => {
+    const ask = flattenAsks[`${nft.collectionAddress}${nft.tokenId}`]
+    if (ask) {
+      return {
+        ...nft,
+        price: ask.price,
+        seller: ask.seller,
+      }
+    } else {
+      return nft
+    }
+  })
+
+  return resNftList
 }
 
 export function useViewAsksByCollection() {

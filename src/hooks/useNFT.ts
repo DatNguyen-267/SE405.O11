@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { ABI_ERC721, ABI_PUBLIC_COLLECTION } from 'src/abis'
 import { ADDRESS_OF_CHAINS } from 'src/constants'
 import { Address, useWalletClient } from 'wagmi'
@@ -163,16 +163,18 @@ type GetNFTOfCollectionParams = {
 export type GetNFTsOfCollectionResponse = {
   tokenId: string
   owner: Address
+  collectionAddress: Address
 }[]
 
-// !!! warning performance
 export function useGetNFTsOfCollection() {
   const publicClient = usePublicClient()
-  return useCallback(
+
+  const [data, setData] = useState<GetNFTsOfCollectionResponse>([])
+
+  const mutate = useCallback(
     async ({ cltAddress }: GetNFTOfCollectionParams) => {
       try {
         let listNFT: GetNFTsOfCollectionResponse = []
-
         let tokenId = 0
 
         while (true) {
@@ -184,6 +186,7 @@ export function useGetNFTsOfCollection() {
             })
 
             listNFT.push({
+              collectionAddress: cltAddress,
               owner: ownerAddress as Address,
               tokenId: tokenId.toString(),
             })
@@ -193,13 +196,17 @@ export function useGetNFTsOfCollection() {
             break
           }
         }
+        setData(listNFT)
         return listNFT
       } catch (error) {
+        setData([])
         throw error
       }
     },
     [publicClient],
   )
+
+  return { mutate, data }
 }
 
 type GetOwnerOfCollectionParams = {
