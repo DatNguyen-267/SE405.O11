@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTopRightRadius: 8,
     borderTopLeftRadius: 8,
+    overflow: 'hidden',
   },
   cardImageDefault: {
     height: '100%',
@@ -153,11 +154,12 @@ const styles = StyleSheet.create({
     marginTop: 7,
     // marginBottom: 5,
     paddingHorizontal: 5,
+    height: 28,
   },
 
   cardBtn: {
     width: '100%',
-    height: 28,
+    height: '100%',
     backgroundColor: Colors.color_base_300,
     justifyContent: 'center',
     alignItems: 'center',

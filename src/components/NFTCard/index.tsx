@@ -87,16 +87,18 @@ const NFTCard = ({
                 ></SvgUri>
               </View>
           } */}
-          <Image
-            resizeMode="cover"
-            style={styles.cardImage}
-            source={{
-              uri:
-                metaData && metaData.image
-                  ? getUrlImage(metaData.image)
-                  : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
-            }}
-          ></Image>
+          <View style={styles.cardImage}>
+            <Image
+              resizeMode="cover"
+              style={{width: '100%', height: '100%'}}
+              source={{
+                uri:
+                  metaData && metaData.image
+                    ? getUrlImage(metaData.image)
+                    : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
+              }}
+            ></Image>
+          </View>
           <View style={styles.cardHeadLine}>
             <Text style={[styles.text, styles.cardAddress]}>
               {item.collectionAddress ? shorterAddress(item.collectionAddress) : '0x000...000'}

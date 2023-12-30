@@ -8,6 +8,7 @@ import SearchInput from 'src/components/Search'
 import { onHideLoading, onShowLoading } from 'src/utils/loading'
 import styles from './styles'
 import TypingText from './typingText'
+import { useGetNftsOfAddress } from 'src/hooks/useNFT'
 
 interface ProfileCardProps {
   navigation?: any
