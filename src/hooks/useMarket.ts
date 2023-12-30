@@ -7,7 +7,7 @@ import { writeContract } from 'wagmi/actions'
 import { useApproveErc20 } from './useErc20'
 import { useApproveSpenderToAccessNft } from './useNFT'
 import { usePublicClient } from './usePublicClient'
-import { AskInfo } from 'src/types'
+import { AskInfo, CollectionItem, NftItem } from 'src/types'
 
 export type CollectionDetail = {
   creatorAddress: string
@@ -37,14 +37,14 @@ export function useViewMarketCollections() {
   const publicClient = usePublicClient()
   const [isLoading, setIsLoading] = useState(false)
 
-  const [data, setData] = useState<ViewMarketCollectionsResponse>()
+  const [data, setData] = useState<CollectionItem[]>()
 
   const mutate = useCallback(
     async ({
       marketAddress,
       cursor = 0,
       size = 10,
-    }: ViewMarketCollectionParams): Promise<ViewMarketCollectionsResponse> => {
+    }: ViewMarketCollectionParams): Promise<CollectionItem[]> => {
       try {
         setIsLoading(() => true)
         const collectionsResponse: any = await publicClient.readContract({
@@ -54,26 +54,22 @@ export function useViewMarketCollections() {
           args: [cursor, size],
         })
 
-        const collectionDetails = collectionsResponse[1].map((collectionDetail: any) => {
-          return {
-            status: collectionDetail.status,
-            creatorAddress: collectionDetail.creatorAddress,
-            whitelistChecker: collectionDetail.whitelistChecker,
-            tradingFee: Number(BigInt(collectionDetail.tradingFee).toString(10)) / 100,
-            creatorFee: Number(BigInt(collectionDetail.creatorFee).toString(10)) / 100,
-          }
-        })
+        const collectionDetails = collectionsResponse[1].map(
+          (collectionDetail: any, index: number) => {
+            return {
+              status: collectionDetail.status,
+              creatorAddress: collectionDetail.creatorAddress,
+              whitelistChecker: collectionDetail.whitelistChecker,
+              tradingFee: Number(BigInt(collectionDetail.tradingFee).toString(10)) / 100,
+              creatorFee: Number(BigInt(collectionDetail.creatorFee).toString(10)) / 100,
+              collectionAddress: collectionsResponse[0][index],
+            }
+          },
+        )
 
-        const collectionAddresses = collectionsResponse[0]
-        setData({
-          collectionDetails,
-          collectionAddresses,
-        })
+        setData(collectionDetails)
         setIsLoading(false)
-        return {
-          collectionDetails,
-          collectionAddresses,
-        }
+        return collectionDetails
       } catch (error) {
         setIsLoading(false)
         setData(undefined)
@@ -102,26 +98,27 @@ export type AsksResponse = [TokenIds, AskInfoRaw, BigInt]
  * @param size: size of the response
  */
 
-type ViewAsksByCollectionAndSellerAddressParams = {
-  marketAddress: Address
-  collectionAddress: Address
-  sellerAddress: Address
-  cursor?: number
-  size?: number
-}
-
 export function useViewAsksByCollectionAndSellerAddress() {
   const publicClient = usePublicClient()
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState<AskInfo[]>()
 
-  return useCallback(
+  const mutate = useCallback(
     async ({
       marketAddress,
       collectionAddress,
       sellerAddress,
       cursor = 0,
       size = 10,
-    }: ViewAsksByCollectionAndSellerAddressParams) => {
+    }: {
+      marketAddress: Address
+      collectionAddress: Address
+      sellerAddress: Address
+      cursor?: number
+      size?: number
+    }): Promise<AskInfo[]> => {
       try {
+        setIsLoading(true)
         const asksResponse = (await publicClient.readContract({
           abi: MARKETPLACE_ABI,
           address: marketAddress,
@@ -146,13 +143,19 @@ export function useViewAsksByCollectionAndSellerAddress() {
           }
         })
 
+        setData(asksInfo)
+        setIsLoading(false)
         return asksInfo
       } catch (error) {
+        setIsLoading(false)
+        setData(undefined)
         throw error
       }
     },
     [publicClient],
   )
+
+  return { mutate, data, isLoading }
 }
 
 /**
@@ -168,6 +171,27 @@ type ViewAsksByCollectionParams = {
   collectionAddress: Address
   cursor: number
   size: number
+}
+
+export const mappingAsksToNftList = (asksResponse: AskInfo[], nfts: NftItem[]) => {
+  let flattenAsks: NftItem[] = []
+  asksResponse.forEach((ask, index) => {
+    flattenAsks.push({
+      collectionAddress: ask.collectionAddress,
+      tokenId: Number(ask.tokenId),
+      price: ask.price,
+      seller: ask.seller,
+      status: 'Sale',
+      title: '',
+      description: '',
+      tokenUri: '',
+      owner: ask.seller,
+      imageUri: '',
+      imageGatewayUrl: '',
+    })
+  })
+
+  return [...flattenAsks, ...nfts]
 }
 
 export function useViewAsksByCollection() {

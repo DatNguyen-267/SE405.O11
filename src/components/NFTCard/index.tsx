@@ -17,7 +17,15 @@ interface ProfileCardProps {
   isSell?: boolean
   setDataNFT?: any
 }
-const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell, setDataNFT }: ProfileCardProps) => {
+const NFTCard = ({
+  item,
+  index,
+  onShowModal,
+  isDelist,
+  isBuy,
+  isSell,
+  setDataNFT,
+}: ProfileCardProps) => {
   const [metaData, setMetaData] = useState<any>(undefined)
   const { mutate: getTokenURI } = useGetTokenURI()
   const { mutate: handleGetNameOfCollection } = useGetNameOfCollection()
@@ -25,7 +33,7 @@ const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell, setDataNFT
     if (ethereumAddressRegex.test(address)) {
       return `https://effigy.im/a/${address}.svg`
     } else {
-      return `https://effigy.im/a/${"0x0000000000000000000000000000000000000000"}.svg`
+      return `https://effigy.im/a/${'0x0000000000000000000000000000000000000000'}.svg`
     }
   }
   const handleClick = () => {
@@ -33,7 +41,6 @@ const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell, setDataNFT
       setDataNFT(item)
     }
     onShowModal(true)
-
   }
   const handleGetMetadata = async () => {
     getTokenURI({
@@ -84,13 +91,16 @@ const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell, setDataNFT
             resizeMode="cover"
             style={styles.cardImage}
             source={{
-              uri: metaData && metaData.image
-                ? getUrlImage(metaData.image)
-                : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
+              uri:
+                metaData && metaData.image
+                  ? getUrlImage(metaData.image)
+                  : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
             }}
           ></Image>
           <View style={styles.cardHeadLine}>
-            <Text style={[styles.text, styles.cardAddress]}>{item.collectionAddress ? shorterAddress(item.collectionAddress) : "0x000...000"}</Text>
+            <Text style={[styles.text, styles.cardAddress]}>
+              {item.collectionAddress ? shorterAddress(item.collectionAddress) : '0x000...000'}
+            </Text>
           </View>
         </View>
         <View style={styles.cardContent}>
@@ -99,25 +109,25 @@ const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell, setDataNFT
               <Text numberOfLines={1} ellipsizeMode="tail" style={[styles.text, styles.cardName]}>
                 {metaData && metaData.name ? metaData.name : 'NFT Name'}
               </Text>
-              <Text style={[styles.text, styles.cardId]}>{item.tokenId ? "#" + item.tokenId : "#0"}</Text>
+              <Text style={[styles.text, styles.cardId]}>
+                {item.tokenId ? '#' + item.tokenId : '#0'}
+              </Text>
             </View>
             <View style={styles.cardCollection}>
               <View style={styles.cardAvatar}>
-                {
-                  item && item.seller ?
-                    <SvgUri
-                      width={'100%'}
-                      height={'100%'}
-                      uri={getAvatarByAddress(item.seller)}
-                    ></SvgUri>
-                    :
-                    <Image
-                      resizeMode='cover'
-                      style={{ width: '100%', height: '100%' }}
-                      source={require('./../../assets/images/avatarDefault.png')}
-                    >
-                    </Image>
-                }
+                {item && item.seller ? (
+                  <SvgUri
+                    width={'100%'}
+                    height={'100%'}
+                    uri={getAvatarByAddress(item.seller)}
+                  ></SvgUri>
+                ) : (
+                  <Image
+                    resizeMode="cover"
+                    style={{ width: '100%', height: '100%' }}
+                    source={require('./../../assets/images/avatarDefault.png')}
+                  ></Image>
+                )}
               </View>
               {/* <Image
                 resizeMode="cover"
@@ -128,9 +138,13 @@ const NFTCard = ({ item, index, onShowModal, isDelist, isBuy, isSell, setDataNFT
                     : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
                 }}
               ></Image> */}
-              <Text style={[styles.text, styles.cardCollectionAddress]}>{item.seller ? shorterAddress(item.seller) : "0x000...000"}</Text>
+              <Text style={[styles.text, styles.cardCollectionAddress]}>
+                {item.seller ? shorterAddress(item.seller) : '0x000...000'}
+              </Text>
             </View>
-            <Text style={[styles.text, styles.cardPrice]}>{item.price? item.price:'0'} WUIT</Text>
+            <Text style={[styles.text, styles.cardPrice]}>
+              {item.price ? item.price : '0'} WUIT
+            </Text>
           </View>
         </View>
         <View style={styles.cardAction}>

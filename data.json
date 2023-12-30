@@ -1,0 +1,74 @@
+{
+  "asks": [
+    {
+      "collectionAddress": "0x993Ee67F5262c1B4c775d21EbD5bb85733AB3eFE",
+      "price": "0.004",
+      "seller": "0x454574C8AD9706a8fC22dDA71Ce77Cb1CDd5fEB1",
+      "size": 4,
+      "tokenId": "0"
+    },
+    {
+      "collectionAddress": "0x993Ee67F5262c1B4c775d21EbD5bb85733AB3eFE",
+      "price": "0.0000142",
+      "seller": "0x454574C8AD9706a8fC22dDA71Ce77Cb1CDd5fEB\n1",
+      "size": 4,
+      "tokenId": "4"
+    },
+    {
+      "collectionAddress": "0x993Ee67F5262c1B4c775d21EbD5bb85733AB3eFE",
+      "price": "0.0000111",
+      "seller": "0x454574C8AD9706a8fC22dDA71Ce77\nCb1CDd5fEB1",
+      "size": 4,
+      "tokenId": "1"
+    },
+    {
+      "collectionAddress": "0x993Ee67F5262c1B4c775d21EbD5bb85733AB3eFE",
+      "price": "13.0",
+      "seller": "0x454574C8AD9706a8fC22dDA7\n1Ce77Cb1CDd5fEB1",
+      "size": 4,
+      "tokenId": "20"
+    },
+    {
+      "collectionAddress": "0x947976e72e45d6741933bd28CD80e3D28A71619c",
+      "price": "0.005",
+      "seller": "0x454574C8AD9706a8f\nC22dDA71Ce77Cb1CDd5fEB1",
+      "size": 2,
+      "tokenId": "0"
+    },
+    {
+      "collectionAddress": "0x947976e72e45d6741933bd28CD80e3D28A71619c",
+      "price": "0.004",
+      "seller": "0x454574C8AD9\n706a8fC22dDA71Ce77Cb1CDd5fEB1",
+      "size": 2,
+      "tokenId": "3"
+    },
+    {
+      "collectionAddress": "0x55327442555db09955110428F46B66b902Dee1a4",
+      "price": "0.00124",
+      "seller": "0x454\n574C8AD9706a8fC22dDA71Ce77Cb1CDd5fEB1",
+      "size": 3,
+      "tokenId": "4"
+    },
+    {
+      "collectionAddress": "0x55327442555db09955110428F46B66b902Dee1a4",
+      "price": "0.0000222",
+      "selle\nr": "0x454574C8AD9706a8fC22dDA71Ce77Cb1CDd5fEB1",
+      "size": 3,
+      "tokenId": "2"
+    },
+    {
+      "collectionAddress": "0x55327442555db09955110428F46B66b902Dee1a4",
+      "price": "0.000104\n5",
+      "seller": "0x454574C8AD9706a8fC22dDA71Ce77Cb1CDd5fEB1",
+      "size": 3,
+      "tokenId": "6"
+    },
+    {
+      "collectionAddress": "0xE51c681779EB648FB939331DCb6115E49f27A6Fb",
+      "price": "0.0014",
+      "seller": "0x454574C8AD9706a8fC22dDA71Ce77Cb1CDd5fEB1",
+      "size": 1,
+      "tokenId": "0"
+    }
+  ]
+}

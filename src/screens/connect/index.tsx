@@ -1,10 +1,10 @@
 import { W3mButton } from '@web3modal/wagmi-react-native'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Button } from 'react-native-paper'
 import { getMetadata } from 'src/hooks/useIPFS'
-import { useGetNameOfCollection, useGetTokenURI } from 'src/hooks/useNFT'
+import { useGetNameOfCollection, useGetNftsOfAddress, useGetTokenURI } from 'src/hooks/useNFT'
 import { useAccount, useChainId, useWalletClient } from 'wagmi'
 import styles from './styles'
 
@@ -23,15 +23,20 @@ const Connect = ({ navigation }: { navigation?: any }) => {
       tokenId: 1,
     }).then(async (res) => {
       const metadata = await getMetadata(res).then((res) => res.json())
-      console.log({ metadata })
     })
   }
 
   const handleGetNameCollection = async () => {
     handleGetNameOfCollection({
       cltAddress: '0x772b21c128f759F75A352568B1F7b4fF331d1162',
-    }).then((res) => {
-      console.log({ res })
+    }).then((res) => {})
+  }
+
+  const { data: nfts, mutate: getAllNftOfAddress } = useGetNftsOfAddress()
+
+  const handleGetAllNftOfAddress = () => {
+    getAllNftOfAddress({
+      ownerAddress: '0x454574C8AD9706a8fC22dDA71Ce77Cb1CDd5fEB1',
     })
   }
 
@@ -46,6 +51,7 @@ const Connect = ({ navigation }: { navigation?: any }) => {
           <W3mButton />
           <Button onPress={handleGetMetadata}>Get metadata NFT</Button>
           <Button onPress={handleGetNameCollection}>Get name collection</Button>
+          <Button onPress={handleGetAllNftOfAddress}>Get all nft of address</Button>
           <Image
             style={styles.connectImage}
             source={require('../../assets/images/wallet.png')}

@@ -16,8 +16,7 @@ import { Button } from 'react-native-paper'
 import { Colors } from 'src/constants/Colors'
 import styles from './styles'
 
-
-const Create = ({ }) => {
+const Create = ({}) => {
   const [profile, setProfile] = useState<string | null>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [addressDefault, setAddressDefault] = useState('0x634345357C9eA4B6e52765804d647048bd15e468')
@@ -42,10 +41,10 @@ const Create = ({ }) => {
   }
 
   const copyToClipboard = () => {
-    if(addressDefault){
-      Clipboard.setString(addressDefault);
+    if (addressDefault) {
+      Clipboard.setString(addressDefault)
     }
-  };
+  }
 
   return (
     <View style={styles.createScreen}>
@@ -93,11 +92,7 @@ const Create = ({ }) => {
               )}
               {/* <Entypo name="pencil" size={20} color={Colors.green} /> */}
               {profile ? (
-                <AntDesign
-                  name="closecircle"
-                  style={styles.clearImage}
-                  onPress={clearImage}
-                />
+                <AntDesign name="closecircle" style={styles.clearImage} onPress={clearImage} />
               ) : (
                 <></>
               )}
@@ -108,10 +103,7 @@ const Create = ({ }) => {
             <TextInput
               placeholderTextColor={Colors.color_label_200}
               onFocus={() => setIsFocused(true)}
-              style={[
-                styles.input,
-                isFocused && Platform.OS === 'web' && { outline: 'none' },
-              ]}
+              style={[styles.input, isFocused && Platform.OS === 'web' && { outline: 'none' }]}
               placeholder="Ex: Stair Rain"
             ></TextInput>
           </View>
@@ -120,10 +112,7 @@ const Create = ({ }) => {
             <TextInput
               placeholderTextColor={Colors.color_label_200}
               onFocus={() => setIsFocused(true)}
-              style={[
-                styles.input,
-                isFocused && Platform.OS === 'web' && { outline: 'none' },
-              ]}
+              style={[styles.input, isFocused && Platform.OS === 'web' && { outline: 'none' }]}
               placeholder="Ex: 0x000...000"
             ></TextInput>
             <TouchableOpacity style={styles.clipboard} onPress={copyToClipboard}>
@@ -132,8 +121,8 @@ const Create = ({ }) => {
                 <Text style={[styles.text, styles.addressDefault]}>
                   {addressDefault ? addressDefault : '0x00000000000000000000000000'}
                 </Text>{' '}
-                on our platform. If you don't have your own collection yet, kickstart your
-                creative journey by using this address.
+                on our platform. If you don't have your own collection yet, kickstart your creative
+                journey by using this address.
               </Text>
             </TouchableOpacity>
           </View>
@@ -142,10 +131,7 @@ const Create = ({ }) => {
             <TextInput
               placeholderTextColor={Colors.color_label_200}
               onFocus={() => setIsFocused(true)}
-              style={[
-                styles.input,
-                isFocused && Platform.OS === 'web' && { outline: 'none' },
-              ]}
+              style={[styles.input, isFocused && Platform.OS === 'web' && { outline: 'none' }]}
               placeholder="Ex: It is created at 17/2/2023"
             ></TextInput>
           </View>

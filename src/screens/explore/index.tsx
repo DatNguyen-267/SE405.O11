@@ -81,8 +81,7 @@ const Explore = ({ navigation }: { navigation: any }) => {
             ></Image>
           </View>
           <PageLoading isVisible={isLoadingGetCollection}></PageLoading>
-          {
-            !isLoadingGetCollection &&
+          {!isLoadingGetCollection && (
             <View>
               <ScrollView
                 horizontal={false}
@@ -90,16 +89,25 @@ const Explore = ({ navigation }: { navigation: any }) => {
                 showsHorizontalScrollIndicator={false}
               >
                 <View style={styles.listContent}>
-                  {listAddress && listCollection?.map((item, index) => {
-                    return <Collection key={index} navigation={navigation} item={item} address={listAddress[index]} search={search}></Collection>
-                  })}
+                  {listCollection &&
+                    listCollection.map((item, index) => {
+                      return (
+                        <Collection
+                          key={index}
+                          navigation={navigation}
+                          item={item}
+                          address={item.collectionAddress}
+                          search={search}
+                        ></Collection>
+                      )
+                    })}
 
                   {/* <Collection navigation={navigation}></Collection>
                               <Collection navigation={navigation}></Collection> */}
                 </View>
               </ScrollView>
             </View>
-          }
+          )}
         </View>
       </ScrollView>
 

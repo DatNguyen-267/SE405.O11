@@ -1,10 +1,17 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { ABI_ERC721, ABI_PUBLIC_COLLECTION } from 'src/abis'
 import { ADDRESS_OF_CHAINS } from 'src/constants'
 import { Address, useWalletClient } from 'wagmi'
 import { multicall, readContract, writeContract } from 'wagmi/actions'
 import useCurrentChain from './useCurrentChain'
 import { usePublicClient } from './usePublicClient'
+import { NftItem, NftItemDefault } from 'src/types'
+import {
+  mappingAsksToNftList,
+  useViewAsksByCollectionAndSellerAddress,
+  useViewMarketCollections,
+} from './useMarket'
+import useAppAddress from './useAppAddress'
 
 type ApproveNFTParams = {
   cltAddress: Address
@@ -163,29 +170,35 @@ type GetNFTOfCollectionParams = {
 export type GetNFTsOfCollectionResponse = {
   tokenId: string
   owner: Address
+  collectionAddress: Address
 }[]
 
-// !!! warning performance
 export function useGetNFTsOfCollection() {
   const publicClient = usePublicClient()
-  return useCallback(
+
+  const [data, setData] = useState<NftItem[] | undefined>(undefined)
+
+  const mutate = useCallback(
     async ({ cltAddress }: GetNFTOfCollectionParams) => {
       try {
-        let listNFT: GetNFTsOfCollectionResponse = []
-
+        let listNFT: NftItem[] = []
         let tokenId = 0
-
         while (true) {
           try {
             const ownerAddress = await readContract({
               abi: ABI_ERC721,
               address: cltAddress,
               functionName: 'ownerOf',
+              args: [tokenId],
             })
 
             listNFT.push({
+              ...NftItemDefault,
+              collectionAddress: cltAddress,
               owner: ownerAddress as Address,
-              tokenId: tokenId.toString(),
+              seller: ownerAddress as Address,
+              tokenId: tokenId,
+              status: 'NotForSale',
             })
 
             tokenId++
@@ -193,13 +206,17 @@ export function useGetNFTsOfCollection() {
             break
           }
         }
+        setData(listNFT)
         return listNFT
       } catch (error) {
+        setData([])
         throw error
       }
     },
     [publicClient],
   )
+
+  return { mutate, data }
 }
 
 type GetOwnerOfCollectionParams = {
@@ -273,4 +290,109 @@ export function useGetTotalSupplyOfCollection() {
     },
     [publicClient],
   )
+}
+export function useGetNFTsOfCollectionOfOwnerAddress() {
+  const publicClient = usePublicClient()
+
+  const [data, setData] = useState<NftItem[] | undefined>(undefined)
+
+  const mutate = useCallback(
+    async ({ cltAddress, ownerAddress }: { cltAddress: Address; ownerAddress: Address }) => {
+      try {
+        let listNFT: NftItem[] = []
+        let tokenId = 0
+        while (true) {
+          try {
+            const ownerOfNft = await readContract({
+              abi: ABI_ERC721,
+              address: cltAddress,
+              functionName: 'ownerOf',
+              args: [tokenId],
+            })
+
+            if (ownerAddress.toLowerCase() === (ownerOfNft as string).toLowerCase()) {
+              listNFT.push({
+                ...NftItemDefault,
+                collectionAddress: cltAddress,
+                owner: ownerAddress as Address,
+                tokenId: tokenId,
+                status: 'NotForSale',
+              })
+            }
+
+            tokenId++
+          } catch (error) {
+            break
+          }
+        }
+        setData(listNFT)
+        return listNFT
+      } catch (error) {
+        setData([])
+        throw error
+      }
+    },
+    [publicClient],
+  )
+
+  return { mutate, data }
+}
+
+export function useGetNftsOfAddress() {
+  const publicClient = usePublicClient()
+  const { mutate: getAllCollecntionOfMarket } = useViewMarketCollections()
+  const { mutate: getAllNFTsOfCollectionOfOwnerAddress } = useGetNFTsOfCollectionOfOwnerAddress()
+  const { mutate: getAskOfAddress } = useViewAsksByCollectionAndSellerAddress()
+  const marketAddress = useAppAddress('MARKET')
+  const [data, setData] = useState<NftItem[]>([])
+
+  const mutate = useCallback(
+    async ({ ownerAddress }: { ownerAddress: Address }) => {
+      try {
+        const listCollection = await getAllCollecntionOfMarket({
+          marketAddress: marketAddress,
+          cursor: 0,
+          size: 20,
+        })
+        console.log({ listCollection: JSON.stringify(listCollection, undefined, 4) })
+
+        const asks = await Promise.all(
+          listCollection.map(async (collection) => {
+            const nfts = await getAskOfAddress({
+              collectionAddress: collection.collectionAddress,
+              marketAddress: marketAddress,
+              sellerAddress: ownerAddress,
+              cursor: 0,
+              size: 20,
+            })
+            return nfts
+          }),
+        )
+
+        console.log({ asks: JSON.stringify(asks.flat(1), undefined, 4) })
+
+        const allNfts = await Promise.all(
+          listCollection.map(async (collection) => {
+            const nfts = await getAllNFTsOfCollectionOfOwnerAddress({
+              cltAddress: collection.collectionAddress,
+              ownerAddress: ownerAddress,
+            })
+            return nfts
+          }),
+        )
+        console.log({ allNfts: JSON.stringify(allNfts.flat(1), undefined, 4) })
+
+        const res = mappingAsksToNftList(asks.flat(1), allNfts.flat(1))
+
+        console.log({ res: JSON.stringify(res, undefined, 4) })
+        console.log({ res: res })
+      } catch (error) {
+        setData([])
+        throw error
+      }
+    },
+    [publicClient],
+  )
+
+  return { mutate, data }
 }

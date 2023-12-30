@@ -1,8 +1,8 @@
 import { Address } from 'viem'
 
 export interface CollectionItem {
-  collectionAddress: string
-  owner: string
+  collectionAddress: Address
+  owner: Address
   tradingFee: number
   creatorFee: number
   title: string

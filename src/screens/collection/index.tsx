@@ -1,18 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { FlatList, Image, ImageBackground, ScrollView, Text, View } from 'react-native'
 
 import { useState } from 'react'
 import ModalBuy from 'src/components/ModalBuy'
 import NFTCard from 'src/components/NFTCard'
 import styles from './styles'
-import { getAvatarByAddress} from 'src/utils/avatar'
+import { getAvatarByAddress } from 'src/utils/avatar'
 import { shorterAddress } from 'src/utils/common'
 import { useLocalSearchParams } from 'expo-router'
-import { useViewAsksByCollection } from 'src/hooks/useMarket'
+import { mappingAsksToNftList, useViewAsksByCollection } from 'src/hooks/useMarket'
 import useAppAddress from 'src/hooks/useAppAddress'
 import { SvgUri } from 'react-native-svg'
 import PageLoading from 'src/components/PageLoading'
 import { DEFAULT_ADDRESS } from 'src/constants'
+import { useGetNFTsOfCollection } from 'src/hooks/useNFT'
 
 const Collection = ({ navigation, route }: { navigation?: any; route?: any }) => {
   const [profile, setProfile] = useState(null)
@@ -21,16 +22,28 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
   const [isVisible, setIsVisible] = useState(false)
   const [dataNFT, setDataNFT] = useState(undefined)
   // const item = route.params.item
-  const params = useLocalSearchParams<{ address: string, item: any }>()
+  const params = useLocalSearchParams<{ address: string; item: any }>()
   const collectionAddress = params.address
   const collectionDetail = params.item
-  
+
   const marketAddress = useAppAddress('MARKET')
-  const {
-    mutate: handleGetByCollectionAddress,
-    data: asks,
-    isLoading: isLoadingGetAsk,
-  } = useViewAsksByCollection()
+  const { mutate: handleGetByCollectionAddress, data: asks } = useViewAsksByCollection()
+
+  const { mutate: handleGetAllNftOfCollection, data: nfts } = useGetNFTsOfCollection()
+
+  const mappingList = useMemo(() => {
+    if (nfts && asks) {
+      const res = mappingAsksToNftList(asks, nfts)
+      return res
+    } else return nfts
+  }, [nfts, asks])
+
+  console.log({ mappingList: JSON.stringify(mappingList, undefined, 4) })
+  console.log({ nfts: JSON.stringify(nfts, undefined, 4) })
+
+  const isLoadingGetAsk = !!!mappingList
+  console.log({ isLoadingGetAsk })
+
   useEffect(() => {
     const newAddress = collectionAddress.slice(2)
 
@@ -40,7 +53,12 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
       cursor: 0,
       size: 20,
     })
+
+    handleGetAllNftOfCollection({
+      cltAddress: `0x${newAddress}`,
+    })
   }, [])
+
   const changeConnect = () => {
     setIsConnected(!isConnected)
   }
@@ -61,24 +79,20 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
               resizeMode="cover"
               style={styles.headLineBg}
             >
-              <View
-                style={styles.headLineAvatar}
-              >
-                {
-                  collectionAddress ?
-                    <SvgUri
-                      width={'100%'}
-                      height={'100%'}
-                      uri={getAvatarByAddress(collectionAddress)}
-                    ></SvgUri>
-                    :
-                    <Image
-                      resizeMode='cover'
-                      style={{ width: '100%', height: '100%' }}
-                      source={require('./../../assets/images/avatarDefault.png')}
-                    >
-                    </Image>
-                }
+              <View style={styles.headLineAvatar}>
+                {collectionAddress ? (
+                  <SvgUri
+                    width={'100%'}
+                    height={'100%'}
+                    uri={getAvatarByAddress(collectionAddress)}
+                  ></SvgUri>
+                ) : (
+                  <Image
+                    resizeMode="cover"
+                    style={{ width: '100%', height: '100%' }}
+                    source={require('./../../assets/images/avatarDefault.png')}
+                  ></Image>
+                )}
               </View>
               {/* <Image
                 style={styles.headLineAvatar}
@@ -91,48 +105,57 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
             </ImageBackground>
           </View>
           <View style={[styles.walletInfo]}>
-            <Text style={[styles.text, styles.walletAddress]}>{collectionAddress ? shorterAddress(collectionAddress.toString(), 10) : '0x000...000'}</Text>
+            <Text style={[styles.text, styles.walletAddress]}>
+              {collectionAddress ? shorterAddress(collectionAddress.toString(), 10) : '0x000...000'}
+            </Text>
             <View style={[styles.walletOwnerContainer]}>
               <Text style={[styles.walletOwnerTitle, styles.label]}>Owner Of:</Text>
-              <Text style={[styles.text, styles.walletOwnerAddress]}>{collectionDetail ? shorterAddress(collectionDetail.creatorAddress, 10) : '0x000...000'}</Text>
+              <Text style={[styles.text, styles.walletOwnerAddress]}>
+                {collectionDetail
+                  ? shorterAddress(collectionDetail.creatorAddress, 10)
+                  : '0x000...000'}
+              </Text>
             </View>
           </View>
           <View style={styles.nftContent}>
             <Text style={[styles.text, styles.title]}>All NFT</Text>
             <PageLoading isVisible={isLoadingGetAsk}></PageLoading>
-            {
-              !isLoadingGetAsk &&
+            {!isLoadingGetAsk && (
               <FlatList
-              columnWrapperStyle={{
-                justifyContent: 'space-between',
-              }}
-              scrollEnabled={false}
-              style={styles.listNft}
-              data={asks}
-              numColumns={2}
-              renderItem={({ item }) => {
-
-                return (
-                  <View style={styles.nftItem}>
-                    <NFTCard item={item} onShowModal={setIsVisible} isBuy={true} setDataNFT={setDataNFT}></NFTCard>
-                  </View>
-                )
-                // if (item.status.toLowerCase() === 'on sale') {
-                //   return (
-                //     <View style={styles.nftItem}>
-                //       <NFTCard item={item} onShowModal={setIsVisible} isBuy={true}></NFTCard>
-                //     </View>
-                //   )
-                // } else {
-                //   return (
-                //     <View style={styles.nftItem}>
-                //       <NFTCard item={item}></NFTCard>
-                //     </View>
-                //   )
-                // }
-              }}
-            />
-            }
+                columnWrapperStyle={{
+                  justifyContent: 'space-between',
+                }}
+                scrollEnabled={false}
+                style={styles.listNft}
+                data={mappingList}
+                numColumns={2}
+                renderItem={({ item }) => {
+                  return (
+                    <View style={styles.nftItem}>
+                      <NFTCard
+                        item={item}
+                        onShowModal={setIsVisible}
+                        isBuy={item.status === 'Sale'}
+                        setDataNFT={setDataNFT}
+                      ></NFTCard>
+                    </View>
+                  )
+                  // if (item.status.toLowerCase() === 'on sale') {
+                  //   return (
+                  //     <View style={styles.nftItem}>
+                  //       <NFTCard item={item} onShowModal={setIsVisible} isBuy={true}></NFTCard>
+                  //     </View>
+                  //   )
+                  // } else {
+                  //   return (
+                  //     <View style={styles.nftItem}>
+                  //       <NFTCard item={item}></NFTCard>
+                  //     </View>
+                  //   )
+                  // }
+                }}
+              />
+            )}
           </View>
         </View>
       </ScrollView>

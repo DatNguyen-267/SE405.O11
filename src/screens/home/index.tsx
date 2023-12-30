@@ -25,6 +25,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
   const [isVisible, setIsVisible] = useState(false)
   const [listNFTs, setListNFTs] = useState<AskInfo[]>([])
   const [search, setSearch] = useState('')
+
   const data = [
     {
       img: 'https://th.bing.com/th/id/OIG.ey_KYrwhZnirAkSgDhmg',
@@ -84,7 +85,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
         marketAddress: marketAddress,
         cursor: 0,
         size: 20,
-      }).then(async (res:ViewMarketCollectionsResponse) => {
+      }).then(async (res:any) => {
         console.log("address: ",res.collectionAddresses)
         await Promise.all(
           res.collectionAddresses.map(async(collectionAddress: string)=>{
