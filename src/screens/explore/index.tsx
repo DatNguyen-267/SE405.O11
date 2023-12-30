@@ -20,7 +20,6 @@ const Explore = ({ navigation }: { navigation: any }) => {
   const marketAddress = useAppAddress('MARKET')
 
   const listCollection = collections
-  console.log({ collections })
 
   useEffect(() => {
     handleGetAllCollection({

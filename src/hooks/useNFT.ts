@@ -30,8 +30,6 @@ export function useApproveSpenderToAccessNft() {
           args: [spenderAddress, tokenId],
         })
 
-        console.log('approve receipt:', transactionReceipt)
-
         return transactionReceipt
       } catch (error) {
         throw error
@@ -66,7 +64,6 @@ export function useMintNFT() {
           args: [addressTo, tokenUri],
         })
 
-        console.log('Mint receipt:', transactionReceipt)
         return transactionReceipt
       } catch (error) {
         throw error
@@ -102,7 +99,6 @@ export function useGetTokenURIs() {
           contracts: contracts,
         })
 
-        console.log({ data })
         return data
       } catch (error) {
         throw error
@@ -126,7 +122,6 @@ export function useGetTokenURI() {
           args: [tokenId],
           functionName: 'tokenURI',
         })
-        console.log({ tokenUri })
 
         return tokenUri as string
       } catch (error) {
@@ -354,7 +349,6 @@ export function useGetNftsOfAddress() {
           cursor: 0,
           size: 20,
         })
-        console.log({ listCollection: JSON.stringify(listCollection, undefined, 4) })
 
         const asks = await Promise.all(
           listCollection.map(async (collection) => {
@@ -369,8 +363,6 @@ export function useGetNftsOfAddress() {
           }),
         )
 
-        console.log({ asks: JSON.stringify(asks.flat(1), undefined, 4) })
-
         const allNfts = await Promise.all(
           listCollection.map(async (collection) => {
             const nfts = await getAllNFTsOfCollectionOfOwnerAddress({
@@ -380,12 +372,8 @@ export function useGetNftsOfAddress() {
             return nfts
           }),
         )
-        console.log({ allNfts: JSON.stringify(allNfts.flat(1), undefined, 4) })
 
         const res = mappingAsksToNftList(asks.flat(1), allNfts.flat(1))
-
-        console.log({ res: JSON.stringify(res, undefined, 4) })
-        console.log({ res: res })
       } catch (error) {
         setData([])
         throw error

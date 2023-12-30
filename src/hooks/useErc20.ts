@@ -25,8 +25,6 @@ export function useApproveErc20() {
           functionName: 'approve',
         })
 
-        console.log('approve receipt:', transactionReceipt)
-
         return transactionReceipt
       } catch (error) {
         throw error
@@ -53,7 +51,6 @@ export function useDeposit() {
           value: BigInt(ethers.utils.formatEther(value)),
         })
 
-        console.log('deposit receipt:', transactionReceipt)
         return transactionReceipt
       } catch (error) {
         throw error

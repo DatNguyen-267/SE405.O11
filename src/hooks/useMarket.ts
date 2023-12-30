@@ -349,7 +349,6 @@ export function useBuyNFTUsingWrapToken() {
             nftAddressGuy: marketAddress,
             wad: ethers.utils.parseEther(price).toString(),
           })
-          console.log(receiptApprove)
         } catch (error) {
           console.log(error)
           throw new Error(AppError.APPROVE_TOKEN_EXCHANGE_FAILED)
@@ -362,7 +361,6 @@ export function useBuyNFTUsingWrapToken() {
           args: [collectionAddress, tokenId, ethers.utils.parseEther(price)],
         })
 
-        console.log('buyTokenUsingWrapToken Receipt:', buyTokenUsingWrapTokenReceipt)
         return buyTokenUsingWrapTokenReceipt
       } catch (error) {
         console.log(error)
@@ -399,7 +397,6 @@ export function useCreateAskOrder() {
             spenderAddress: marketAddress,
             tokenId,
           })
-          console.log(receiptApprove)
         } catch (error) {
           throw new Error(AppError.APPROVE_SPENDER_TO_ACCESS_NFT_FAILED)
         }
@@ -417,7 +414,6 @@ export function useCreateAskOrder() {
           args: [cltAddress, tokenId, ethers.utils.parseEther(price)],
         })
 
-        console.log('createAskOrder Receipt:', createAskOrderReceipt)
         return createAskOrderReceipt
       } catch (error) {
         throw error
@@ -464,7 +460,6 @@ export function useImportCollection() {
           args: [cltAddress, creatorAddress, whiteListChecker, tradingFee, creatorFee],
         })
 
-        console.log(addResponse)
         return addResponse
       } catch (error) {
         throw error
