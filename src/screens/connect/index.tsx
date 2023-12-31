@@ -7,6 +7,7 @@ import { getMetadata } from 'src/hooks/useIPFS'
 import { useGetNameOfCollection, useGetNftsOfAddress, useGetTokenURI } from 'src/hooks/useNFT'
 import { useAccount, useChainId, useWalletClient } from 'wagmi'
 import styles from './styles'
+import { useCreateAskOrder } from 'src/hooks/useMarket'
 
 const Connect = ({ navigation }: { navigation?: any }) => {
   const { address, connector, isConnected } = useAccount()
@@ -17,6 +18,8 @@ const Connect = ({ navigation }: { navigation?: any }) => {
   const chainId = useChainId()
 
   const { mutate: handleGetNameOfCollection } = useGetNameOfCollection()
+  const { mutate: createAskOrder } = useCreateAskOrder()
+
   const handleGetMetadata = async () => {
     getTokenURI({
       cltAddress: '0x772b21c128f759F75A352568B1F7b4fF331d1162',
@@ -40,6 +43,15 @@ const Connect = ({ navigation }: { navigation?: any }) => {
     })
   }
 
+  const handleCreateAskOrder = () => {
+    createAskOrder({
+      // The grap - Goerli
+      cltAddress: '0x55327442555db09955110428F46B66b902Dee1a4',
+      tokenId: 1,
+      price: '0.07685',
+    })
+  }
+
   return (
     <View style={styles.createScreen}>
       <ScrollView
@@ -52,6 +64,7 @@ const Connect = ({ navigation }: { navigation?: any }) => {
           <Button onPress={handleGetMetadata}>Get metadata NFT</Button>
           <Button onPress={handleGetNameCollection}>Get name collection</Button>
           <Button onPress={handleGetAllNftOfAddress}>Get all nft of address</Button>
+          <Button onPress={handleCreateAskOrder}>Create Ask order</Button>
           <Image
             style={styles.connectImage}
             source={require('../../assets/images/wallet.png')}

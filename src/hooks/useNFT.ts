@@ -371,7 +371,7 @@ export function useGetNFTsOfCollectionOfOwnerAddress() {
         throw error
       }
     },
-    [publicClient],
+    [publicClient, setData],
   )
 
   return { mutate, data }
@@ -379,16 +379,19 @@ export function useGetNFTsOfCollectionOfOwnerAddress() {
 
 export function useGetNftsOfAddress() {
   const publicClient = usePublicClient()
-  const { mutate: getAllCollecntionOfMarket } = useViewMarketCollections()
+  const { mutate: getAllCollectionOfMarket } = useViewMarketCollections()
   const { mutate: getAllNFTsOfCollectionOfOwnerAddress } = useGetNFTsOfCollectionOfOwnerAddress()
   const { mutate: getAskOfAddress } = useViewAsksByCollectionAndSellerAddress()
+
   const marketAddress = useAppAddress('MARKET')
-  const [data, setData] = useState<NftItem[]>([])
+  const [data, setData] = useState<NftItem[]>()
+  const [isLoading, setLoading] = useState(false)
 
   const mutate = useCallback(
     async ({ ownerAddress }: { ownerAddress: Address }) => {
+      setLoading(true)
       try {
-        const listCollection = await getAllCollecntionOfMarket({
+        const listCollection = await getAllCollectionOfMarket({
           marketAddress: marketAddress,
           cursor: 0,
           size: 20,
@@ -418,13 +421,23 @@ export function useGetNftsOfAddress() {
         )
 
         const res = mappingAsksToNftList(asks.flat(1), allNfts.flat(1))
+        setData(res)
       } catch (error) {
-        setData([])
+        setLoading(false)
+        setData(undefined)
         throw error
       }
     },
-    [publicClient],
+    [
+      publicClient,
+      marketAddress,
+      setData,
+      setLoading,
+      getAllCollectionOfMarket,
+      getAllNFTsOfCollectionOfOwnerAddress,
+      getAskOfAddress,
+    ],
   )
 
-  return { mutate, data }
+  return { mutate, data, isLoading }
 }

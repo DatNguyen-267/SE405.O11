@@ -3,11 +3,12 @@ import { MARKETPLACE_ABI } from 'src/abis'
 import { AppError, DEFAULT_ADDRESS } from 'src/constants'
 import { ethers } from 'src/utils'
 import { Address } from 'viem'
-import { writeContract } from 'wagmi/actions'
+import { WriteContractResult, writeContract } from 'wagmi/actions'
 import { useApproveErc20 } from './useErc20'
 import { useApproveSpenderToAccessNft } from './useNFT'
 import { usePublicClient } from './usePublicClient'
 import { AskInfo, CollectionItem, NftItem } from 'src/types'
+import useAppAddress from './useAppAddress'
 
 export type CollectionDetail = {
   creatorAddress: string
@@ -330,27 +331,28 @@ type BuyNFTUsingWrapTokenParams = {
   tokenId: number
   price: string
   wrapTokenAddress: Address
-  marketAddress: Address
 }
 
 export function useBuyNFTUsingWrapToken() {
   const approveTokenExchange = useApproveErc20()
-  return useCallback(
-    async ({
-      collectionAddress,
-      tokenId,
-      price,
-      marketAddress,
-      wrapTokenAddress,
-    }: BuyNFTUsingWrapTokenParams) => {
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState<WriteContractResult>()
+
+  const marketAddress = useAppAddress('MARKET')
+  const wrapTokenAddress = useAppAddress('WUIT')
+
+  const mutate = useCallback(
+    async ({ collectionAddress, tokenId, price }: BuyNFTUsingWrapTokenParams) => {
       try {
+        setIsLoading(true)
         try {
           const receiptApprove = await approveTokenExchange({
             nftAddressGuy: marketAddress,
             wad: ethers.utils.parseEther(price).toString(),
           })
+          console.log({ receiptApprove })
         } catch (error) {
-          console.log(error)
           throw new Error(AppError.APPROVE_TOKEN_EXCHANGE_FAILED)
         }
 
@@ -361,14 +363,22 @@ export function useBuyNFTUsingWrapToken() {
           args: [collectionAddress, tokenId, ethers.utils.parseEther(price)],
         })
 
+        setData(buyTokenUsingWrapTokenReceipt)
         return buyTokenUsingWrapTokenReceipt
       } catch (error) {
-        console.log(error)
+        setIsLoading(false)
+        setData(undefined)
         throw error
       }
     },
-    [approveTokenExchange],
+    [approveTokenExchange, marketAddress, setData, setIsLoading, wrapTokenAddress],
   )
+
+  return {
+    data,
+    isLoading,
+    mutate,
+  }
 }
 
 /**
@@ -379,7 +389,6 @@ export function useBuyNFTUsingWrapToken() {
  */
 
 type CreateAskOrderParams = {
-  marketAddress: Address
   cltAddress: Address
   tokenId: number
   price: string
@@ -387,25 +396,25 @@ type CreateAskOrderParams = {
 
 export function useCreateAskOrder() {
   const approveSpenderToAccessNft = useApproveSpenderToAccessNft()
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState<WriteContractResult>()
+  const marketAddress = useAppAddress('MARKET')
 
-  return useCallback(
-    async ({ marketAddress, cltAddress, tokenId, price }: CreateAskOrderParams) => {
+  const mutate = useCallback(
+    async ({ cltAddress, tokenId, price }: CreateAskOrderParams) => {
       try {
+        setIsLoading(true)
         try {
+          console.log({ marketAddress })
           const receiptApprove = await approveSpenderToAccessNft({
             cltAddress,
             spenderAddress: marketAddress,
             tokenId,
           })
+          console.log({ receiptApprove })
         } catch (error) {
-          throw new Error(AppError.APPROVE_SPENDER_TO_ACCESS_NFT_FAILED)
+          throw error
         }
-
-        // const transaction = await marketContract.createAskOrder(
-        //   cltAddress,
-        //   tokenId,
-        //   ethers.parseEther(price),
-        // )
 
         const createAskOrderReceipt = await writeContract({
           abi: MARKETPLACE_ABI,
@@ -414,13 +423,22 @@ export function useCreateAskOrder() {
           args: [cltAddress, tokenId, ethers.utils.parseEther(price)],
         })
 
+        setData(createAskOrderReceipt)
         return createAskOrderReceipt
       } catch (error) {
+        setIsLoading(false)
+        setData(undefined)
         throw error
       }
     },
-    [approveSpenderToAccessNft],
+    [approveSpenderToAccessNft, marketAddress, setData, setIsLoading],
   )
+
+  return {
+    data,
+    isLoading,
+    mutate,
+  }
 }
 
 /**
@@ -476,14 +494,19 @@ export function useImportCollection() {
  */
 
 type CancelAskOrderParams = {
-  marketAddress: Address
   collectionAddress: Address
   tokenId: string
 }
 
 export function useCancelAskOrder() {
-  return useCallback(
-    async ({ marketAddress, collectionAddress, tokenId }: CancelAskOrderParams) => {
+  const marketAddress = useAppAddress('MARKET')
+
+  const [data, setData] = useState<WriteContractResult>()
+  const [isLoading, setIsLoading] = useState(false)
+
+  const mutate = useCallback(
+    async ({ collectionAddress, tokenId }: CancelAskOrderParams) => {
+      setIsLoading(true)
       try {
         const transaction = await writeContract({
           abi: MARKETPLACE_ABI,
@@ -491,12 +514,17 @@ export function useCancelAskOrder() {
           functionName: 'cancelAskOrder',
           args: [collectionAddress, tokenId],
         })
-
+        setData(transaction)
         return transaction
       } catch (error) {
+        setIsLoading(false)
+        setData(undefined)
+
         throw error
       }
     },
-    [],
+    [marketAddress, setIsLoading, setData],
   )
+
+  return { mutate, isLoading, data }
 }
