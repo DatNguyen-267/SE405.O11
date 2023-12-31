@@ -12,6 +12,7 @@ import {
   useViewMarketCollections,
 } from './useMarket'
 import useAppAddress from './useAppAddress'
+import { createMetadata } from 'src/services/createIPFS'
 
 type ApproveNFTParams = {
   cltAddress: Address
@@ -45,6 +46,49 @@ type MintNFTParams = {
   tokenUri: string
 }
 
+export function usePinIPFSAndMintNFT() {
+  const handleMintNFT = useMintNFT()
+  const handleGetOwnerCollection = useGetOwnerOfCollection()
+
+  return useCallback(
+    async ({
+      cltAddress,
+      addressTo,
+      metadata,
+    }: {
+      cltAddress: Address
+      addressTo: Address
+      metadata: {
+        file: any
+        title: string
+        description: string
+      }
+    }) => {
+      const { file, title, description } = metadata
+
+      try {
+        const owner = await handleGetOwnerCollection({ cltAddress: cltAddress })
+        if ((owner as string).toLowerCase() !== addressTo.toLowerCase()) {
+          throw new Error('You are not owner of collection')
+        }
+
+        const tokenUri = await createMetadata(file, title, description)
+        console.log({ tokenUri })
+        // const transactionReceipt = await handleMintNFT({
+        //   cltAddress: cltAddress,
+        //   addressTo: addressTo,
+        //   tokenUri: tokenUri.url,
+        // })
+
+        // return transactionReceipt
+      } catch (error) {
+        console.log({ error })
+        throw error
+      }
+    },
+    [handleMintNFT, handleGetOwnerCollection],
+  )
+}
 export function useMintNFT() {
   const currentChain = useCurrentChain()
   return useCallback(
