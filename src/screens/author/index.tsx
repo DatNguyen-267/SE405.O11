@@ -15,6 +15,7 @@ import { useGetNftsOfAddress } from 'src/hooks/useNFT'
 import { useFocusEffect } from 'expo-router'
 import { useAccount } from 'wagmi'
 import { shorterAddress } from 'src/utils'
+import PageLoading from 'src/components/PageLoading'
 
 const Author = ({navigation}:{navigation?:any}) => {
   const { address, connector, isConnected } = useAccount()
@@ -168,7 +169,10 @@ const Author = ({navigation}:{navigation?:any}) => {
             <View style={styles.nftContent}>
               {/* <Text style={[styles.text, styles.title]}>All NFT</Text> */}
               <Tabs items={tabs} setTab={setTab} />
-              <FlatList
+              <PageLoading isVisible={nfts && nfts.length == 0}></PageLoading>
+              {
+                nfts && nfts.length > 0  && 
+                <FlatList
                 columnWrapperStyle={{
                   justifyContent: 'space-between',
                 }}
@@ -212,6 +216,7 @@ const Author = ({navigation}:{navigation?:any}) => {
                   return null
                 }}
               />
+              }
             </View>
           </View>
         </ScrollView>
