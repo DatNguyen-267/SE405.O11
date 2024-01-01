@@ -3,7 +3,7 @@ import { MARKETPLACE_ABI } from 'src/abis'
 import { AppError, DEFAULT_ADDRESS } from 'src/constants'
 import { ethers } from 'src/utils'
 import { Address } from 'viem'
-import { WriteContractResult, writeContract } from 'wagmi/actions'
+import { WriteContractResult, prepareWriteContract, writeContract } from 'wagmi/actions'
 import { useApproveErc20 } from './useErc20'
 import { useApproveSpenderToAccessNft } from './useNFT'
 import { usePublicClient } from './usePublicClient'
@@ -330,7 +330,6 @@ type BuyNFTUsingWrapTokenParams = {
   collectionAddress: Address
   tokenId: number
   price: string
-  wrapTokenAddress: Address
 }
 
 export function useBuyNFTUsingWrapToken() {
@@ -353,19 +352,24 @@ export function useBuyNFTUsingWrapToken() {
           })
           console.log({ receiptApprove })
         } catch (error) {
+          console.log(error)
           throw new Error(AppError.APPROVE_TOKEN_EXCHANGE_FAILED)
         }
-
-        const buyTokenUsingWrapTokenReceipt = await writeContract({
+        const config = await prepareWriteContract({
           abi: MARKETPLACE_ABI,
-          address: wrapTokenAddress,
+          address: marketAddress,
           functionName: 'buyTokenUsingWrapToken',
-          args: [collectionAddress, tokenId, ethers.utils.parseEther(price)],
+          args: [collectionAddress, tokenId, ethers.utils.parseEther(price).toString()],
         })
+        console.log({ config })
+        const buyTokenUsingWrapTokenReceipt = await writeContract(config)
+
+        console.log({ buyTokenUsingWrapTokenReceipt })
 
         setData(buyTokenUsingWrapTokenReceipt)
         return buyTokenUsingWrapTokenReceipt
       } catch (error) {
+        console.log(error)
         setIsLoading(false)
         setData(undefined)
         throw error
@@ -420,7 +424,7 @@ export function useCreateAskOrder() {
           abi: MARKETPLACE_ABI,
           address: marketAddress,
           functionName: 'createAskOrder',
-          args: [cltAddress, tokenId, ethers.utils.parseEther(price)],
+          args: [cltAddress, tokenId, ethers.utils.parseEther(price).toString()],
         })
 
         setData(createAskOrderReceipt)
