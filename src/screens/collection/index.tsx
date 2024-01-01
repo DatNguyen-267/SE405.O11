@@ -38,11 +38,7 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
     } else return nfts
   }, [nfts, asks])
 
-  console.log({ mappingList: JSON.stringify(mappingList, undefined, 4) })
-  console.log({ nfts: JSON.stringify(nfts, undefined, 4) })
-
   const isLoadingGetAsk = !!!mappingList
-  console.log({ isLoadingGetAsk })
 
   useEffect(() => {
     const newAddress = collectionAddress.slice(2)

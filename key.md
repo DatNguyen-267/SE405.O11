@@ -1,0 +1,2 @@
+clientID: 9e937fb37e51021ea811cbd8b9477861
+secretKey: IR57kXP4nnuEw3AfmCkdcKSLIfxusSj-HN1RksXHL2UuJt0GqymZLAfldsqy60F5w3cewLjmlpS_7dMax5LTSg
