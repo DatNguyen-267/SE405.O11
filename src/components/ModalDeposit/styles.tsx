@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
     fontFamily: 'InterRegular',
   },
   input: {
+    width: '100%',
     flex: 1,
     height: 44,
     borderRadius: 8,

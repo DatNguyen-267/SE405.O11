@@ -37,6 +37,7 @@
     "nft.storage": "^7.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.49.2",
     "react-native": "0.72.6",
     "react-native-animatable": "^1.3.3",
     "react-native-gesture-handler": "~2.12.0",

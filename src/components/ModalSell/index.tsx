@@ -1,5 +1,5 @@
 import { AntDesign } from '@expo/vector-icons'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Image,
   Modal,
@@ -15,6 +15,8 @@ import Toast from 'react-native-toast-message'
 import { Colors } from 'src/constants/Colors'
 import { onShowToastSuccess } from 'src/utils/toast'
 import styles from './styles'
+import CustomInput from '../CustomInput'
+import { useForm } from 'react-hook-form'
 
 interface IModal {
   item?: object
@@ -24,6 +26,20 @@ interface IModal {
 }
 const ModalSell = ({ item, index, isVisible, setIsVisible }: IModal) => {
   const [isFocused, setIsFocused] = useState(false)
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }, reset
+  } = useForm()
+  const onSubmit = (data: any) => {
+    console.log(data);
+    onShowToastSuccess("Congratulations!!!")
+    
+  }
+  console.log("errors: ",errors)
+  useEffect(() =>{
+    reset()
+  },[isVisible])
   return (
     <Modal transparent={true} visible={isVisible}>
       <View style={styles.container}>
@@ -65,7 +81,7 @@ const ModalSell = ({ item, index, isVisible, setIsVisible }: IModal) => {
                 <View style={[styles.modalSellInfoItem]}>
                   <Text style={[styles.text, styles.modalSellInfoItemTitle]}>Price</Text>
                   <View style={[styles.modalSellInfoItemValue]}>
-                    <TextInput
+                    {/* <TextInput
                       placeholderTextColor={Colors.color_label_200}
                       onFocus={() => setIsFocused(true)}
                       style={[
@@ -74,7 +90,22 @@ const ModalSell = ({ item, index, isVisible, setIsVisible }: IModal) => {
                       ]}
                       placeholder="0"
                       keyboardType="number-pad"
-                    ></TextInput>
+                    ></TextInput> */}
+                    <CustomInput
+                      styleInput={styles.input}
+                      name="price"
+                      control={control}
+                      placeholder='0'
+                      rules={{
+                        required: 'This is required',
+                        min: {
+                          value: 0,
+                          message: 'Price is not negative',
+                        },
+
+                      }}
+                      keyboardType='number-pad'
+                    />
                     <Text style={[styles.text, styles.unit]}>WUIT</Text>
                   </View>
                 </View>
@@ -101,9 +132,7 @@ const ModalSell = ({ item, index, isVisible, setIsVisible }: IModal) => {
               <View style={styles.modalSellAction}>
                 <Button
                   style={[styles.btn, styles.modalSellBtnOk]}
-                  onPress={() => {
-                    onShowToastSuccess('Congratulation for you!!!')
-                  }}
+                  onPress={handleSubmit(onSubmit)}
                 >
                   <Text style={[styles.btnText, styles.btnTextOk]}>OK</Text>
                 </Button>

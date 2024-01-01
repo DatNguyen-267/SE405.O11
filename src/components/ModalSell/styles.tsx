@@ -6,7 +6,8 @@ const styles = StyleSheet.create({
     fontFamily: 'InterRegular',
   },
   input: {
-    maxWidth: 150,
+    maxWidth: '100%',
+    width: 150,
     flex: 1,
     height: 35,
     borderRadius: 8,

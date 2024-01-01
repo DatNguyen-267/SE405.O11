@@ -1,5 +1,5 @@
 import { AntDesign } from '@expo/vector-icons'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Image,
   Modal,
@@ -13,6 +13,8 @@ import {
 import { Button } from 'react-native-paper'
 import { Colors } from 'src/constants/Colors'
 import styles from './styles'
+import CustomInput from '../CustomInput'
+import { useForm } from 'react-hook-form'
 
 interface IModal {
   item?: object
@@ -22,6 +24,18 @@ interface IModal {
 }
 const ModalDeposit = ({ item, index, isVisible, setIsVisible }: IModal) => {
   const [isFocused, setIsFocused] = useState(false)
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }, reset
+  } = useForm()
+  const onSubmit = (data: any) => {
+    console.log(data);
+    
+  }
+  useEffect(() =>{
+    reset()
+  },[isVisible])
   return (
     <Modal transparent={true} visible={isVisible}>
       <View style={styles.container}>
@@ -66,7 +80,7 @@ const ModalDeposit = ({ item, index, isVisible, setIsVisible }: IModal) => {
                     Amount token (WUIT)
                   </Text>
                   <View style={[styles.modalDepositInfoItemValue]}>
-                    <TextInput
+                    {/* <TextInput
                       placeholderTextColor={Colors.color_label_200}
                       onFocus={() => setIsFocused(true)}
                       style={[
@@ -75,7 +89,22 @@ const ModalDeposit = ({ item, index, isVisible, setIsVisible }: IModal) => {
                       ]}
                       placeholder="0"
                       keyboardType="number-pad"
-                    ></TextInput>
+                    ></TextInput> */}
+                    <CustomInput
+                      styleInput={styles.input}
+                      name="token"
+                      control={control}
+                      placeholder='0'
+                      rules={{
+                        required: 'This is required',
+                        min: {
+                          value: 0,
+                          message: 'Price is not negative',
+                        },
+
+                      }}
+                      keyboardType='number-pad'
+                    ></CustomInput>
                   </View>
                   <Text style={[styles.text, styles.modalDepositInfoDes]}>
                     The conversion is straightforward: 1 AIOZ equals 1 WUIT. Input your desired WUIT
@@ -85,7 +114,7 @@ const ModalDeposit = ({ item, index, isVisible, setIsVisible }: IModal) => {
               </View>
 
               <View style={styles.modalDepositAction}>
-                <Button style={[styles.btn, styles.modalDepositBtnOk]}>
+                <Button style={[styles.btn, styles.modalDepositBtnOk]} onPress={handleSubmit(onSubmit)}>
                   <Text style={[styles.btnText, styles.btnTextOk]}>OK</Text>
                 </Button>
                 <Button

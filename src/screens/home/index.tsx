@@ -9,6 +9,9 @@ import { onHideLoading, onShowLoading } from 'src/utils/loading'
 import styles from './styles'
 import TypingText from './typingText'
 import { useGetNftsOfAddress } from 'src/hooks/useNFT'
+import ModalSell from 'src/components/ModalSell'
+import ModalDeposit from 'src/components/ModalDeposit'
+import ModalImport from 'src/components/ModalImport'
 
 interface ProfileCardProps {
   navigation?: any
@@ -53,7 +56,10 @@ const Home = ({ navigation }: ProfileCardProps) => {
   return (
     <>
       <View style={styles.homeScreen}>
-        <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible}></ModalBuy>
+        {/* <ModalImport isVisible={isVisible} setIsVisible={setIsVisible}></ModalImport> */}
+        {/* <ModalDeposit isVisible={isVisible} setIsVisible={setIsVisible}></ModalDeposit> */}
+        <ModalSell isVisible={isVisible} setIsVisible={setIsVisible}></ModalSell>
+        {/* <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible}></ModalBuy> */}
         {/* <Loading isVisible={isLoading}></Loading> */}
         <ScrollView
           style={styles.homeContent}

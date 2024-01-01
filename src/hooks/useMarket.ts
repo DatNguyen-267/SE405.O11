@@ -3,11 +3,12 @@ import { MARKETPLACE_ABI } from 'src/abis'
 import { AppError, DEFAULT_ADDRESS } from 'src/constants'
 import { ethers } from 'src/utils'
 import { Address } from 'viem'
-import { writeContract } from 'wagmi/actions'
+import { WriteContractResult, writeContract } from 'wagmi/actions'
 import { useApproveErc20 } from './useErc20'
 import { useApproveSpenderToAccessNft } from './useNFT'
 import { usePublicClient } from './usePublicClient'
 import { AskInfo, CollectionItem, NftItem } from 'src/types'
+import useAppAddress from './useAppAddress'
 
 export type CollectionDetail = {
   creatorAddress: string
@@ -381,7 +382,6 @@ export function useBuyNFTUsingWrapToken() {
  */
 
 type CreateAskOrderParams = {
-  marketAddress: Address
   cltAddress: Address
   tokenId: number
   price: string
@@ -389,26 +389,25 @@ type CreateAskOrderParams = {
 
 export function useCreateAskOrder() {
   const approveSpenderToAccessNft = useApproveSpenderToAccessNft()
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState<WriteContractResult>()
+  const marketAddress = useAppAddress('MARKET')
 
-  return useCallback(
-    async ({ marketAddress, cltAddress, tokenId, price }: CreateAskOrderParams) => {
+  const mutate = useCallback(
+    async ({ cltAddress, tokenId, price }: CreateAskOrderParams) => {
       try {
+        setIsLoading(true)
         try {
+          console.log({ marketAddress })
           const receiptApprove = await approveSpenderToAccessNft({
             cltAddress,
             spenderAddress: marketAddress,
             tokenId,
           })
-          console.log(receiptApprove)
+          console.log({ receiptApprove })
         } catch (error) {
-          throw new Error(AppError.APPROVE_SPENDER_TO_ACCESS_NFT_FAILED)
+          throw error
         }
-
-        // const transaction = await marketContract.createAskOrder(
-        //   cltAddress,
-        //   tokenId,
-        //   ethers.parseEther(price),
-        // )
 
         const createAskOrderReceipt = await writeContract({
           abi: MARKETPLACE_ABI,
@@ -417,16 +416,23 @@ export function useCreateAskOrder() {
           args: [cltAddress, tokenId, ethers.utils.parseEther(price)],
         })
 
-        console.log('createAskOrder Receipt:', createAskOrderReceipt)
+        setData(createAskOrderReceipt)
         return createAskOrderReceipt
       } catch (error) {
+        setIsLoading(false)
+        setData(undefined)
         throw error
       }
     },
-    [approveSpenderToAccessNft],
+    [approveSpenderToAccessNft, marketAddress, setData, setIsLoading],
   )
-}
 
+  return {
+    data,
+    isLoading,
+    mutate,
+  }
+}
 /**
  * @notice Add a new collection
  * @param _collection: collection address
