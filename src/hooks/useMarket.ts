@@ -499,7 +499,7 @@ export function useImportCollection() {
 
 type CancelAskOrderParams = {
   collectionAddress: Address
-  tokenId: string
+  tokenId: number
 }
 
 export function useCancelAskOrder() {
