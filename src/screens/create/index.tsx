@@ -15,12 +15,21 @@ import {
 import { Button } from 'react-native-paper'
 import { Colors } from 'src/constants/Colors'
 import styles from './styles'
+import { usePinIPFSAndMintNFT } from 'src/hooks/useNFT'
+import { useAccount } from 'wagmi'
+import useAppAddress from 'src/hooks/useAppAddress'
 
 const Create = ({}) => {
   const [profile, setProfile] = useState<string | null>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [addressDefault, setAddressDefault] = useState('0x634345357C9eA4B6e52765804d647048bd15e468')
+  const { address, isConnected } = useAccount()
 
+  const [imageSelected, setImageSelected] = useState<ImagePicker.ImagePickerResult>()
+
+  const publicCollectionAddress = useAppAddress('PUBLIC_ERC721_TOKEN')
+
+  const handlePinIPFSAndMint = usePinIPFSAndMintNFT()
   const imgPlaceHolder = '../../assets/images/addImage.png'
 
   const imagePick = async () => {
@@ -33,6 +42,7 @@ const Create = ({}) => {
     if (!result.canceled) {
       // setProfile(result.uri);
       setProfile(result.assets[0].uri as string)
+      setImageSelected(result)
     }
   }
 
@@ -44,6 +54,30 @@ const Create = ({}) => {
     if (addressDefault) {
       Clipboard.setString(addressDefault)
     }
+  }
+
+  const handleCreate = async () => {
+    console.log('create')
+    if (!isConnected || !address) {
+      // TODO: Toast message here
+      alert('Please connect wallet')
+      return
+    }
+    if (!imageSelected) return
+
+    try {
+      const receipt = await handlePinIPFSAndMint({
+        metadata: {
+          file: imageSelected?.assets?.[0] as unknown as File,
+          title: 'INGENUE',
+          description:
+            'Beauty is but a vain and doubtful good; a shining gloss that fadeth suddenly; a flower that dies when it begins to bud; a doubtful good, a gloss, a glass, a flower, lost, faded, broken, dead within an hour.',
+        },
+        addressTo: address,
+        cltAddress: publicCollectionAddress,
+      })
+      console.log({ receipt })
+    } catch (error) {}
   }
 
   return (
@@ -136,7 +170,7 @@ const Create = ({}) => {
             ></TextInput>
           </View>
           <View style={[styles.createAction]}>
-            <Button style={styles.createBtn}>
+            <Button style={styles.createBtn} onPress={handleCreate}>
               <Text style={[styles.text, styles.createText]}>Create New</Text>
             </Button>
           </View>

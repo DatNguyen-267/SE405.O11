@@ -7,6 +7,7 @@ import { getMetadata } from 'src/hooks/useIPFS'
 import { useGetNameOfCollection, useGetNftsOfAddress, useGetTokenURI } from 'src/hooks/useNFT'
 import { useAccount, useChainId, useWalletClient } from 'wagmi'
 import styles from './styles'
+import { useBuyNFTUsingWrapToken, useCancelAskOrder, useCreateAskOrder } from 'src/hooks/useMarket'
 
 const Connect = ({ navigation }: { navigation?: any }) => {
   const { address, connector, isConnected } = useAccount()
@@ -17,6 +18,10 @@ const Connect = ({ navigation }: { navigation?: any }) => {
   const chainId = useChainId()
 
   const { mutate: handleGetNameOfCollection } = useGetNameOfCollection()
+  const { mutate: createAskOrder } = useCreateAskOrder()
+  const { mutate: buyWithWrapToken } = useBuyNFTUsingWrapToken()
+  const { mutate: cancelAskOrder } = useCancelAskOrder()
+
   const handleGetMetadata = async () => {
     getTokenURI({
       cltAddress: '0x772b21c128f759F75A352568B1F7b4fF331d1162',
@@ -40,6 +45,29 @@ const Connect = ({ navigation }: { navigation?: any }) => {
     })
   }
 
+  const handleCreateAskOrder = () => {
+    createAskOrder({
+      // The grap - Goerli
+      cltAddress: '0x993Ee67F5262c1B4c775d21EbD5bb85733AB3eFE',
+      tokenId: 5,
+      price: '0.07685',
+    })
+  }
+
+  const handleBuy = () => {
+    buyWithWrapToken({
+      collectionAddress: '0x55327442555db09955110428F46B66b902Dee1a4',
+      tokenId: 4,
+      price: '0.0055',
+    })
+  }
+
+  const handleCancelAskOrder = () => {
+    cancelAskOrder({
+      collectionAddress: '0x55327442555db09955110428F46B66b902Dee1a4',
+      tokenId: 4,
+    })
+  }
   return (
     <View style={styles.createScreen}>
       <ScrollView
@@ -52,6 +80,9 @@ const Connect = ({ navigation }: { navigation?: any }) => {
           <Button onPress={handleGetMetadata}>Get metadata NFT</Button>
           <Button onPress={handleGetNameCollection}>Get name collection</Button>
           <Button onPress={handleGetAllNftOfAddress}>Get all nft of address</Button>
+          <Button onPress={handleCreateAskOrder}>Create Ask order</Button>
+          <Button onPress={handleBuy}>Buy nft</Button>
+          <Button onPress={handleCancelAskOrder}>Cancel ask order</Button>
           <Image
             style={styles.connectImage}
             source={require('../../assets/images/wallet.png')}

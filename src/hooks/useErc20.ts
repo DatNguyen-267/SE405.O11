@@ -11,28 +11,24 @@ type ApproveTokenExchangeParams = {
 }
 
 export function useApproveErc20() {
-  const publicClient = usePublicClient()
-
   const wrapperTokenAddress = useAppAddress('WUIT')
 
   return useCallback(
     async ({ nftAddressGuy, wad }: ApproveTokenExchangeParams) => {
       try {
-        const transactionReceipt = await publicClient.readContract({
+        const transactionReceipt = await writeContract({
           abi: TOKEN_EXCHANGE_ABI,
           address: wrapperTokenAddress,
-          args: [nftAddressGuy, wad],
           functionName: 'approve',
+          args: [nftAddressGuy, wad],
         })
-
-        console.log('approve receipt:', transactionReceipt)
 
         return transactionReceipt
       } catch (error) {
         throw error
       }
     },
-    [publicClient, wrapperTokenAddress],
+    [wrapperTokenAddress],
   )
 }
 
@@ -53,7 +49,6 @@ export function useDeposit() {
           value: BigInt(ethers.utils.formatEther(value)),
         })
 
-        console.log('deposit receipt:', transactionReceipt)
         return transactionReceipt
       } catch (error) {
         throw error

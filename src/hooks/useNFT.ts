@@ -12,6 +12,7 @@ import {
   useViewMarketCollections,
 } from './useMarket'
 import useAppAddress from './useAppAddress'
+import { createMetadata } from 'src/services/createIPFS'
 
 type ApproveNFTParams = {
   cltAddress: Address
@@ -30,8 +31,6 @@ export function useApproveSpenderToAccessNft() {
           args: [spenderAddress, tokenId],
         })
 
-        console.log('approve receipt:', transactionReceipt)
-
         return transactionReceipt
       } catch (error) {
         throw error
@@ -47,6 +46,49 @@ type MintNFTParams = {
   tokenUri: string
 }
 
+export function usePinIPFSAndMintNFT() {
+  const handleMintNFT = useMintNFT()
+  const handleGetOwnerCollection = useGetOwnerOfCollection()
+
+  return useCallback(
+    async ({
+      cltAddress,
+      addressTo,
+      metadata,
+    }: {
+      cltAddress: Address
+      addressTo: Address
+      metadata: {
+        file: any
+        title: string
+        description: string
+      }
+    }) => {
+      const { file, title, description } = metadata
+
+      try {
+        const owner = await handleGetOwnerCollection({ cltAddress: cltAddress })
+        if ((owner as string).toLowerCase() !== addressTo.toLowerCase()) {
+          throw new Error('You are not owner of collection')
+        }
+
+        const tokenUri = await createMetadata(file, title, description)
+        console.log({ tokenUri })
+        // const transactionReceipt = await handleMintNFT({
+        //   cltAddress: cltAddress,
+        //   addressTo: addressTo,
+        //   tokenUri: tokenUri.url,
+        // })
+
+        // return transactionReceipt
+      } catch (error) {
+        console.log({ error })
+        throw error
+      }
+    },
+    [handleMintNFT, handleGetOwnerCollection],
+  )
+}
 export function useMintNFT() {
   const currentChain = useCurrentChain()
   return useCallback(
@@ -66,7 +108,6 @@ export function useMintNFT() {
           args: [addressTo, tokenUri],
         })
 
-        console.log('Mint receipt:', transactionReceipt)
         return transactionReceipt
       } catch (error) {
         throw error
@@ -102,7 +143,6 @@ export function useGetTokenURIs() {
           contracts: contracts,
         })
 
-        console.log({ data })
         return data
       } catch (error) {
         throw error
@@ -126,7 +166,6 @@ export function useGetTokenURI() {
           args: [tokenId],
           functionName: 'tokenURI',
         })
-        console.log({ tokenUri })
 
         return tokenUri as string
       } catch (error) {
@@ -332,7 +371,7 @@ export function useGetNFTsOfCollectionOfOwnerAddress() {
         throw error
       }
     },
-    [publicClient],
+    [publicClient, setData],
   )
 
   return { mutate, data }
@@ -340,21 +379,23 @@ export function useGetNFTsOfCollectionOfOwnerAddress() {
 
 export function useGetNftsOfAddress() {
   const publicClient = usePublicClient()
-  const { mutate: getAllCollecntionOfMarket } = useViewMarketCollections()
+  const { mutate: getAllCollectionOfMarket } = useViewMarketCollections()
   const { mutate: getAllNFTsOfCollectionOfOwnerAddress } = useGetNFTsOfCollectionOfOwnerAddress()
   const { mutate: getAskOfAddress } = useViewAsksByCollectionAndSellerAddress()
+
   const marketAddress = useAppAddress('MARKET')
-  const [data, setData] = useState<NftItem[]>([])
+  const [data, setData] = useState<NftItem[]>()
+  const [isLoading, setLoading] = useState(false)
 
   const mutate = useCallback(
     async ({ ownerAddress }: { ownerAddress: Address }) => {
+      setLoading(true)
       try {
-        const listCollection = await getAllCollecntionOfMarket({
+        const listCollection = await getAllCollectionOfMarket({
           marketAddress: marketAddress,
           cursor: 0,
           size: 20,
         })
-        console.log({ listCollection: JSON.stringify(listCollection, undefined, 4) })
 
         const asks = await Promise.all(
           listCollection.map(async (collection) => {
@@ -369,8 +410,6 @@ export function useGetNftsOfAddress() {
           }),
         )
 
-        console.log({ asks: JSON.stringify(asks.flat(1), undefined, 4) })
-
         const allNfts = await Promise.all(
           listCollection.map(async (collection) => {
             const nfts = await getAllNFTsOfCollectionOfOwnerAddress({
@@ -380,20 +419,25 @@ export function useGetNftsOfAddress() {
             return nfts
           }),
         )
-        console.log({ allNfts: JSON.stringify(allNfts.flat(1), undefined, 4) })
 
         const res = mappingAsksToNftList(asks.flat(1), allNfts.flat(1))
-
-        console.log({ res: JSON.stringify(res, undefined, 4) })
-        console.log({ res: res })
         setData(res)
       } catch (error) {
-        setData([])
+        setLoading(false)
+        setData(undefined)
         throw error
       }
     },
-    [publicClient],
+    [
+      publicClient,
+      marketAddress,
+      setData,
+      setLoading,
+      getAllCollectionOfMarket,
+      getAllNFTsOfCollectionOfOwnerAddress,
+      getAskOfAddress,
+    ],
   )
 
-  return { mutate, data }
+  return { mutate, data, isLoading }
 }
