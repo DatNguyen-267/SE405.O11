@@ -5,9 +5,17 @@ import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Button } from 'react-native-paper'
 import { getMetadata } from 'src/hooks/useIPFS'
 import { useGetNameOfCollection, useGetNftsOfAddress, useGetTokenURI } from 'src/hooks/useNFT'
-import { useAccount, useChainId, useWalletClient } from 'wagmi'
+import { useAccount, useBalance, useChainId, useWalletClient } from 'wagmi'
 import styles from './styles'
-import { useBuyNFTUsingWrapToken, useCancelAskOrder, useCreateAskOrder } from 'src/hooks/useMarket'
+import {
+  useBuyNFTUsingWrapToken,
+  useCancelAskOrder,
+  useCreateAskOrder,
+  useViewAllAsk,
+} from 'src/hooks/useMarket'
+import { ethers } from 'ethers'
+import { toDisplayDenomAmount } from 'src/utils/big'
+import useAppAddress from 'src/hooks/useAppAddress'
 
 const Connect = ({ navigation }: { navigation?: any }) => {
   const { address, connector, isConnected } = useAccount()
@@ -21,6 +29,24 @@ const Connect = ({ navigation }: { navigation?: any }) => {
   const { mutate: createAskOrder } = useCreateAskOrder()
   const { mutate: buyWithWrapToken } = useBuyNFTUsingWrapToken()
   const { mutate: cancelAskOrder } = useCancelAskOrder()
+
+  // Get Native balance
+  const { data: nativeBalanceData } = useBalance({ address })
+  const amount = nativeBalanceData?.formatted
+  // display denom is unit (AIOZ, ETH, BNB, ...)
+  const displayDenom = nativeBalanceData?.symbol
+  console.log({ amount, displayDenom })
+
+  // Get Token Exchange balance (WUIT)
+  const ExchangeTokenAddress = useAppAddress('WUIT')
+  const { data: tokenExchangeBalanceData } = useBalance({
+    address,
+    token: ExchangeTokenAddress,
+  })
+  console.log({ tokenExchangeBalanceData })
+  const tokenExchangeAmount = tokenExchangeBalanceData?.formatted
+  const tokenExchangeDisplay = tokenExchangeBalanceData?.symbol
+  console.log({ tokenExchangeAmount, tokenExchangeDisplay })
 
   const handleGetMetadata = async () => {
     getTokenURI({
@@ -38,7 +64,7 @@ const Connect = ({ navigation }: { navigation?: any }) => {
   }
 
   const { data: nfts, mutate: getAllNftOfAddress } = useGetNftsOfAddress()
-
+  const { mutate: viewAllAsk } = useViewAllAsk()
   const handleGetAllNftOfAddress = () => {
     getAllNftOfAddress({
       ownerAddress: '0x454574C8AD9706a8fC22dDA71Ce77Cb1CDd5fEB1',
@@ -68,6 +94,9 @@ const Connect = ({ navigation }: { navigation?: any }) => {
       tokenId: 4,
     })
   }
+  const handleViewAllAsk = () => {
+    viewAllAsk()
+  }
   return (
     <View style={styles.createScreen}>
       <ScrollView
@@ -83,6 +112,7 @@ const Connect = ({ navigation }: { navigation?: any }) => {
           <Button onPress={handleCreateAskOrder}>Create Ask order</Button>
           <Button onPress={handleBuy}>Buy nft</Button>
           <Button onPress={handleCancelAskOrder}>Cancel ask order</Button>
+          <Button onPress={handleViewAllAsk}>Get all asks</Button>
           <Image
             style={styles.connectImage}
             source={require('../../assets/images/wallet.png')}

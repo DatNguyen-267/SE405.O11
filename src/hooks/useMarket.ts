@@ -1,14 +1,14 @@
 import { useCallback, useState } from 'react'
 import { MARKETPLACE_ABI } from 'src/abis'
 import { AppError, DEFAULT_ADDRESS } from 'src/constants'
+import { AskInfo, CollectionItem, NftItem } from 'src/types'
 import { ethers } from 'src/utils'
 import { Address } from 'viem'
 import { WriteContractResult, prepareWriteContract, writeContract } from 'wagmi/actions'
+import useAppAddress from './useAppAddress'
 import { useApproveErc20 } from './useErc20'
 import { useApproveSpenderToAccessNft } from './useNFT'
 import { usePublicClient } from './usePublicClient'
-import { AskInfo, CollectionItem, NftItem } from 'src/types'
-import useAppAddress from './useAppAddress'
 
 export type CollectionDetail = {
   creatorAddress: string
@@ -531,4 +531,55 @@ export function useCancelAskOrder() {
   )
 
   return { mutate, isLoading, data }
+}
+
+export function useViewAllAsk() {
+  const publicClient = usePublicClient()
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState<AskInfo[]>()
+  const { mutate: getAllCollectionOfMarket } = useViewMarketCollections()
+  const { mutate: getAskByCollection } = useViewAsksByCollection()
+
+  const marketAddress = useAppAddress('MARKET')
+  const mutate = useCallback(async (): Promise<AskInfo[]> => {
+    try {
+      setIsLoading(true)
+      const listCollection = await getAllCollectionOfMarket({
+        marketAddress: marketAddress,
+        cursor: 0,
+        size: 20,
+      })
+
+      const asks = await Promise.all(
+        listCollection.map(async (collection) => {
+          const nfts = await getAskByCollection({
+            collectionAddress: collection.collectionAddress,
+            marketAddress: marketAddress,
+            cursor: 0,
+            size: 20,
+          })
+          return nfts
+        }),
+      )
+      const res = asks.flat(1)
+
+      setData(res)
+      console.log({ res })
+      setIsLoading(false)
+      return res
+    } catch (error) {
+      setIsLoading(false)
+      setData(undefined)
+      throw error
+    }
+  }, [
+    publicClient,
+    marketAddress,
+    getAskByCollection,
+    getAllCollectionOfMarket,
+    setIsLoading,
+    setData,
+  ])
+
+  return { mutate, data, isLoading }
 }
