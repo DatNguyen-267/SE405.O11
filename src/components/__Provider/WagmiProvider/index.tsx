@@ -16,7 +16,7 @@ const metadata = {
   icons: ['https://avatars.githubusercontent.com/u/37784886'],
 }
 
-const chains = [sepolia, goerli, aiozChain]
+const chains = [goerli, aiozChain]
 
 const wagmiConfig = defaultWagmiConfig({
   chains,
