@@ -13,11 +13,12 @@ import ModalDelist from 'src/components/ModalDelist'
 import { DEFAULT_ADDRESS } from 'src/constants'
 import { useGetNftsOfAddress } from 'src/hooks/useNFT'
 import { useFocusEffect } from 'expo-router'
-import { useAccount } from 'wagmi'
+import { useAccount, useBalance } from 'wagmi'
 import { shorterAddress } from 'src/utils'
 import PageLoading from 'src/components/PageLoading'
+import useAppAddress from 'src/hooks/useAppAddress'
 
-const Author = ({navigation}:{navigation?:any}) => {
+const Author = ({ navigation }: { navigation?: any }) => {
   const { address, connector, isConnected } = useAccount()
   const [isDeposit, setIsDeposit] = useState(false)
   const [isImport, setIsImport] = useState(false)
@@ -27,45 +28,6 @@ const Author = ({navigation}:{navigation?:any}) => {
   const [isLoading, setIsLoading] = useState(false)
   const [tab, setTab] = useState('All')
   const { data: nfts, mutate: getAllNftOfAddress } = useGetNftsOfAddress()
-
-  const handleGetAllNftOfAddress = () => {
-   setIsLoading(true) 
-   getAllNftOfAddress({
-      ownerAddress: '0x454574C8AD9706a8fC22dDA71Ce77Cb1CDd5fEB1',
-    }).then((res) => {
-
-    })
-    .catch((err)=>{
-
-    })
-    .finally(()=>{
-      setIsLoading(false)
-    })
-  }
- 
-
-  const data = [
-    {
-      img: 'https://th.bing.com/th/id/OIG.ey_KYrwhZnirAkSgDhmg',
-      name: 'fox abc abc abc abc abc abc abc abc abc abc',
-      status: 'On Sale',
-    },
-    {
-      img: 'https://png.pngtree.com/background/20230411/original/pngtree-beautiful-moon-background-on-moon-night-picture-image_2392251.jpg',
-      name: 'moon',
-      status: 'On Sale',
-    },
-    {
-      img: 'https://statusneo.com/wp-content/uploads/2023/02/MicrosoftTeams-image551ad57e01403f080a9df51975ac40b6efba82553c323a742b42b1c71c1e45f1.jpg',
-      name: 'childreno',
-      status: 'Not For Sale',
-    },
-    {
-      img: 'https://deep-image.ai/blog/content/images/2022/09/underwater-magic-world-8tyxt9yz.jpeg',
-      name: 'water',
-      status: 'Not For Sale',
-    },
-  ]
   const tabs = [
     {
       title: 'All',
@@ -78,16 +40,46 @@ const Author = ({navigation}:{navigation?:any}) => {
     },
   ]
 
-  
+  const handleGetAllNftOfAddress = () => {
+    if (address) {
+      setIsLoading(true)
+      getAllNftOfAddress({
+        ownerAddress: address,
+      }).then((res) => {
+
+      })
+        .catch((err) => {
+
+        })
+        .finally(() => {
+          setIsLoading(false)
+        })
+    }
+  }
+  // Get Native balance
+  const { data: nativeBalanceData } = useBalance({ address })
+  const amount = nativeBalanceData?.formatted
+  // display denom is unit (AIOZ, ETH, BNB, ...)
+  const displayDenom = nativeBalanceData?.symbol
+
+  // Get Token Exchange balance (WUIT)
+  const ExchangeTokenAddress = useAppAddress('WUIT')
+  const { data: tokenExchangeBalanceData } = useBalance({
+    address,
+    token: ExchangeTokenAddress,
+  })
+  const tokenExchangeAmount = tokenExchangeBalanceData?.formatted
+  const tokenExchangeDisplay = tokenExchangeBalanceData?.symbol
+
   const changeConnect = () => {
     // setIsConnected(!isConnected)
   }
-  useEffect(()=>{
-    if(isConnected){
+  useEffect(() => {
+    if (isConnected && (isDeposit == false || isSell == false)) {
       handleGetAllNftOfAddress()
     }
-  },[])
-  
+  }, [isDelist, isSell])
+   
   return (
     <View style={styles.createScreen}>
       <ModalDeposit isVisible={isDeposit} setIsVisible={setIsDeposit}></ModalDeposit>
@@ -172,8 +164,8 @@ const Author = ({navigation}:{navigation?:any}) => {
               </View>
               <View style={[styles.balanceContainer]}>
                 <Text style={[styles.label]}>Balance</Text>
-                <Text style={[styles.text, styles.balanceAZ]}>192.193139212329 AIOZ</Text>
-                <Text style={[styles.text, styles.balanceWB]}>192.193139212329 WBNB</Text>
+                <Text style={[styles.text, styles.balanceAZ]}>{`${amount} ${displayDenom}`}</Text>
+                <Text style={[styles.text, styles.balanceWB]}>{`${tokenExchangeAmount} ${tokenExchangeDisplay}`}</Text>
               </View>
             </View>
             <View style={styles.nftContent}>
@@ -181,53 +173,53 @@ const Author = ({navigation}:{navigation?:any}) => {
               <Tabs items={tabs} setTab={setTab} />
               <PageLoading isVisible={isLoading}></PageLoading>
               {
-                isLoading == false  && 
+                isLoading == false &&
                 <FlatList
-                columnWrapperStyle={{
-                  justifyContent: 'space-between',
-                }}
-                scrollEnabled={false}
-                style={styles.listNft}
-                data={nfts}
-                numColumns={2}
-                renderItem={({ item }) => {
-                  if (tab.toLowerCase() === tabs[0].title.toLowerCase()) {
-                    return (
-                      <View style={styles.nftItem}>
-                        <NFTCard
-                          item={item}
-                          isDelist={item.status === 'Sale'}
-                          isSell={item.status !== 'Sale'}
-                          onShowModal={item.status === 'Sale'?setIsDelist:setIsSell}
-                          setDataNFT={setDataNFT}
-                        ></NFTCard>
-                      </View>
-                    )
-                  } else {
-                    if (
-                      item.status.toLowerCase() === tab.toLowerCase() &&
-                      tab.toLowerCase() === tabs[1].title.toLowerCase()
-                    ) {
+                  columnWrapperStyle={{
+                    justifyContent: 'space-between',
+                  }}
+                  scrollEnabled={false}
+                  style={styles.listNft}
+                  data={nfts}
+                  numColumns={2}
+                  renderItem={({ item }) => {
+                    if (tab.toLowerCase() === tabs[0].title.toLowerCase()) {
                       return (
                         <View style={styles.nftItem}>
-                          <NFTCard item={item} isDelist={true} onShowModal={setIsDelist} setDataNFT={setDataNFT}></NFTCard>
+                          <NFTCard
+                            item={item}
+                            isDelist={item.status === 'Sale'}
+                            isSell={item.status !== 'Sale'}
+                            onShowModal={item.status === 'Sale' ? setIsDelist : setIsSell}
+                            setDataNFT={setDataNFT}
+                          ></NFTCard>
                         </View>
                       )
+                    } else {
+                      if (
+                        item.status.toLowerCase() === tab.toLowerCase() &&
+                        tab.toLowerCase() === tabs[1].title.toLowerCase()
+                      ) {
+                        return (
+                          <View style={styles.nftItem}>
+                            <NFTCard item={item} isDelist={true} onShowModal={setIsDelist} setDataNFT={setDataNFT}></NFTCard>
+                          </View>
+                        )
+                      }
+                      if (
+                        item.status.toLowerCase() === tab.toLowerCase() &&
+                        tab.toLowerCase() === tabs[2].title.toLowerCase()
+                      ) {
+                        return (
+                          <View style={styles.nftItem}>
+                            <NFTCard item={item} isSell={true} onShowModal={setIsSell} setDataNFT={setDataNFT}></NFTCard>
+                          </View>
+                        )
+                      }
                     }
-                    if (
-                      item.status.toLowerCase() === tab.toLowerCase() &&
-                      tab.toLowerCase() === tabs[2].title.toLowerCase()
-                    ) {
-                      return (
-                        <View style={styles.nftItem}>
-                          <NFTCard item={item} isSell={true} onShowModal={setIsSell} setDataNFT={setDataNFT}></NFTCard>
-                        </View>
-                      )
-                    }
-                  }
-                  return null
-                }}
-              />
+                    return null
+                  }}
+                />
               }
             </View>
           </View>

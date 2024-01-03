@@ -29,10 +29,7 @@ const Explore = ({ navigation }: { navigation: any }) => {
   } = useViewAsksByCollection()
 
   useFocusEffect(
-    useCallback(() => {
-      console.log({ collections })
-      console.log({ asks })
-      
+    useCallback(() => { 
       handleGetAllCollection({
         marketAddress: marketAddress,
         cursor: 0,

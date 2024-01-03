@@ -1,4 +1,4 @@
-import { default as React, useEffect, useState } from 'react'
+import { default as React, useCallback, useEffect, useMemo, useState } from 'react'
 import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import ModalBuy from 'src/components/ModalBuy'
@@ -12,6 +12,10 @@ import { useGetNftsOfAddress } from 'src/hooks/useNFT'
 import ModalSell from 'src/components/ModalSell'
 import ModalDeposit from 'src/components/ModalDeposit'
 import ModalImport from 'src/components/ModalImport'
+import { mappingAsksToNftList, useViewAllAsk } from 'src/hooks/useMarket'
+import { useFocusEffect } from 'expo-router'
+import { NftItem } from 'src/types'
+import PageLoading from 'src/components/PageLoading'
 
 interface ProfileCardProps {
   navigation?: any
@@ -19,8 +23,11 @@ interface ProfileCardProps {
 const Home = ({ navigation }: ProfileCardProps) => {
   const dispatch = useDispatch()
   const [isVisible, setIsVisible] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [dataNFT, setDataNFT] = useState(undefined)
   const [search, setSearch] = useState('')
-
+  const { mutate: viewAllAsk, data: asks } = useViewAllAsk()
+  const nfts: NftItem[] = []
   const data = [
     {
       img: 'https://th.bing.com/th/id/OIG.ey_KYrwhZnirAkSgDhmg',
@@ -43,9 +50,31 @@ const Home = ({ navigation }: ProfileCardProps) => {
       status: 'Not For Sale',
     },
   ]
+  const mappingList = useMemo(() => {
+    if (asks) {
+      const res = mappingAsksToNftList(asks, nfts)
+      return res
+    } else return nfts
+  }, [asks])
 
-  useEffect(() => {}, [])
+  useFocusEffect(
+    useCallback(() => {
+      handleViewAllAsk()
+    }, [])
+  )
 
+  const handleViewAllAsk = () => {
+    setIsLoading(true)
+    viewAllAsk().then((res) => {
+
+    })
+      .catch((err) => {
+
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }
   const handleLoading = () => {
     onShowLoading(dispatch)
     setTimeout(() => {
@@ -58,8 +87,8 @@ const Home = ({ navigation }: ProfileCardProps) => {
       <View style={styles.homeScreen}>
         {/* <ModalImport isVisible={isVisible} setIsVisible={setIsVisible}></ModalImport> */}
         {/* <ModalDeposit isVisible={isVisible} setIsVisible={setIsVisible}></ModalDeposit> */}
-        <ModalSell isVisible={isVisible} setIsVisible={setIsVisible}></ModalSell>
-        {/* <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible}></ModalBuy> */}
+        {/* <ModalSell isVisible={isVisible} setIsVisible={setIsVisible}></ModalSell> */}
+        <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible} item={dataNFT}></ModalBuy>
         {/* <Loading isVisible={isLoading}></Loading> */}
         <ScrollView
           style={styles.homeContent}
@@ -89,33 +118,31 @@ const Home = ({ navigation }: ProfileCardProps) => {
                 source={require('../../assets/images/fire.png')}
               ></Image>
             </View>
+            <PageLoading isVisible={isLoading}></PageLoading>
             <View style={styles.list}>
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                <View style={styles.listContent}>
-                  {data.map((item, index) => {
-                    if (item.status === 'On Sale') {
-                      return (
-                        <TouchableOpacity
-                          onPress={() => {
-                            setIsVisible(true)
-                          }}
-                          key={index}
-                        >
-                          <NFTCardHorital item={item}></NFTCardHorital>
-                        </TouchableOpacity>
-                      )
-                    }
-                  })}
-                  {/* <TouchableOpacity onPress={() => { setIsVisible(true) }}>
-                                        <NFTCardHorital></NFTCardHorital>
-                                    </TouchableOpacity> */}
-                  {/* <TouchableOpacity onPress={() => { setIsVisible(true) }}>
-                                        <NFTCardHorital></NFTCardHorital>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => { setIsVisible(true) }}>
-                                        <NFTCardHorital></NFTCardHorital>
-                                    </TouchableOpacity> */}
-                </View>
+                {
+                  !isLoading &&
+                  <View style={styles.listContent}>
+                    {
+                      mappingList && mappingList.map((item, index) => {
+                        if (index < 5) {
+                          return (
+                            <NFTCardHorital item={item} key={index} onShowModal={setIsVisible} setDataNFT={setDataNFT} ></NFTCardHorital>
+                          )
+                        }
+                      })}
+                    {/* <TouchableOpacity onPress={() => { setIsVisible(true) }}>
+                                      <NFTCardHorital></NFTCardHorital>
+                                  </TouchableOpacity> */}
+                    {/* <TouchableOpacity onPress={() => { setIsVisible(true) }}>
+                                      <NFTCardHorital></NFTCardHorital>
+                                  </TouchableOpacity>
+                                  <TouchableOpacity onPress={() => { setIsVisible(true) }}>
+                                      <NFTCardHorital></NFTCardHorital>
+                                  </TouchableOpacity> */}
+                  </View>
+                }
               </ScrollView>
             </View>
 
@@ -125,33 +152,37 @@ const Home = ({ navigation }: ProfileCardProps) => {
               <View style={styles.search}>
                 <SearchInput search={search} setSearch={setSearch} />
               </View>
-              <FlatList
-                columnWrapperStyle={{
-                  justifyContent: 'space-between',
-                }}
-                scrollEnabled={false}
-                style={styles.listNft}
-                data={data}
-                numColumns={2}
-                renderItem={({ item }) => {
-                  if (search === '') {
-                    return (
-                      <View style={styles.nftItem}>
-                        <NFTCard item={item} onShowModal={setIsVisible} isBuy={true}></NFTCard>
-                      </View>
-                    )
-                  } else {
-                    if (item.name.toLowerCase().includes(search.toLowerCase())) {
+              <PageLoading isVisible={isLoading}></PageLoading>
+              {
+                !isLoading &&
+                <FlatList
+                  columnWrapperStyle={{
+                    justifyContent: 'space-between',
+                  }}
+                  scrollEnabled={false}
+                  style={styles.listNft}
+                  data={mappingList}
+                  numColumns={2}
+                  renderItem={({ item }) => {
+                    if (search === '') {
                       return (
                         <View style={styles.nftItem}>
-                          <NFTCard item={item} onShowModal={setIsVisible} isBuy={true}></NFTCard>
+                          <NFTCard item={item} onShowModal={setIsVisible} isBuy={true} setDataNFT={setDataNFT}></NFTCard>
                         </View>
                       )
+                    } else {
+                      if (item.title.toLowerCase().includes(search.toLowerCase())) {
+                        return (
+                          <View style={styles.nftItem}>
+                            <NFTCard item={item} onShowModal={setIsVisible} isBuy={true} setDataNFT={setDataNFT}></NFTCard>
+                          </View>
+                        )
+                      }
                     }
-                  }
-                  return null
-                }}
-              />
+                    return null
+                  }}
+                />
+              }
             </View>
           </View>
         </ScrollView>
