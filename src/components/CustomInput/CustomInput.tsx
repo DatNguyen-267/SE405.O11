@@ -10,6 +10,7 @@ interface InputType{
   secureTextEntry?: any;
   styleInput?: any;
   keyboardType?: any;
+  setValue?: any;
 }
 
 const CustomInput = ({
@@ -20,6 +21,7 @@ const CustomInput = ({
   secureTextEntry,
   styleInput,
   keyboardType,
+  setValue
 }: InputType) => {
   return (
     <Controller
@@ -30,7 +32,10 @@ const CustomInput = ({
         <View style={styles.container}>
           <TextInput
               value={value}
-              onChangeText={onChange}
+              onChangeText={(e)=>{
+                onChange(e)
+                setValue(e)
+              }}
               onBlur={onBlur}
               placeholder={placeholder}
               style={[styleInput, error && styles.error]}

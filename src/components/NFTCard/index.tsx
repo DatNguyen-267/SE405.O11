@@ -7,6 +7,8 @@ import { ethereumAddressRegex } from 'src/utils/regex'
 import { useGetNameOfCollection, useGetTokenURI } from 'src/hooks/useNFT'
 import { getMetadata, getUrlImage } from 'src/utils'
 import { DEFAULT_ADDRESS } from 'src/constants'
+import { NftItem } from 'src/types'
+import { onShowToastInfo } from 'src/utils/toast'
 
 interface ProfileCardProps {
   item?: any
@@ -29,6 +31,7 @@ const NFTCard = ({
   const [metaData, setMetaData] = useState<any>(undefined)
   const { mutate: getTokenURI } = useGetTokenURI()
   const { mutate: handleGetNameOfCollection } = useGetNameOfCollection()
+  const [isLoading, setIsLoading] = useState(false)
   const getAvatarByAddress = (address: string) => {
     if (ethereumAddressRegex.test(address)) {
       return `https://effigy.im/a/${address}.svg`
@@ -37,19 +40,33 @@ const NFTCard = ({
     }
   }
   const handleClick = () => {
-    if (setDataNFT !== undefined) {
-      setDataNFT(item)
+    if (!isLoading) {
+      if (setDataNFT !== undefined) {
+        setDataNFT(item)
+      }
+      onShowModal(true)
     }
-    onShowModal(true)
+    else {
+      onShowToastInfo("Please wait image and name loaded!")
+    }
   }
   const handleGetMetadata = async () => {
+    setIsLoading(true)
+
     getTokenURI({
       cltAddress: item.collectionAddress,
       tokenId: item.tokenId,
     }).then(async (res) => {
       const data = await getMetadata(res)
+      if (data) {
+        item.title = data.name
+        item.imageGatewayUrl = data.image
+      }
       setMetaData(data)
-    })
+      setIsLoading(false)
+    }).catch(() => {
+      setIsLoading(false)
+    });
   }
 
   useEffect(() => {
@@ -90,7 +107,7 @@ const NFTCard = ({
           <View style={styles.cardImage}>
             <Image
               resizeMode="cover"
-              style={{width: '100%', height: '100%'}}
+              style={{ width: '100%', height: '100%' }}
               source={{
                 uri:
                   metaData && metaData.image

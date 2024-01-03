@@ -23,13 +23,23 @@ const Author = ({navigation}:{navigation?:any}) => {
   const [isImport, setIsImport] = useState(false)
   const [isDelist, setIsDelist] = useState(false)
   const [isSell, setIsSell] = useState(false)
-  // const [isConnected, setIsConnected] = useState(true)
+  const [dataNFT, setDataNFT] = useState(undefined)
+  const [isLoading, setIsLoading] = useState(false)
   const [tab, setTab] = useState('All')
   const { data: nfts, mutate: getAllNftOfAddress } = useGetNftsOfAddress()
 
   const handleGetAllNftOfAddress = () => {
+   setIsLoading(true) 
    getAllNftOfAddress({
       ownerAddress: '0x454574C8AD9706a8fC22dDA71Ce77Cb1CDd5fEB1',
+    }).then((res) => {
+
+    })
+    .catch((err)=>{
+
+    })
+    .finally(()=>{
+      setIsLoading(false)
     })
   }
  
@@ -82,8 +92,8 @@ const Author = ({navigation}:{navigation?:any}) => {
     <View style={styles.createScreen}>
       <ModalDeposit isVisible={isDeposit} setIsVisible={setIsDeposit}></ModalDeposit>
       <ModalImport isVisible={isImport} setIsVisible={setIsImport}></ModalImport>
-      <ModalDelist isVisible={isDelist} setIsVisible={setIsDelist}></ModalDelist>
-      <ModalSell isVisible={isSell} setIsVisible={setIsSell}></ModalSell>
+      <ModalDelist isVisible={isDelist} setIsVisible={setIsDelist} item={dataNFT}></ModalDelist>
+      <ModalSell isVisible={isSell} setIsVisible={setIsSell} item={dataNFT}></ModalSell>
       {/* <ModalSend></ModalSend> */}
       {/* <Header
                 title={"Create NFT"}
@@ -169,9 +179,9 @@ const Author = ({navigation}:{navigation?:any}) => {
             <View style={styles.nftContent}>
               {/* <Text style={[styles.text, styles.title]}>All NFT</Text> */}
               <Tabs items={tabs} setTab={setTab} />
-              <PageLoading isVisible={nfts && nfts.length == 0}></PageLoading>
+              <PageLoading isVisible={isLoading}></PageLoading>
               {
-                nfts && nfts.length > 0  && 
+                isLoading == false  && 
                 <FlatList
                 columnWrapperStyle={{
                   justifyContent: 'space-between',
@@ -188,6 +198,8 @@ const Author = ({navigation}:{navigation?:any}) => {
                           item={item}
                           isDelist={item.status === 'Sale'}
                           isSell={item.status !== 'Sale'}
+                          onShowModal={item.status === 'Sale'?setIsDelist:setIsSell}
+                          setDataNFT={setDataNFT}
                         ></NFTCard>
                       </View>
                     )
@@ -198,7 +210,7 @@ const Author = ({navigation}:{navigation?:any}) => {
                     ) {
                       return (
                         <View style={styles.nftItem}>
-                          <NFTCard item={item} isDelist={true} onShowModal={setIsDelist}></NFTCard>
+                          <NFTCard item={item} isDelist={true} onShowModal={setIsDelist} setDataNFT={setDataNFT}></NFTCard>
                         </View>
                       )
                     }
@@ -208,7 +220,7 @@ const Author = ({navigation}:{navigation?:any}) => {
                     ) {
                       return (
                         <View style={styles.nftItem}>
-                          <NFTCard item={item} isSell={true} onShowModal={setIsSell}></NFTCard>
+                          <NFTCard item={item} isSell={true} onShowModal={setIsSell} setDataNFT={setDataNFT}></NFTCard>
                         </View>
                       )
                     }
