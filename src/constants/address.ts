@@ -4,7 +4,7 @@ import { CHAIN_IDS } from './chains'
 export const DEFAULT_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export const ADDRESS_OF_CHAINS: {
-  [key: (typeof CHAIN_IDS)[keyof typeof CHAIN_IDS]]: AddressOfChainType
+  [key: number]: AddressOfChainType
 } = {
   [CHAIN_IDS.AIOZ]: {
     DEPOSIT_RATE: 100000,
