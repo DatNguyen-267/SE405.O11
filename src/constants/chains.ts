@@ -1,13 +1,5 @@
 import { defineChain } from 'viem'
-import { goerli, sepolia } from 'viem/chains'
-
-export const CHAIN_IDS = {
-  AIOZ: 4102,
-  GOERLI: goerli.id,
-  SEPOLIA: sepolia.id,
-}
-export const DEFAULT_CHAIN_ID = CHAIN_IDS.GOERLI
-export const DEFAULT_WRAP_TOKEN_SYMBOL = 'WUIT'
+import { goerli } from 'viem/chains'
 
 export const aiozChain = defineChain({
   id: 4102,
@@ -36,6 +28,42 @@ export const aiozChain = defineChain({
       url: 'https://testnet.explorer.aioz.network',
     },
   },
+  testnet: true,
 })
 
-export const CHAINS = [aiozChain, goerli]
+export const sepolia = defineChain({
+  id: 11155111,
+  network: 'sepolia',
+  name: 'Sepolia',
+  nativeCurrency: { name: 'Sepolia Ether', symbol: 'SEP', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.sepolia.org'],
+    },
+    public: {
+      http: ['https://rpc.sepolia.org'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'Etherscan',
+      url: 'https://sepolia.etherscan.io',
+    },
+    default: {
+      name: 'Etherscan',
+      url: 'https://sepolia.etherscan.io',
+    },
+  },
+
+  testnet: true,
+})
+
+export const CHAINS = [aiozChain, goerli, sepolia]
+
+export const CHAIN_IDS = {
+  AIOZ: aiozChain.id,
+  GOERLI: goerli.id,
+  SEPOLIA: sepolia.id,
+} as const
+export const DEFAULT_CHAIN_ID = CHAIN_IDS.GOERLI
+export const DEFAULT_WRAP_TOKEN_SYMBOL = 'WUIT'

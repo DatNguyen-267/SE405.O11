@@ -7,7 +7,9 @@ const useCurrentChain = () => {
   const chainId = useChainId()
 
   const currentChainId = useMemo(() => {
-    const isSupportedChain = Object.values(CHAIN_IDS).includes(chainId)
+    const isSupportedChain = Object.values(CHAIN_IDS).includes(
+      chainId as (typeof CHAIN_IDS)[keyof typeof CHAIN_IDS],
+    )
 
     if (isSupportedChain) {
       return chainId

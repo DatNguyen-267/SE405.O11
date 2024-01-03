@@ -1,11 +1,18 @@
-import { W3mButton } from '@web3modal/wagmi-react-native'
+import { W3mButton, useWeb3Modal } from '@web3modal/wagmi-react-native'
 
 import React, { useEffect } from 'react'
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Button } from 'react-native-paper'
 import { getMetadata } from 'src/hooks/useIPFS'
 import { useGetNameOfCollection, useGetNftsOfAddress, useGetTokenURI } from 'src/hooks/useNFT'
-import { useAccount, useBalance, useChainId, useWalletClient } from 'wagmi'
+import {
+  useAccount,
+  useBalance,
+  useChainId,
+  useConnect,
+  useSwitchNetwork,
+  useWalletClient,
+} from 'wagmi'
 import styles from './styles'
 import {
   useBuyNFTUsingWrapToken,
@@ -16,10 +23,11 @@ import {
 import { ethers } from 'ethers'
 import { toDisplayDenomAmount } from 'src/utils/big'
 import useAppAddress from 'src/hooks/useAppAddress'
+import { aiozChain } from 'src/constants'
 
 const Connect = ({ navigation }: { navigation?: any }) => {
   const { address, connector, isConnected } = useAccount()
-
+  const { chains, error, isLoading, pendingChainId, switchNetwork } = useSwitchNetwork()
   const { data: walletClient } = useWalletClient()
 
   const { mutate: getTokenURI } = useGetTokenURI()
@@ -47,6 +55,7 @@ const Connect = ({ navigation }: { navigation?: any }) => {
   const tokenExchangeAmount = tokenExchangeBalanceData?.formatted
   const tokenExchangeDisplay = tokenExchangeBalanceData?.symbol
   console.log({ tokenExchangeAmount, tokenExchangeDisplay })
+  const { connect, connectors } = useConnect()
 
   const handleGetMetadata = async () => {
     getTokenURI({
@@ -97,6 +106,11 @@ const Connect = ({ navigation }: { navigation?: any }) => {
   const handleViewAllAsk = () => {
     viewAllAsk()
   }
+
+  const handleAddChain = async () => {
+    switchNetwork?.(aiozChain.id)
+  }
+
   return (
     <View style={styles.createScreen}>
       <ScrollView
@@ -113,6 +127,8 @@ const Connect = ({ navigation }: { navigation?: any }) => {
           <Button onPress={handleBuy}>Buy nft</Button>
           <Button onPress={handleCancelAskOrder}>Cancel ask order</Button>
           <Button onPress={handleViewAllAsk}>Get all asks</Button>
+          <Button onPress={handleAddChain}>handle add chain</Button>
+
           <Image
             style={styles.connectImage}
             source={require('../../assets/images/wallet.png')}

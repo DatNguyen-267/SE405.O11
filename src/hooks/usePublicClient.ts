@@ -7,7 +7,7 @@ export const usePublicClient = () => {
   const publicClient = useMemo(() => {
     return createPublicClient({
       chain: currentChain,
-      transport: http(),
+      transport: http(currentChain.rpcUrls.public.http[0]),
     })
   }, [currentChain])
 

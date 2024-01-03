@@ -1,8 +1,8 @@
 import '@walletconnect/react-native-compat'
 import { Web3Modal, createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi-react-native'
 import { ReactNode } from 'react'
-import { aiozChain } from 'src/constants'
-import { goerli, sepolia } from 'viem/chains'
+import { aiozChain, sepolia } from 'src/constants'
+import { goerli } from 'viem/chains'
 import { WagmiConfig } from 'wagmi'
 
 // 1. Get projectId at https://cloud.walletconnect.com
@@ -16,7 +16,7 @@ const metadata = {
   icons: ['https://avatars.githubusercontent.com/u/37784886'],
 }
 
-const chains = [goerli, aiozChain]
+const chains = [goerli, aiozChain, sepolia]
 
 const wagmiConfig = defaultWagmiConfig({
   chains,
