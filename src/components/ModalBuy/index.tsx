@@ -56,7 +56,6 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible, setReload, reload }: I
         <TouchableOpacity
           onPress={() => {
             setIsVisible(false)
-            setReload(!reload)
           }}
           style={styles.modalOverlay}
         ></TouchableOpacity>

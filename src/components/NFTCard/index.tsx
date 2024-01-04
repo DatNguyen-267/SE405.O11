@@ -29,6 +29,7 @@ const NFTCard = ({
   setDataNFT,
 }: ProfileCardProps) => {
   const [metaData, setMetaData] = useState<any>(undefined)
+  const [nft, setNft] = useState<any>(undefined)
   const { mutate: getTokenURI } = useGetTokenURI()
   const { mutate: handleGetNameOfCollection } = useGetNameOfCollection()
   const [isLoading, setIsLoading] = useState(false)
@@ -42,7 +43,7 @@ const NFTCard = ({
   const handleClick = () => {
     if (!isLoading) {
       if (setDataNFT !== undefined) {
-        setDataNFT(item)
+        setDataNFT(nft)
       }
       onShowModal(true)
     }
@@ -63,6 +64,7 @@ const NFTCard = ({
         item.imageGatewayUrl = data.image
       }
       setMetaData(data)
+      setNft(item)
       setIsLoading(false)
     }).catch(() => {
       setIsLoading(false)
