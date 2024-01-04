@@ -120,11 +120,11 @@ const Home = ({ navigation }: ProfileCardProps) => {
                 source={require('../../assets/images/fire.png')}
               ></Image>
             </View>
-            <PageLoading isVisible={isLoadingGetAsk}></PageLoading>
+            <PageLoading isVisible={isLoading}></PageLoading>
             <View style={styles.list}>
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 {
-                  !isLoadingGetAsk &&
+                  !isLoading &&
                   <View style={styles.listContent}>
                     {
                       mappingList && mappingList.map((item, index) => {
@@ -154,9 +154,9 @@ const Home = ({ navigation }: ProfileCardProps) => {
               <View style={styles.search}>
                 <SearchInput search={search} setSearch={setSearch} />
               </View>
-              <PageLoading isVisible={isLoadingGetAsk}></PageLoading>
+              <PageLoading isVisible={isLoading}></PageLoading>
               {
-                !isLoadingGetAsk &&
+                !isLoading &&
                 <FlatList
                   columnWrapperStyle={{
                     justifyContent: 'space-between',
