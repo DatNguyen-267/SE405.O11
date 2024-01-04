@@ -26,6 +26,7 @@ const Author = ({ navigation }: { navigation?: any }) => {
   const [isSell, setIsSell] = useState(false)
   const [dataNFT, setDataNFT] = useState(undefined)
   const [isLoading, setIsLoading] = useState(false)
+  const [reload, setReLoad] = useState(true)
   const [tab, setTab] = useState('All')
   const { data: nfts, mutate: getAllNftOfAddress } = useGetNftsOfAddress()
   const tabs = [
@@ -75,17 +76,18 @@ const Author = ({ navigation }: { navigation?: any }) => {
     // setIsConnected(!isConnected)
   }
   useEffect(() => {
-    if (isConnected && (isDeposit == false || isSell == false)) {
+    if (isConnected) {
       handleGetAllNftOfAddress()
+      setReLoad(false)
     }
-  }, [isDelist, isSell])
+  }, [reload, isConnected])
    
   return (
     <View style={styles.createScreen}>
       <ModalDeposit isVisible={isDeposit} setIsVisible={setIsDeposit}></ModalDeposit>
       <ModalImport isVisible={isImport} setIsVisible={setIsImport}></ModalImport>
-      <ModalDelist isVisible={isDelist} setIsVisible={setIsDelist} item={dataNFT}></ModalDelist>
-      <ModalSell isVisible={isSell} setIsVisible={setIsSell} item={dataNFT}></ModalSell>
+      <ModalDelist isVisible={isDelist} setIsVisible={setIsDelist} item={dataNFT} setReload={setReLoad} reload={reload}></ModalDelist>
+      <ModalSell isVisible={isSell} setIsVisible={setIsSell} item={dataNFT} setReload={setReLoad} reload={reload}></ModalSell>
       {/* <ModalSend></ModalSend> */}
       {/* <Header
                 title={"Create NFT"}

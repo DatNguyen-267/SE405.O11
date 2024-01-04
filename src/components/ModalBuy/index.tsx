@@ -18,8 +18,10 @@ interface IModalBuy {
   index?: number
   isVisible?: boolean
   setIsVisible?: any
+  setReload?: any
+  reload?: boolean
 }
-const ModalBuy = ({ item, index, isVisible, setIsVisible }: IModalBuy) => {
+const ModalBuy = ({ item, index, isVisible, setIsVisible, setReload, reload }: IModalBuy) => {
   
   const { mutate: buyWithWrapToken } = useBuyNFTUsingWrapToken()
   const handleBuy = () => {
@@ -31,6 +33,9 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible }: IModalBuy) => {
         price: item.price,
       }).then((res) => {
         onShowToastSuccess("Buy NFT Successfully")
+        if(setReload){
+          setReload(!reload)
+        }
       })
       .catch((err) => {
         onShowToastError(err.message)
@@ -51,6 +56,7 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible }: IModalBuy) => {
         <TouchableOpacity
           onPress={() => {
             setIsVisible(false)
+            setReload(!reload)
           }}
           style={styles.modalOverlay}
         ></TouchableOpacity>

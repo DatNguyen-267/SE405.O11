@@ -27,8 +27,10 @@ interface IModal {
   index?: number
   isVisible?: boolean
   setIsVisible?: any
+  setReload?: any
+  reload?: boolean
 }
-const ModalSell = ({ item, index, isVisible, setIsVisible }: IModal) => {
+const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: IModal) => {
   const [isFocused, setIsFocused] = useState(false)
   const [price , setPrice]= useState('')
   const { mutate: createAskOrder } = useCreateAskOrder()
@@ -48,6 +50,9 @@ const ModalSell = ({ item, index, isVisible, setIsVisible }: IModal) => {
         price: price,
       }).then((res) => {
         onShowToastSuccess("Sell NFT Successfully")
+        if(setReload){
+          setReload(!reload)
+        }
       })
       .catch((err) => {
         onShowToastError(err.message)

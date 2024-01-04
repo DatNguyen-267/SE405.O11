@@ -16,8 +16,10 @@ interface IModal {
   index?: number
   isVisible?: boolean
   setIsVisible?: any
+  setReload?: any
+  reload?: boolean
 }
-const ModalDelist = ({ item, index, isVisible, setIsVisible }: IModal) => {
+const ModalDelist = ({ item, index, isVisible, setIsVisible, setReload, reload }: IModal) => {
   const { mutate: cancelAskOrder } = useCancelAskOrder()
   const handleDelist = () => {
     if(item){
@@ -27,6 +29,9 @@ const ModalDelist = ({ item, index, isVisible, setIsVisible }: IModal) => {
         tokenId: item.tokenId,
       }).then((res) => {
         onShowToastSuccess("Delist NFT Successfully")
+        if(setReload){
+          setReload(!reload)
+        }
       })
       .catch((err) => {
         onShowToastError(err.message)

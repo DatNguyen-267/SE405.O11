@@ -26,6 +26,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const [dataNFT, setDataNFT] = useState(undefined)
   const [search, setSearch] = useState('')
+  const [reload, setReLoad] = useState(true)
   const { mutate: viewAllAsk, data: asks } = useViewAllAsk()
   const nfts: NftItem[] = []
   const data = [
@@ -57,10 +58,11 @@ const Home = ({ navigation }: ProfileCardProps) => {
     } else return nfts
   }, [asks])
 
+  const isLoadingGetAsk = !!!mappingList
   useFocusEffect(
     useCallback(() => {
       handleViewAllAsk()
-    }, [])
+    }, [reload])
   )
 
   const handleViewAllAsk = () => {
@@ -88,7 +90,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
         {/* <ModalImport isVisible={isVisible} setIsVisible={setIsVisible}></ModalImport> */}
         {/* <ModalDeposit isVisible={isVisible} setIsVisible={setIsVisible}></ModalDeposit> */}
         {/* <ModalSell isVisible={isVisible} setIsVisible={setIsVisible}></ModalSell> */}
-        <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible} item={dataNFT}></ModalBuy>
+        <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible} item={dataNFT} setReload={setReLoad} reload={reload}></ModalBuy>
         {/* <Loading isVisible={isLoading}></Loading> */}
         <ScrollView
           style={styles.homeContent}
@@ -118,11 +120,11 @@ const Home = ({ navigation }: ProfileCardProps) => {
                 source={require('../../assets/images/fire.png')}
               ></Image>
             </View>
-            <PageLoading isVisible={isLoading}></PageLoading>
+            <PageLoading isVisible={isLoadingGetAsk}></PageLoading>
             <View style={styles.list}>
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 {
-                  !isLoading &&
+                  !isLoadingGetAsk &&
                   <View style={styles.listContent}>
                     {
                       mappingList && mappingList.map((item, index) => {
@@ -152,9 +154,9 @@ const Home = ({ navigation }: ProfileCardProps) => {
               <View style={styles.search}>
                 <SearchInput search={search} setSearch={setSearch} />
               </View>
-              <PageLoading isVisible={isLoading}></PageLoading>
+              <PageLoading isVisible={isLoadingGetAsk}></PageLoading>
               {
-                !isLoading &&
+                !isLoadingGetAsk &&
                 <FlatList
                   columnWrapperStyle={{
                     justifyContent: 'space-between',
