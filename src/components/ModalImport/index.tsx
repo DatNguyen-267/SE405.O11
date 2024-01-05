@@ -1,10 +1,12 @@
 import { View, Text, Image, TouchableOpacity, Modal, TextInput, ScrollView } from 'react-native'
 import { Button } from 'react-native-paper'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './styles'
 import { AntDesign } from '@expo/vector-icons'
 import { Colors } from 'src/constants/Colors'
 import { Platform } from 'react-native'
+import { useForm } from 'react-hook-form'
+import CustomInput from '../CustomInput'
 
 interface IModal {
   item?: object
@@ -14,6 +16,18 @@ interface IModal {
 }
 const ModalImport = ({ item, index, isVisible, setIsVisible }: IModal) => {
   const [isFocused, setIsFocused] = useState(false)
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }, reset
+  } = useForm()
+  const onSubmit = (data: any) => {
+    console.log(data);
+
+  }
+  useEffect(() => {
+    reset()
+  }, [isVisible])
   return (
     <Modal transparent={true} visible={isVisible}>
       <View style={styles.container}>
@@ -56,7 +70,7 @@ const ModalImport = ({ item, index, isVisible, setIsVisible }: IModal) => {
                 <View style={[styles.modalImportInfoItem]}>
                   <Text style={[styles.text, styles.modalImportInfoItemTitle]}>Address</Text>
                   <View style={[styles.modalImportInfoItemValue]}>
-                    <TextInput
+                    {/* <TextInput
                       placeholderTextColor={Colors.color_label_200}
                       onFocus={() => setIsFocused(true)}
                       style={[
@@ -64,13 +78,24 @@ const ModalImport = ({ item, index, isVisible, setIsVisible }: IModal) => {
                         isFocused && Platform.OS === 'web' && { outline: 'none' },
                       ]}
                       placeholder="Enter Address"
-                    ></TextInput>
+                    ></TextInput> */}
+                    <CustomInput
+                      styleInput={styles.input}
+                      name="collectionAddress"
+                      control={control}
+                      placeholder='Enter Address'
+                      rules={{
+                        required: 'This is required',
+                        
+                      }}
+                      keyboardType='default'
+                    ></CustomInput>
                   </View>
                 </View>
               </View>
 
               <View style={styles.modalImportAction}>
-                <Button style={[styles.btn, styles.modalImportBtnOk]}>
+                <Button style={[styles.btn, styles.modalImportBtnOk]} onPress={handleSubmit(onSubmit)}>
                   <Text style={[styles.btnText, styles.btnTextOk]}>OK</Text>
                 </Button>
                 <Button

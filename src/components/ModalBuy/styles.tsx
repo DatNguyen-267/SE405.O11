@@ -99,6 +99,8 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 10,
     marginBottom: 10,
+    overflow: 'hidden',
+    backgroundColor: Colors.color_base_300
   },
   modalBuyNftName: {
     textAlign: 'center',

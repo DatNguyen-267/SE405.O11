@@ -30,6 +30,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: Colors.color_base_300
   },
   cardHeadLine: {
     position: 'absolute',
@@ -107,6 +109,8 @@ const styles = StyleSheet.create({
     borderRadius: 13,
     borderWidth: 2,
     borderColor: Colors.color_base_200,
+    overflow: 'hidden',
+    backgroundColor: Colors.color_base_300
   },
   cardCollectionAddress: {
     fontSize: 12,

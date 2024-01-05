@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.color_label_400,
   },
-  // ============= No modalSell ================
+  // ============= No modalDelist ================
   container: {
     flex: 1,
     height: '100%',
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     height: '100%',
     position: 'absolute',
   },
-  modalSellForm: {
+  modalDelistForm: {
     overflow: 'hidden',
     maxHeight: '100%',
     maxWidth: '100%',
@@ -96,32 +96,34 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignContent: 'center',
   },
-  modalSellTitle: {
+  modalDelistTitle: {
     flex: 1,
     fontSize: 22,
     fontWeight: '700',
   },
 
   // NFT
-  modalSellNft: {
+  modalDelistNft: {
     width: '100%',
     gap: 10,
     alignItems: 'center',
   },
-  modalSellNftImg: {
+  modalDelistNftImg: {
     width: 150,
     height: 150,
     borderRadius: 10,
     marginBottom: 10,
+    overflow: 'hidden',
+    backgroundColor: Colors.color_base_300
   },
-  modalSellNftName: {
+  modalDelistNftName: {
     textAlign: 'center',
     fontSize: 20,
     fontWeight: '700',
     color: Colors.color_label_400,
     lineHeight: 24,
   },
-  modalSellNftAdd: {
+  modalDelistNftAdd: {
     textAlign: 'center',
     fontSize: 14,
     fontWeight: '500',
@@ -129,11 +131,11 @@ const styles = StyleSheet.create({
   },
 
   // Infor
-  modalSellInfo: {
+  modalDelistInfo: {
     gap: 25,
     width: '100%',
   },
-  modalSellInfoItem: {
+  modalDelistInfoItem: {
     width: '100%',
     gap: 25,
     flexDirection: 'row',
@@ -141,20 +143,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
   },
-  modalSellInfoItemTitle: {
+  modalDelistInfoItemTitle: {
     fontSize: 16,
     fontWeight: '700',
     color: Colors.color_label_400,
     lineHeight: 24,
   },
-  modalSellInfoItemValue: {
+  modalDelistInfoItemValue: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
     gap: 8,
   },
-  modalSellTotal: {
+  modalDelistTotal: {
     borderTopColor: Colors.color_divider,
     borderTopWidth: 2,
     paddingTop: 15,
@@ -169,7 +171,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   // Actions
-  modalSellAction: {
+  modalDelistAction: {
     marginTop: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -177,7 +179,7 @@ const styles = StyleSheet.create({
     gap: 15,
     width: '100%',
   },
-  modalSellBtnOk: {
+  modalDelistBtnOk: {
     backgroundColor: Colors.color_error,
     color: Colors.color_label_100,
   },

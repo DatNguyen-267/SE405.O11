@@ -1,23 +1,54 @@
 import { AntDesign } from '@expo/vector-icons'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Button } from 'react-native-paper'
 import Toast from 'react-native-toast-message'
 import { useDispatch } from 'react-redux'
 import styles from './styles'
 import { Colors } from 'src/constants/Colors'
-import { onShowToastSuccess } from 'src/utils/toast'
+import { onShowToastError, onShowToastSuccess } from 'src/utils/toast'
 import { StatusBar } from 'expo-status-bar'
 import { shorterAddress } from 'src/utils/common'
+import { getUrlImage } from 'src/utils'
+import { useBuyNFTUsingWrapToken } from 'src/hooks/useMarket'
+import { onHideLoading, onShowLoading } from 'src/utils/loading'
 
 interface IModalBuy {
   item?: any
   index?: number
   isVisible?: boolean
   setIsVisible?: any
+  setReload?: any
+  reload?: boolean
 }
-const ModalBuy = ({ item, index, isVisible, setIsVisible }: IModalBuy) => {
+const ModalBuy = ({ item, index, isVisible, setIsVisible, setReload, reload }: IModalBuy) => {
+  
+  const { mutate: buyWithWrapToken } = useBuyNFTUsingWrapToken()
+  const handleBuy = () => {
+    if(item && item.price){
+      onShowLoading(dispatch)
+      buyWithWrapToken({
+        collectionAddress: item.collectionAddress,
+        tokenId: item.tokenId,
+        price: item.price,
+      }).then((res) => {
+        onShowToastSuccess("Buy NFT Successfully")
+        if(setReload){
+          setReload(!reload)
+        }
+      })
+      .catch((err) => {
+        onShowToastError(err.message)
+      })
+      .finally(() => {
+        onHideLoading(dispatch)
+      })
 
+    }
+    else{
+      onShowToastError("Not found information NFT!!!")
+    }
+  }
   const dispatch = useDispatch()
   return (
     <Modal transparent={true} visible={isVisible}>
@@ -48,22 +79,34 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible }: IModalBuy) => {
               </View>
               <View style={styles.modalBuyNft}>
                 {/* <Image style={styles.modalBuyNftImg}></Image> */}
-                <Image
+                <View style={styles.modalBuyNftImg}>
+                  <Image
+                    resizeMode="cover"
+                    style={{ width: '100%', height: '100%' }}
+                    source={{
+                      uri:
+                        item && item.imageGatewayUrl
+                          ? getUrlImage(item.imageGatewayUrl)
+                          : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
+                    }}
+                  ></Image>
+                </View>
+                {/* <Image
                   style={styles.modalBuyNftImg}
                   source={require('../../assets/images/createBg.jpg')}
                 >
-                </Image>
+                </Image> */}
                 <Text numberOfLines={1} style={[styles.text, styles.modalBuyNftName]}>
-                  {item && item.name ? item.name : "Undefined"}
+                  {item && item.title ? item.title : "NFT Name"}
                 </Text>
-                <Text style={[styles.text, styles.modalBuyNftAdd]}>{item && item.creatorAddress ? shorterAddress(item.collectionAddress, 10) : '0x000...000'}</Text>
+                <Text style={[styles.text, styles.modalBuyNftAdd]}>{item && item.collectionAddress ? shorterAddress(item.collectionAddress, 10) : '0x000...000'}</Text>
               </View>
               <View style={styles.modalBuyInfo}>
                 <View style={[styles.modalBuyInfoItem]}>
                   <Text style={[styles.text, styles.modalBuyInfoItemTitle]}>Price</Text>
                   <View style={[styles.modalBuyInfoItemValue]}>
                     <Text numberOfLines={1} style={[styles.text, styles.number]}>
-                      {item && item.price ? item.price : "Undefined"}
+                      {item && item.price ? item.price : '0'}
                     </Text>
                     <Text style={[styles.text, styles.unit]}>WUIT</Text>
                   </View>
@@ -81,7 +124,7 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible }: IModalBuy) => {
                   <Text style={[styles.text, styles.modalBuyInfoItemTitle]}>Total</Text>
                   <View style={[styles.modalBuyInfoItemValue]}>
                     <Text numberOfLines={1} style={[styles.text, styles.number]}>
-                      {item && item.price ?   ((Number(item.price) * 0.1) / 100 +Number(item.price)).toFixed(8) : "Undefined"}
+                      {item && item.price ? ((Number(item.price) * 0.1) / 100 + Number(item.price)).toFixed(8) : '0'}
                     </Text>
                     <Text style={[styles.text, styles.unit]}>WUIT</Text>
                   </View>
@@ -92,7 +135,7 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible }: IModalBuy) => {
                 <Button
                   style={[styles.btn, styles.modalBuyBtnOk]}
                   onPress={() => {
-                    onShowToastSuccess('Congratulation for you!!!')
+                    handleBuy()
                   }}
                 >
                   <Text style={[styles.btnText, styles.btnTextOk]}>OK</Text>

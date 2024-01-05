@@ -21,6 +21,7 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
   const [isConnected, setIsConnected] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const [dataNFT, setDataNFT] = useState(undefined)
+  const [reload, setReLoad] = useState(true)
   // const item = route.params.item
   const params = useLocalSearchParams<{ address: string; item: any }>()
   const collectionAddress = params.address
@@ -53,7 +54,7 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
     handleGetAllNftOfCollection({
       cltAddress: `0x${newAddress}`,
     })
-  }, [])
+  }, [reload])
 
   const changeConnect = () => {
     setIsConnected(!isConnected)
@@ -61,7 +62,7 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
 
   return (
     <View style={styles.createScreen}>
-      <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible} item={dataNFT}></ModalBuy>
+      <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible} item={dataNFT} reload={reload} setReload={setReLoad}></ModalBuy>
       <ScrollView
         style={styles.createContent}
         showsVerticalScrollIndicator={false}
