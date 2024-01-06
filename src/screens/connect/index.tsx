@@ -24,12 +24,12 @@ import { ethers } from 'ethers'
 import { toDisplayDenomAmount } from 'src/utils/big'
 import useAppAddress from 'src/hooks/useAppAddress'
 import { aiozChain } from 'src/constants'
+import { useToken } from 'wagmi'
 
 const Connect = ({ navigation }: { navigation?: any }) => {
   const { address, connector, isConnected } = useAccount()
   const { chains, error, isLoading, pendingChainId, switchNetwork } = useSwitchNetwork()
   const { data: walletClient } = useWalletClient()
-
   const { mutate: getTokenURI } = useGetTokenURI()
   const chainId = useChainId()
 
@@ -111,6 +111,17 @@ const Connect = ({ navigation }: { navigation?: any }) => {
     switchNetwork?.(aiozChain.id)
   }
 
+  const wuitAddress = useAppAddress('WUIT')
+  const handleAddWUIT = async ()=> {
+    const success = await walletClient?.watchAsset({ 
+      type: 'ERC20',
+      options: {
+        address: wuitAddress,
+        decimals: 18,
+        symbol: 'WUIT',
+      },
+    })
+  }
   return (
     <View style={styles.createScreen}>
       <ScrollView
@@ -128,6 +139,7 @@ const Connect = ({ navigation }: { navigation?: any }) => {
           <Button onPress={handleCancelAskOrder}>Cancel ask order</Button>
           <Button onPress={handleViewAllAsk}>Get all asks</Button>
           <Button onPress={handleAddChain}>handle add chain</Button>
+          <Button onPress={handleAddWUIT}>handle add WUIT</Button>
 
           <Image
             style={styles.connectImage}

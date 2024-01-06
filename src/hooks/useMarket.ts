@@ -417,6 +417,7 @@ export function useCreateAskOrder() {
           })
           console.log({ receiptApprove })
         } catch (error) {
+          console.log({error})
           throw error
         }
 
@@ -430,6 +431,7 @@ export function useCreateAskOrder() {
         setData(createAskOrderReceipt)
         return createAskOrderReceipt
       } catch (error) {
+        console.log({error})
         setIsLoading(false)
         setData(undefined)
         throw error

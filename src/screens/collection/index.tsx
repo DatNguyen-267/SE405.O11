@@ -36,8 +36,9 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
     if (nfts && asks) {
       const res = mappingAsksToNftList(asks, nfts)
       return res
-    } else return nfts
+    } else return undefined
   }, [nfts, asks])
+  console.log({asks})
 
   const isLoadingGetAsk = !!!mappingList
 

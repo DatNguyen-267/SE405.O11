@@ -44,7 +44,6 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
     if(item){
       onShowLoading(dispatch)
       createAskOrder({
-        // The grap - Goerli
         cltAddress: item.collectionAddress,
         tokenId: item.tokenId,
         price: price,

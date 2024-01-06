@@ -55,7 +55,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
     if (asks) {
       const res = mappingAsksToNftList(asks, nfts)
       return res
-    } else return nfts
+    } else return undefined
   }, [asks])
 
   const isLoadingGetAsk = !!!mappingList

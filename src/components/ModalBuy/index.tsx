@@ -25,8 +25,8 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible, setReload, reload }: I
   
   const { mutate: buyWithWrapToken } = useBuyNFTUsingWrapToken()
   const handleBuy = () => {
+    console.log({item})
     if(item && item.price){
-      onShowLoading(dispatch)
       buyWithWrapToken({
         collectionAddress: item.collectionAddress,
         tokenId: item.tokenId,
@@ -41,7 +41,6 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible, setReload, reload }: I
         onShowToastError(err.message)
       })
       .finally(() => {
-        onHideLoading(dispatch)
       })
 
     }
