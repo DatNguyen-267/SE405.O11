@@ -23,7 +23,6 @@ const ModalDelist = ({ item, index, isVisible, setIsVisible, setReload, reload }
   const { mutate: cancelAskOrder } = useCancelAskOrder()
   const handleDelist = () => {
     if(item){
-      onShowLoading(dispatch)
       cancelAskOrder({
         collectionAddress: item.collectionAddress,
         tokenId: item.tokenId,
@@ -37,7 +36,6 @@ const ModalDelist = ({ item, index, isVisible, setIsVisible, setReload, reload }
         onShowToastError(err.message)
       })
       .finally(() => {
-        onHideLoading(dispatch)
       })
 
     }

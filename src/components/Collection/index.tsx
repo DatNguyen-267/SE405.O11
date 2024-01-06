@@ -4,6 +4,7 @@ import styles from './styles'
 import { getAvatarByAddress, shorterAddress } from 'src/utils'
 import { SvgUri } from 'react-native-svg'
 import { useGetNameOfCollection } from 'src/hooks/useNFT'
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import { Address } from 'viem'
 interface ProfileCardProps {
   item?: any
@@ -67,10 +68,11 @@ const Collection = ({ item, index, navigation, address, search }: ProfileCardPro
               ellipsizeMode="tail"
               style={[styles.text, styles.collectionName]}
             >
-              {name ? name : 'Collection Name'}
+              {name ? name : <>...</>}
             </Text>
+
             <Text style={[styles.text, styles.collectionAddress]}>
-              {address ? shorterAddress(address, 10) : '0x000...000'}
+              {address ? shorterAddress(address, 10) : ''}
             </Text>
             <View style={styles.collectionOwner}>
               <View style={styles.collectionOwnerAvatar}>
@@ -89,9 +91,7 @@ const Collection = ({ item, index, navigation, address, search }: ProfileCardPro
                 )}
               </View>
               <Text style={[styles.text, styles.collectionOwnerAdd]}>
-                {item && item.creatorAddress
-                  ? shorterAddress(item.creatorAddress, 10)
-                  : '0x000...000'}
+                {item && item.creatorAddress ? shorterAddress(item.creatorAddress, 10) : ''}
               </Text>
             </View>
             <View style={styles.collectionAmount}>
@@ -100,8 +100,6 @@ const Collection = ({ item, index, navigation, address, search }: ProfileCardPro
               style={styles.collectionAmountIcon}
               source={require('../../assets/images/nft.png')}
             ></Image> */}
-              <Text style={[styles.text, styles.collectionAmountValue]}>NFTs: </Text>
-              <Text style={[styles.text, styles.collectionAmountValue]}>undefine</Text>
             </View>
           </View>
         </View>
