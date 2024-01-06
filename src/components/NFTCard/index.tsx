@@ -41,15 +41,10 @@ const NFTCard = ({
     }
   }
   const handleClick = () => {
-    if (!isLoading) {
-      if (setDataNFT !== undefined) {
-        setDataNFT(nft)
-      }
-      onShowModal(true)
+    if (setDataNFT !== undefined) {
+      setDataNFT(nft)
     }
-    else {
-      onShowToastInfo("Please wait image and name loaded!")
-    }
+    onShowModal(true)
   }
   const handleGetMetadata = async () => {
     setIsLoading(true)
@@ -57,18 +52,20 @@ const NFTCard = ({
     getTokenURI({
       cltAddress: item.collectionAddress,
       tokenId: item.tokenId,
-    }).then(async (res) => {
-      const data = await getMetadata(res)
-      if (data) {
-        item.title = data.name
-        item.imageGatewayUrl = data.image
-      }
-      setMetaData(data)
-      setNft(item)
-      setIsLoading(false)
-    }).catch(() => {
-      setIsLoading(false)
-    });
+    })
+      .then(async (res) => {
+        const data = await getMetadata(res)
+        if (data) {
+          item.title = data.name
+          item.imageGatewayUrl = data.image
+        }
+        setMetaData(data)
+        setNft(item)
+        setIsLoading(false)
+      })
+      .catch(() => {
+        setIsLoading(false)
+      })
   }
 
   useEffect(() => {

@@ -38,7 +38,6 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
       return res
     } else return undefined
   }, [nfts, asks])
-  console.log({asks})
 
   const isLoadingGetAsk = !!!mappingList
 
@@ -63,7 +62,13 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
 
   return (
     <View style={styles.createScreen}>
-      <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible} item={dataNFT} reload={reload} setReload={setReLoad}></ModalBuy>
+      <ModalBuy
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        item={dataNFT}
+        reload={reload}
+        setReload={setReLoad}
+      ></ModalBuy>
       <ScrollView
         style={styles.createContent}
         showsVerticalScrollIndicator={false}

@@ -1,5 +1,10 @@
 [ ] Đóng modal khi mua, bán, hủy success
+
 [ ] Không dùng hình ảnh từ local mà dùng hình ảnh chuyển từ address - screen "My Collection" đổi avatar user theo address - Những NFT đang được load thì hiển thị hình theo collection address của NFT đó
+
+[ ] Load chua xong hinh voi ten van duoc buy sell delist
+
+[ ] Xoa het loading khi thuc hien mua ban
 
 ### End
 
@@ -15,11 +20,6 @@
 - Connected thì hiện địa chỉ ví, chain đang connect
 - Hiện thêm balance và WUIT ở đó luôn
 
-[ ] Bỏ cái icon reload ở screen collection và my collection để reload lại NFT list
+[ ] Them icon reload ở screen collection và my collection để reload lại NFT list
 
 - Đề xuất là hiện ở ngay cái title của list, size: 20px là dc
-
-[ ] Mỗi lần click qua tab Setting là auto hiện tab setting không hiển thị tab nhỏ bên trong
-
-✅ Click setting -> show screen Setting
-❌ Click setting -> show connect screen

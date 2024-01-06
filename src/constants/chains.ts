@@ -65,5 +65,5 @@ export const CHAIN_IDS = {
   GOERLI: goerli.id,
   SEPOLIA: sepolia.id,
 } as const
-export const DEFAULT_CHAIN_ID = CHAIN_IDS.GOERLI
+export const DEFAULT_CHAIN_ID = CHAIN_IDS.SEPOLIA
 export const DEFAULT_WRAP_TOKEN_SYMBOL = 'WUIT'

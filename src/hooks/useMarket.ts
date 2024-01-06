@@ -565,7 +565,6 @@ export function useViewAllAsk() {
       const res = asks.flat(1)
 
       setData(res)
-      console.log({ res })
       setIsLoading(false)
       return res
     } catch (error) {

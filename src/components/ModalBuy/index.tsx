@@ -22,30 +22,26 @@ interface IModalBuy {
   reload?: boolean
 }
 const ModalBuy = ({ item, index, isVisible, setIsVisible, setReload, reload }: IModalBuy) => {
-  
   const { mutate: buyWithWrapToken } = useBuyNFTUsingWrapToken()
   const handleBuy = () => {
-    console.log({item})
-    if(item && item.price){
+    if (item && item.price) {
       buyWithWrapToken({
         collectionAddress: item.collectionAddress,
         tokenId: item.tokenId,
         price: item.price,
-      }).then((res) => {
-        onShowToastSuccess("Buy NFT Successfully")
-        if(setReload){
-          setReload(!reload)
-        }
       })
-      .catch((err) => {
-        onShowToastError(err.message)
-      })
-      .finally(() => {
-      })
-
-    }
-    else{
-      onShowToastError("Not found information NFT!!!")
+        .then((res) => {
+          onShowToastSuccess('Buy NFT Successfully')
+          if (setReload) {
+            setReload(!reload)
+          }
+        })
+        .catch((err) => {
+          onShowToastError(err.message)
+        })
+        .finally(() => {})
+    } else {
+      onShowToastError('Not found information NFT!!!')
     }
   }
   const dispatch = useDispatch()
@@ -96,9 +92,13 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible, setReload, reload }: I
                 >
                 </Image> */}
                 <Text numberOfLines={1} style={[styles.text, styles.modalBuyNftName]}>
-                  {item && item.title ? item.title : "NFT Name"}
+                  {item && item.title ? item.title : 'NFT Name'}
                 </Text>
-                <Text style={[styles.text, styles.modalBuyNftAdd]}>{item && item.collectionAddress ? shorterAddress(item.collectionAddress, 10) : '0x000...000'}</Text>
+                <Text style={[styles.text, styles.modalBuyNftAdd]}>
+                  {item && item.collectionAddress
+                    ? shorterAddress(item.collectionAddress, 10)
+                    : '0x000...000'}
+                </Text>
               </View>
               <View style={styles.modalBuyInfo}>
                 <View style={[styles.modalBuyInfoItem]}>
@@ -123,7 +123,9 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible, setReload, reload }: I
                   <Text style={[styles.text, styles.modalBuyInfoItemTitle]}>Total</Text>
                   <View style={[styles.modalBuyInfoItemValue]}>
                     <Text numberOfLines={1} style={[styles.text, styles.number]}>
-                      {item && item.price ? ((Number(item.price) * 0.1) / 100 + Number(item.price)).toFixed(8) : '0'}
+                      {item && item.price
+                        ? ((Number(item.price) * 0.1) / 100 + Number(item.price)).toFixed(8)
+                        : '0'}
                     </Text>
                     <Text style={[styles.text, styles.unit]}>WUIT</Text>
                   </View>

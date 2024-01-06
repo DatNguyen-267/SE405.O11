@@ -16,6 +16,7 @@ import { mappingAsksToNftList, useViewAllAsk } from 'src/hooks/useMarket'
 import { useFocusEffect } from 'expo-router'
 import { NftItem } from 'src/types'
 import PageLoading from 'src/components/PageLoading'
+import useCurrentChain from 'src/hooks/useCurrentChain'
 
 interface ProfileCardProps {
   navigation?: any
@@ -28,29 +29,9 @@ const Home = ({ navigation }: ProfileCardProps) => {
   const [search, setSearch] = useState('')
   const [reload, setReLoad] = useState(true)
   const { mutate: viewAllAsk, data: asks } = useViewAllAsk()
+  const currentChain = useCurrentChain()
   const nfts: NftItem[] = []
-  const data = [
-    {
-      img: 'https://th.bing.com/th/id/OIG.ey_KYrwhZnirAkSgDhmg',
-      name: 'fox abc abc abc abc abc abc abc abc abc abc',
-      status: 'On Sale',
-    },
-    {
-      img: 'https://png.pngtree.com/background/20230411/original/pngtree-beautiful-moon-background-on-moon-night-picture-image_2392251.jpg',
-      name: 'moon',
-      status: 'On Sale',
-    },
-    {
-      img: 'https://statusneo.com/wp-content/uploads/2023/02/MicrosoftTeams-image551ad57e01403f080a9df51975ac40b6efba82553c323a742b42b1c71c1e45f1.jpg',
-      name: 'childreno',
-      status: 'Not For Sale',
-    },
-    {
-      img: 'https://deep-image.ai/blog/content/images/2022/09/underwater-magic-world-8tyxt9yz.jpeg',
-      name: 'water',
-      status: 'Not For Sale',
-    },
-  ]
+
   const mappingList = useMemo(() => {
     if (asks) {
       const res = mappingAsksToNftList(asks, nfts)
@@ -58,21 +39,22 @@ const Home = ({ navigation }: ProfileCardProps) => {
     } else return undefined
   }, [asks])
 
+  console.log({ asks })
+
+  useEffect(() => {}, [])
+
   const isLoadingGetAsk = !!!mappingList
   useFocusEffect(
     useCallback(() => {
       handleViewAllAsk()
-    }, [reload])
+    }, [reload]),
   )
 
   const handleViewAllAsk = () => {
     setIsLoading(true)
-    viewAllAsk().then((res) => {
-
-    })
-      .catch((err) => {
-
-      })
+    viewAllAsk()
+      .then((res) => {})
+      .catch((err) => {})
       .finally(() => {
         setIsLoading(false)
       })
@@ -90,7 +72,13 @@ const Home = ({ navigation }: ProfileCardProps) => {
         {/* <ModalImport isVisible={isVisible} setIsVisible={setIsVisible}></ModalImport> */}
         {/* <ModalDeposit isVisible={isVisible} setIsVisible={setIsVisible}></ModalDeposit> */}
         {/* <ModalSell isVisible={isVisible} setIsVisible={setIsVisible}></ModalSell> */}
-        <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible} item={dataNFT} setReload={setReLoad} reload={reload}></ModalBuy>
+        <ModalBuy
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+          item={dataNFT}
+          setReload={setReLoad}
+          reload={reload}
+        ></ModalBuy>
         {/* <Loading isVisible={isLoading}></Loading> */}
         <ScrollView
           style={styles.homeContent}
@@ -123,14 +111,18 @@ const Home = ({ navigation }: ProfileCardProps) => {
             <PageLoading isVisible={isLoading}></PageLoading>
             <View style={styles.list}>
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                {
-                  !isLoading &&
+                {!isLoading && (
                   <View style={styles.listContent}>
-                    {
-                      mappingList && mappingList.map((item, index) => {
+                    {mappingList &&
+                      mappingList.map((item, index) => {
                         if (index < 5) {
                           return (
-                            <NFTCardHorital item={item} key={index} onShowModal={setIsVisible} setDataNFT={setDataNFT} ></NFTCardHorital>
+                            <NFTCardHorital
+                              item={item}
+                              key={index}
+                              onShowModal={setIsVisible}
+                              setDataNFT={setDataNFT}
+                            ></NFTCardHorital>
                           )
                         }
                       })}
@@ -144,7 +136,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
                                       <NFTCardHorital></NFTCardHorital>
                                   </TouchableOpacity> */}
                   </View>
-                }
+                )}
               </ScrollView>
             </View>
 
@@ -155,8 +147,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
                 <SearchInput search={search} setSearch={setSearch} />
               </View>
               <PageLoading isVisible={isLoading}></PageLoading>
-              {
-                !isLoading &&
+              {!isLoading && (
                 <FlatList
                   columnWrapperStyle={{
                     justifyContent: 'space-between',
@@ -169,14 +160,24 @@ const Home = ({ navigation }: ProfileCardProps) => {
                     if (search === '') {
                       return (
                         <View style={styles.nftItem}>
-                          <NFTCard item={item} onShowModal={setIsVisible} isBuy={true} setDataNFT={setDataNFT}></NFTCard>
+                          <NFTCard
+                            item={item}
+                            onShowModal={setIsVisible}
+                            isBuy={true}
+                            setDataNFT={setDataNFT}
+                          ></NFTCard>
                         </View>
                       )
                     } else {
                       if (item.title.toLowerCase().includes(search.toLowerCase())) {
                         return (
                           <View style={styles.nftItem}>
-                            <NFTCard item={item} onShowModal={setIsVisible} isBuy={true} setDataNFT={setDataNFT}></NFTCard>
+                            <NFTCard
+                              item={item}
+                              onShowModal={setIsVisible}
+                              isBuy={true}
+                              setDataNFT={setDataNFT}
+                            ></NFTCard>
                           </View>
                         )
                       }
@@ -184,7 +185,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
                     return null
                   }}
                 />
-              }
+              )}
             </View>
           </View>
         </ScrollView>
