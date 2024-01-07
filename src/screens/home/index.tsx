@@ -24,41 +24,39 @@ interface ProfileCardProps {
 const Home = ({ navigation }: ProfileCardProps) => {
   const dispatch = useDispatch()
   const [isVisible, setIsVisible] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
   const [dataNFT, setDataNFT] = useState(undefined)
   const [search, setSearch] = useState('')
   const [reload, setReLoad] = useState(true)
-  const { mutate: viewAllAsk, data: asks } = useViewAllAsk()
+  const { mutate: viewAllAsk, data: asks, isLoading } = useViewAllAsk()
+
   const currentChain = useCurrentChain()
-  const nfts: NftItem[] = []
+  const [nftList, setNftList] = useState<NftItem[] | undefined>(undefined)
 
-  const mappingList = useMemo(() => {
-    if (asks) {
-      const res = mappingAsksToNftList(asks, nfts)
-      return res
-    } else return undefined
-  }, [asks])
+  const mappingList = useMemo(() => nftList, [nftList])
 
-  console.log({ asks })
+  useEffect(() => {
+    let stale = false
+    viewAllAsk().then((asks) => {
+      if (stale) return
+      if (asks) {
+        const res = mappingAsksToNftList(asks, [])
+        setNftList(res)
+      } else {
+        setNftList(undefined)
+      }
+    })
 
-  useEffect(() => {}, [])
+    return () => {
+      stale = true
+    }
+  }, [currentChain.id])
 
-  const isLoadingGetAsk = !!!mappingList
   useFocusEffect(
     useCallback(() => {
-      handleViewAllAsk()
+      viewAllAsk()
     }, [reload]),
   )
 
-  const handleViewAllAsk = () => {
-    setIsLoading(true)
-    viewAllAsk()
-      .then((res) => {})
-      .catch((err) => {})
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }
   const handleLoading = () => {
     onShowLoading(dispatch)
     setTimeout(() => {

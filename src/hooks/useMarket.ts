@@ -7,6 +7,7 @@ import { Address } from 'viem'
 import { WriteContractResult, prepareWriteContract, writeContract } from 'wagmi/actions'
 import useAppAddress from './useAppAddress'
 import { useApproveErc20 } from './useErc20'
+import { useListenerTransactionHash } from './useListenerTransaction'
 import { useApproveSpenderToAccessNft } from './useNFT'
 import { usePublicClient } from './usePublicClient'
 
@@ -403,6 +404,7 @@ export function useCreateAskOrder() {
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState<WriteContractResult>()
   const marketAddress = useAppAddress('MARKET')
+  const listenerTransactionReceipt = useListenerTransactionHash()
 
   const mutate = useCallback(
     async ({ cltAddress, tokenId, price }: CreateAskOrderParams) => {
@@ -416,22 +418,36 @@ export function useCreateAskOrder() {
             tokenId,
           })
           console.log({ receiptApprove })
+
+          const approveReceipt = await listenerTransactionReceipt(receiptApprove.hash)
+          console.log({ approveReceipt })
         } catch (error) {
-          console.log({error})
+          console.log({ error })
           throw error
         }
 
-        const createAskOrderReceipt = await writeContract({
-          abi: MARKETPLACE_ABI,
-          address: marketAddress,
-          functionName: 'createAskOrder',
-          args: [cltAddress, tokenId, ethers.utils.parseEther(price).toString()],
+        return new Promise(async (resolve, reject) => {
+          setTimeout(async () => {
+            try {
+              const createAskOrderResponse = await writeContract({
+                abi: MARKETPLACE_ABI,
+                address: marketAddress,
+                functionName: 'createAskOrder',
+                args: [cltAddress, tokenId, ethers.utils.parseEther(price).toString()],
+              })
+              const createAskOrderReceipt = await listenerTransactionReceipt(
+                createAskOrderResponse.hash,
+              )
+              console.log({ createAskOrderReceipt })
+              setData(createAskOrderResponse)
+              resolve(createAskOrderResponse)
+            } catch (error) {
+              reject(error)
+            }
+          }, 2000)
         })
-
-        setData(createAskOrderReceipt)
-        return createAskOrderReceipt
       } catch (error) {
-        console.log({error})
+        console.log({ error })
         setIsLoading(false)
         setData(undefined)
         throw error

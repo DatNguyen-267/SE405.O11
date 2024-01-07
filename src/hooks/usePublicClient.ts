@@ -10,6 +10,5 @@ export const usePublicClient = () => {
       transport: http(currentChain.rpcUrls.public.http[0]),
     })
   }, [currentChain])
-
   return publicClient
 }

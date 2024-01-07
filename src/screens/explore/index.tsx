@@ -1,13 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useFocusEffect } from 'expo-router'
+import React, { useCallback, useState } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
 import Collection from 'src/components/Collection'
+import PageLoading from 'src/components/PageLoading'
 import SearchInput from 'src/components/Search'
 import useAppAddress from 'src/hooks/useAppAddress'
-import { useViewAsksByCollection, useViewMarketCollections } from 'src/hooks/useMarket'
+import { useViewMarketCollections } from 'src/hooks/useMarket'
 import styles from './styles'
-import { Button } from 'react-native-paper'
-import PageLoading from 'src/components/PageLoading'
-import { useFocusEffect } from 'expo-router'
 
 const Explore = ({ navigation }: { navigation: any }) => {
   const [search, setSearch] = useState('')
@@ -22,30 +21,15 @@ const Explore = ({ navigation }: { navigation: any }) => {
 
   const listCollection = collections
 
-  const {
-    mutate: handleGetByCollectionAddress,
-    data: asks,
-    isLoading: isLoadingGetAsk,
-  } = useViewAsksByCollection()
-
   useFocusEffect(
-    useCallback(() => { 
+    useCallback(() => {
       handleGetAllCollection({
         marketAddress: marketAddress,
         cursor: 0,
         size: 20,
       })
-    }, [])
+    }, []),
   )
-
-  const handleTestFunction = () => {
-    handleGetByCollectionAddress({
-      marketAddress: marketAddress,
-      collectionAddress: '0x1Def42fc65c3251087Bb61A410003981bE75e1d8',
-      cursor: 0,
-      size: 20,
-    })
-  }
 
   return (
     <View style={styles.homeScreen}>

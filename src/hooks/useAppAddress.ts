@@ -8,7 +8,7 @@ const useAppAddress = (contractName: keyof typeof AppContractName) => {
   const currentChain = useCurrentChain()
 
   const contractAddress = useMemo(() => {
-    if (Object.values(CHAIN_IDS).includes(currentChain.id)) {
+    if (Object.values(CHAIN_IDS).includes(currentChain.id as 4102 | 5 | 11155111)) {
       return ADDRESS_OF_CHAINS[currentChain.id][contractName]
     } else {
       return ADDRESS_OF_CHAINS[DEFAULT_CHAIN_ID][contractName]

@@ -32,42 +32,38 @@ interface IModal {
 }
 const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: IModal) => {
   const [isFocused, setIsFocused] = useState(false)
-  const [price , setPrice]= useState('')
+  const [price, setPrice] = useState('')
   const { mutate: createAskOrder } = useCreateAskOrder()
   const dispatch = useDispatch()
   const {
     control,
     handleSubmit,
-    formState: { errors }, reset
+    formState: { errors },
+    reset,
   } = useForm()
   const onSubmit = (data: any) => {
-    if(item){
-      onShowLoading(dispatch)
+    if (item) {
       createAskOrder({
         cltAddress: item.collectionAddress,
         tokenId: item.tokenId,
         price: price,
-      }).then((res) => {
-        onShowToastSuccess("Sell NFT Successfully")
-        if(setReload){
-          setReload(!reload)
-        }
       })
-      .catch((err) => {
-        onShowToastError(err.message)
-      })
-      .finally(() => {
-        onHideLoading(dispatch)
-      })
+        .then((res) => {
+          onShowToastSuccess('Sell NFT Successfully')
+          if (setReload) {
+            setReload(!reload)
+          }
+        })
+        .catch((err) => {
+          onShowToastError(err.message)
+        })
+        .finally(() => {})
+    } else {
     }
-    else{
-      onShowToastError("Not found information NFT!!!")
-    }
-    
   }
-  useEffect(() =>{
+  useEffect(() => {
     reset()
-  },[isVisible])
+  }, [isVisible])
 
   return (
     <Modal transparent={true} visible={isVisible}>
@@ -98,26 +94,28 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
               </View>
               <View style={styles.modalSellNft}>
                 <View style={styles.modalSellNftImg}>
-                    <Image
-                      resizeMode="cover"
-                      style={{ width: '100%', height: '100%' }}
-                      source={{
-                        uri:
-                          item && item.imageGatewayUrl
-                            ? getUrlImage(item.imageGatewayUrl)
-                            : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
-                      }}
-                    ></Image>
-                  </View>
+                  <Image
+                    resizeMode="cover"
+                    style={{ width: '100%', height: '100%' }}
+                    source={{
+                      uri:
+                        item && item.imageGatewayUrl
+                          ? getUrlImage(item.imageGatewayUrl)
+                          : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
+                    }}
+                  ></Image>
+                </View>
                 {/* <Image
                   style={styles.modalSellNftImg}
                   source={require('../../assets/images/createBg.jpg')}
                 ></Image> */}
                 <Text numberOfLines={1} style={[styles.text, styles.modalSellNftName]}>
-                  {item && item.title ? item.title : "NFT Name"}
+                  {item && item.title ? item.title : 'NFT Name'}
                 </Text>
                 <Text style={[styles.text, styles.modalSellNftAdd]}>
-                  {item && item.collectionAddress ? shorterAddress(item.collectionAddress, 10) : '0x000...000'}
+                  {item && item.collectionAddress
+                    ? shorterAddress(item.collectionAddress, 10)
+                    : '0x000...000'}
                 </Text>
               </View>
               <View style={styles.modalSellInfo}>
@@ -138,7 +136,7 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
                       styleInput={styles.input}
                       name="price"
                       control={control}
-                      placeholder='0'
+                      placeholder="0"
                       setValue={setPrice}
                       rules={{
                         required: 'This is required',
@@ -146,9 +144,8 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
                           value: 0,
                           message: 'Price is not negative',
                         },
-
                       }}
-                      keyboardType='number-pad'
+                      keyboardType="number-pad"
                     />
                     <Text style={[styles.text, styles.unit]}>WUIT</Text>
                   </View>
@@ -166,9 +163,7 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
                   <Text style={[styles.text, styles.modalSellInfoItemTitle]}>Total</Text>
                   <View style={[styles.modalSellInfoItemValue]}>
                     <Text numberOfLines={1} style={[styles.text, styles.number]}>
-                      { 
-                       price?((-Number(price) * 0.1) / 100 +Number(price)).toFixed(8): '0'
-                      }
+                      {price ? ((-Number(price) * 0.1) / 100 + Number(price)).toFixed(8) : '0'}
                     </Text>
                     <Text style={[styles.text, styles.unit]}>WUIT</Text>
                   </View>
