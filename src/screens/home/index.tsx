@@ -17,6 +17,7 @@ import { useFocusEffect } from 'expo-router'
 import { NftItem } from 'src/types'
 import PageLoading from 'src/components/PageLoading'
 import useCurrentChain from 'src/hooks/useCurrentChain'
+import Toast from 'react-native-toast-message'
 
 interface ProfileCardProps {
   navigation?: any
@@ -39,7 +40,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
     } else return undefined
   }, [asks])
 
-  console.log({ asks })
+  // console.log({ asks })
 
   useEffect(() => {}, [])
 
@@ -76,8 +77,6 @@ const Home = ({ navigation }: ProfileCardProps) => {
           isVisible={isVisible}
           setIsVisible={setIsVisible}
           item={dataNFT}
-          setReload={setReLoad}
-          reload={reload}
         ></ModalBuy>
         {/* <Loading isVisible={isLoading}></Loading> */}
         <ScrollView
@@ -190,6 +189,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
           </View>
         </ScrollView>
       </View>
+      <Toast></Toast>
     </>
   )
 }

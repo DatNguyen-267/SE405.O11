@@ -31,8 +31,11 @@ const styles = StyleSheet.create({
   cardHead: {
     width: '100%',
     height: 150,
-    borderRadius: 8,
+    // borderRadius: 8,
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
     position: 'relative',
+    overflow: 'hidden',
   },
   cardImage: {
     height: '100%',

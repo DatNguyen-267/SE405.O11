@@ -9,9 +9,11 @@ import { Colors } from 'src/constants/Colors'
 import { onShowToastError, onShowToastSuccess } from 'src/utils/toast'
 import { StatusBar } from 'expo-status-bar'
 import { shorterAddress } from 'src/utils/common'
-import { getUrlImage } from 'src/utils'
+import { getAvatarByAddress, getUrlImage } from 'src/utils'
 import { useBuyNFTUsingWrapToken } from 'src/hooks/useMarket'
 import { onHideLoading, onShowLoading } from 'src/utils/loading'
+import { SvgUri } from 'react-native-svg'
+import { DEFAULT_ADDRESS } from 'src/constants'
 
 interface IModalBuy {
   item?: any
@@ -32,9 +34,7 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible, setReload, reload }: I
       })
         .then((res) => {
           onShowToastSuccess('Buy NFT Successfully')
-          if (setReload) {
-            setReload(!reload)
-          }
+          setIsVisible(false)
         })
         .catch((err) => {
           onShowToastError(err.message)
@@ -75,7 +75,22 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible, setReload, reload }: I
               <View style={styles.modalBuyNft}>
                 {/* <Image style={styles.modalBuyNftImg}></Image> */}
                 <View style={styles.modalBuyNftImg}>
-                  <Image
+                  {
+                    item && item.imageGatewayUrl ?
+                    <Image
+                      resizeMode="cover"
+                      style={{ width: '100%', height: '100%' }}
+                      source={{
+                        uri:getUrlImage(item.imageGatewayUrl)                     
+                      }}
+                    ></Image>
+                    :<SvgUri
+                      width={'100%'}
+                      height={'100%'}
+                      uri={getAvatarByAddress(item && item.collectionAddress ? item.collectionAddress: DEFAULT_ADDRESS)}
+                    ></SvgUri>
+                  }
+                  {/* <Image
                     resizeMode="cover"
                     style={{ width: '100%', height: '100%' }}
                     source={{
@@ -84,7 +99,7 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible, setReload, reload }: I
                           ? getUrlImage(item.imageGatewayUrl)
                           : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
                     }}
-                  ></Image>
+                  ></Image> */}
                 </View>
                 {/* <Image
                   style={styles.modalBuyNftImg}

@@ -17,10 +17,12 @@ import { onShowToastError, onShowToastSuccess } from 'src/utils/toast'
 import styles from './styles'
 import CustomInput from '../CustomInput'
 import { useForm } from 'react-hook-form'
-import { getUrlImage, shorterAddress } from 'src/utils'
+import { getAvatarByAddress, getUrlImage, shorterAddress } from 'src/utils'
 import { useCreateAskOrder } from 'src/hooks/useMarket'
 import { onHideLoading, onShowLoading } from 'src/utils/loading'
 import { useDispatch } from 'react-redux'
+import { SvgUri } from 'react-native-svg'
+import { DEFAULT_ADDRESS } from 'src/constants'
 
 interface IModal {
   item?: any
@@ -32,7 +34,7 @@ interface IModal {
 }
 const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: IModal) => {
   const [isFocused, setIsFocused] = useState(false)
-  const [price , setPrice]= useState('')
+  const [price, setPrice] = useState('')
   const { mutate: createAskOrder } = useCreateAskOrder()
   const dispatch = useDispatch()
   const {
@@ -41,33 +43,29 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
     formState: { errors }, reset
   } = useForm()
   const onSubmit = (data: any) => {
-    if(item){
-      onShowLoading(dispatch)
+    if (item) {
       createAskOrder({
         cltAddress: item.collectionAddress,
         tokenId: item.tokenId,
         price: price,
       }).then((res) => {
         onShowToastSuccess("Sell NFT Successfully")
-        if(setReload){
-          setReload(!reload)
-        }
+        setIsVisible(false)
       })
-      .catch((err) => {
-        onShowToastError(err.message)
-      })
-      .finally(() => {
-        onHideLoading(dispatch)
-      })
+        .catch((err) => {
+          onShowToastError(err.message)
+        })
+        .finally(() => {
+        })
     }
-    else{
+    else {
       onShowToastError("Not found information NFT!!!")
     }
-    
+
   }
-  useEffect(() =>{
+  useEffect(() => {
     reset()
-  },[isVisible])
+  }, [isVisible])
 
   return (
     <Modal transparent={true} visible={isVisible}>
@@ -98,7 +96,22 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
               </View>
               <View style={styles.modalSellNft}>
                 <View style={styles.modalSellNftImg}>
-                    <Image
+                  {
+                    item && item.imageGatewayUrl ?
+                      <Image
+                        resizeMode="cover"
+                        style={{ width: '100%', height: '100%' }}
+                        source={{
+                          uri: getUrlImage(item.imageGatewayUrl)
+                        }}
+                      ></Image>
+                      : <SvgUri
+                        width={'100%'}
+                        height={'100%'}
+                        uri={getAvatarByAddress(item && item.collectionAddress ? item.collectionAddress: DEFAULT_ADDRESS)}
+                      ></SvgUri>
+                  }
+                  {/* <Image
                       resizeMode="cover"
                       style={{ width: '100%', height: '100%' }}
                       source={{
@@ -107,8 +120,8 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
                             ? getUrlImage(item.imageGatewayUrl)
                             : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
                       }}
-                    ></Image>
-                  </View>
+                    ></Image> */}
+                </View>
                 {/* <Image
                   style={styles.modalSellNftImg}
                   source={require('../../assets/images/createBg.jpg')}
@@ -166,8 +179,8 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
                   <Text style={[styles.text, styles.modalSellInfoItemTitle]}>Total</Text>
                   <View style={[styles.modalSellInfoItemValue]}>
                     <Text numberOfLines={1} style={[styles.text, styles.number]}>
-                      { 
-                       price?((-Number(price) * 0.1) / 100 +Number(price)).toFixed(8): '0'
+                      {
+                        price ? ((-Number(price) * 0.1) / 100 + Number(price)).toFixed(8) : '0'
                       }
                     </Text>
                     <Text style={[styles.text, styles.unit]}>WUIT</Text>

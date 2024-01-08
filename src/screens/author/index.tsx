@@ -14,9 +14,11 @@ import { DEFAULT_ADDRESS } from 'src/constants'
 import { useGetNftsOfAddress } from 'src/hooks/useNFT'
 import { useFocusEffect } from 'expo-router'
 import { useAccount, useBalance } from 'wagmi'
-import { shorterAddress } from 'src/utils'
+import { getAvatarByAddress, shorterAddress } from 'src/utils'
 import PageLoading from 'src/components/PageLoading'
 import useAppAddress from 'src/hooks/useAppAddress'
+import { SvgUri } from 'react-native-svg'
+import Toast from 'react-native-toast-message'
 
 const Author = ({ navigation }: { navigation?: any }) => {
   const { address, connector, isConnected } = useAccount()
@@ -78,16 +80,16 @@ const Author = ({ navigation }: { navigation?: any }) => {
   useEffect(() => {
     if (isConnected) {
       handleGetAllNftOfAddress()
-      setReLoad(false)
     }
   }, [reload, isConnected])
    
   return (
+    <>
     <View style={styles.createScreen}>
       <ModalDeposit isVisible={isDeposit} setIsVisible={setIsDeposit}></ModalDeposit>
       <ModalImport isVisible={isImport} setIsVisible={setIsImport}></ModalImport>
-      <ModalDelist isVisible={isDelist} setIsVisible={setIsDelist} item={dataNFT} setReload={setReLoad} reload={reload}></ModalDelist>
-      <ModalSell isVisible={isSell} setIsVisible={setIsSell} item={dataNFT} setReload={setReLoad} reload={reload}></ModalSell>
+      <ModalDelist isVisible={isDelist} setIsVisible={setIsDelist} item={dataNFT}></ModalDelist>
+      <ModalSell isVisible={isSell} setIsVisible={setIsSell} item={dataNFT}></ModalSell>
       {/* <ModalSend></ModalSend> */}
       {/* <Header
                 title={"Create NFT"}
@@ -129,10 +131,17 @@ const Author = ({ navigation }: { navigation?: any }) => {
                 resizeMode="cover"
                 style={styles.headLineBg}
               >
-                <Image
+                <View style={styles.headLineAvatar}>
+                  <SvgUri
+                    width={'100%'}
+                    height={'100%'}
+                    uri={getAvatarByAddress(address ? address : DEFAULT_ADDRESS)}
+                  ></SvgUri>
+                </View>
+                {/* <Image
                   style={styles.headLineAvatar}
                   source={require('../../assets/images/avatarDefault.png')}
-                ></Image>
+                ></Image> */}
               </ImageBackground>
             </View>
             <View style={[styles.walletInfo]}>
@@ -228,6 +237,8 @@ const Author = ({ navigation }: { navigation?: any }) => {
         </ScrollView>
       )}
     </View>
+    <Toast></Toast>
+    </>
   )
 }
 
