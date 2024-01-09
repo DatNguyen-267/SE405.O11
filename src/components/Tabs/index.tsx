@@ -1,12 +1,16 @@
+import { Ionicons } from '@expo/vector-icons'
 import React, { useState } from 'react'
 import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Button } from 'react-native-paper'
 import { Colors } from 'src/constants/Colors'
 
 interface ProfileCardProps {
   items?: any
   setTab?: any
+  reload?: boolean
+  setReload?: any
 }
-const Tabs = ({ items, setTab }: ProfileCardProps) => {
+const Tabs = ({ items, setTab, reload, setReload }: ProfileCardProps) => {
   const [index, setIndex] = useState(0)
   const handleSetTab = (i: any) => {
     setIndex(i)
@@ -15,6 +19,9 @@ const Tabs = ({ items, setTab }: ProfileCardProps) => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={[styles.btn]} onPress={()=>{if(setReload){setReload(!reload)}}}>
+        <Ionicons name="reload" size={18} color="black"  />
+      </TouchableOpacity>
       <View style={styles.tabs}>
         {items.map((tab?: any, i?: number) => {
           const active = index === i
@@ -34,6 +41,16 @@ const Tabs = ({ items, setTab }: ProfileCardProps) => {
 }
 
 const styles = StyleSheet.create({
+  btn: {
+    width: 50,
+    height: 30,
+    padding: 0,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.color_grey_500,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   text: {
     fontFamily: 'InterMedium',
     fontSize: 14,
@@ -41,6 +58,9 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 10,
     width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   tabs: {
     flexDirection: 'row',

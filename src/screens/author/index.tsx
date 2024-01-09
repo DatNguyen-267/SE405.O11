@@ -180,8 +180,7 @@ const Author = ({ navigation }: { navigation?: any }) => {
               </View>
             </View>
             <View style={styles.nftContent}>
-              {/* <Text style={[styles.text, styles.title]}>All NFT</Text> */}
-              <Tabs items={tabs} setTab={setTab} />
+              <Tabs items={tabs} setTab={setTab} reload={reload} setReload={setReLoad} />
               <PageLoading isVisible={isLoading}></PageLoading>
               {
                 isLoading == false &&
@@ -191,7 +190,7 @@ const Author = ({ navigation }: { navigation?: any }) => {
                   }}
                   scrollEnabled={false}
                   style={styles.listNft}
-                  data={nfts}
+                  data={nfts?.filter(item => tab.toLowerCase() === tabs[0].title.toLowerCase() || item.status.toLowerCase() === tab.toLowerCase())}
                   numColumns={2}
                   renderItem={({ item }) => {
                     if (tab.toLowerCase() === tabs[0].title.toLowerCase()) {

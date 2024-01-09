@@ -144,12 +144,23 @@ const styles = StyleSheet.create({
     paddingTop: 30,
   },
 
+  nftContentHead: {
+    flexDirection: 'row', 
+    gap: 11, 
+    alignItems: 'center',
+    marginBottom: 10,
+  }, 
+
   title: {
     fontSize: 18,
     fontWeight: '700',
     alignItems: 'center',
-    marginBottom: 10,
   },
+
+  reload: {
+   
+  }, 
+
   listNft: {
     // marginTop: 10,
     flex: 1,

@@ -153,7 +153,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
                   }}
                   scrollEnabled={false}
                   style={styles.listNft}
-                  data={mappingList}
+                  data={mappingList?.filter(item => search === "" || item && item.title.toLowerCase().includes(search.toLowerCase()))}
                   numColumns={2}
                   renderItem={({ item }) => {
                     if (search === '') {

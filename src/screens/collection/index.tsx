@@ -15,6 +15,7 @@ import PageLoading from 'src/components/PageLoading'
 import { DEFAULT_ADDRESS } from 'src/constants'
 import { useGetNFTsOfCollection } from 'src/hooks/useNFT'
 import Toast from 'react-native-toast-message'
+import { AntDesign, Ionicons } from '@expo/vector-icons'
 
 const Collection = ({ navigation, route }: { navigation?: any; route?: any }) => {
   const [profile, setProfile] = useState(null)
@@ -123,7 +124,10 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
             </View>
           </View>
           <View style={styles.nftContent}>
-            <Text style={[styles.text, styles.title]}>All NFT</Text>
+            <View style={styles.nftContentHead}>
+              <Text style={[styles.text, styles.title]}>All NFT</Text>
+              <Ionicons name="reload" size={20} color="black" onPress={()=>{setReLoad(!reload)}} />
+            </View>
             <PageLoading isVisible={isLoadingGetAsk}></PageLoading>
             {!isLoadingGetAsk && (
               <FlatList
