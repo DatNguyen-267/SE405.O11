@@ -1,26 +1,16 @@
 import { AntDesign } from '@expo/vector-icons'
 import React, { useEffect, useState } from 'react'
-import {
-  Image,
-  Modal,
-  Platform,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { useForm } from 'react-hook-form'
+import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Button } from 'react-native-paper'
 import Toast from 'react-native-toast-message'
-import { Colors } from 'src/constants/Colors'
-import { onShowToastError, onShowToastSuccess } from 'src/utils/toast'
-import styles from './styles'
-import CustomInput from '../CustomInput'
-import { useForm } from 'react-hook-form'
-import { getUrlImage, shorterAddress } from 'src/utils'
-import { useCreateAskOrder } from 'src/hooks/useMarket'
-import { onHideLoading, onShowLoading } from 'src/utils/loading'
 import { useDispatch } from 'react-redux'
+import { Colors } from 'src/constants/Colors'
+import { useCreateAskOrder } from 'src/hooks/useMarket'
+import { getUrlImage, shorterAddress } from 'src/utils'
+import { onShowToastError, onShowToastSuccess } from 'src/utils/toast'
+import CustomInput from '../CustomInput'
+import styles from './styles'
 
 interface IModal {
   item?: any

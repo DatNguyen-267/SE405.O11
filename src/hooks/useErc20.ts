@@ -1,9 +1,10 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import { TOKEN_EXCHANGE_ABI } from 'src/abis'
+import { ethers } from 'src/utils'
+import { TransactionReceipt } from 'viem'
 import { writeContract } from 'wagmi/actions'
 import useAppAddress from './useAppAddress'
-import { usePublicClient } from './usePublicClient'
-import { ethers } from 'src/utils'
-import { TOKEN_EXCHANGE_ABI } from 'src/abis'
+import { useListenerTransactionHash } from './useListenerTransaction'
 
 type ApproveTokenExchangeParams = {
   nftAddressGuy: string
@@ -12,23 +13,26 @@ type ApproveTokenExchangeParams = {
 
 export function useApproveErc20() {
   const wrapperTokenAddress = useAppAddress('WUIT')
+  const listenerTransactionReceipt = useListenerTransactionHash()
 
   return useCallback(
     async ({ nftAddressGuy, wad }: ApproveTokenExchangeParams) => {
       try {
-        const transactionReceipt = await writeContract({
+        const writeApprove = await writeContract({
           abi: TOKEN_EXCHANGE_ABI,
           address: wrapperTokenAddress,
           functionName: 'approve',
           args: [nftAddressGuy, wad],
         })
+        console.log({ approveHash: writeApprove.hash })
+        const approveReceipt = await listenerTransactionReceipt(writeApprove.hash)
 
-        return transactionReceipt
+        return approveReceipt
       } catch (error) {
         throw error
       }
     },
-    [wrapperTokenAddress],
+    [wrapperTokenAddress, listenerTransactionReceipt, writeContract],
   )
 }
 
@@ -38,22 +42,38 @@ type DepositParams = {
 
 export function useDeposit() {
   const wrapperTokenAddress = useAppAddress('WUIT')
+  const listenerTransactionReceipt = useListenerTransactionHash()
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState<TransactionReceipt>()
 
-  return useCallback(
+  const mutate = useCallback(
     async ({ value }: DepositParams) => {
+      console.log(value)
       try {
-        const transactionReceipt = await writeContract({
+        setIsLoading(true)
+        const txInfo = await writeContract({
           abi: TOKEN_EXCHANGE_ABI,
           address: wrapperTokenAddress,
           functionName: 'deposit',
-          value: BigInt(ethers.utils.formatEther(value)),
+          value: BigInt(value),
         })
-
-        return transactionReceipt
+        const txReceipt = await listenerTransactionReceipt(txInfo.hash)
+        console.log({ txReceipt })
+        setData(txReceipt)
+        return txReceipt
       } catch (error) {
+        setData(undefined)
         throw error
+      } finally {
+        setIsLoading(false)
       }
     },
-    [wrapperTokenAddress],
+    [wrapperTokenAddress, listenerTransactionReceipt, writeContract],
   )
+
+  return {
+    mutate,
+    isLoading,
+    data,
+  }
 }

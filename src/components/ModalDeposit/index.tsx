@@ -15,6 +15,8 @@ import { Colors } from 'src/constants/Colors'
 import styles from './styles'
 import CustomInput from '../CustomInput'
 import { useForm } from 'react-hook-form'
+import { useDeposit } from 'src/hooks/useErc20'
+import { divide, toBaseDenomAmount } from 'src/utils/big'
 
 interface IModal {
   item?: object
@@ -24,18 +26,25 @@ interface IModal {
 }
 const ModalDeposit = ({ item, index, isVisible, setIsVisible }: IModal) => {
   const [isFocused, setIsFocused] = useState(false)
+  const { mutate: deposit, isLoading: isDepositPending } = useDeposit()
   const {
     control,
     handleSubmit,
-    formState: { errors }, reset
+    formState: { errors },
+    reset,
   } = useForm()
+
   const onSubmit = (data: any) => {
-    console.log(data);
-    
+    console.log(toBaseDenomAmount(divide(data.token, 100000), 18))
+    deposit({
+      value: toBaseDenomAmount(divide(data.token, 100000), 18),
+    })
   }
-  useEffect(() =>{
+
+  useEffect(() => {
     reset()
-  },[isVisible])
+  }, [isVisible])
+
   return (
     <Modal transparent={true} visible={isVisible}>
       <View style={styles.container}>
@@ -94,27 +103,29 @@ const ModalDeposit = ({ item, index, isVisible, setIsVisible }: IModal) => {
                       styleInput={styles.input}
                       name="token"
                       control={control}
-                      placeholder='0'
+                      placeholder="0"
                       rules={{
                         required: 'This is required',
                         min: {
                           value: 0,
                           message: 'Price is not negative',
                         },
-
                       }}
-                      keyboardType='number-pad'
+                      keyboardType="number-pad"
                     ></CustomInput>
                   </View>
                   <Text style={[styles.text, styles.modalDepositInfoDes]}>
-                    The conversion is straightforward: 1 AIOZ equals 1 WUIT. Input your desired WUIT
-                    amount, confirm, and you're done! Simple, transparent, and hassle-free.
+                    The conversion is straightforward: 1 AIOZ equals 100000 WUIT. Input your desired
+                    WUIT amount, confirm, and you're done! Simple, transparent, and hassle-free.
                   </Text>
                 </View>
               </View>
 
               <View style={styles.modalDepositAction}>
-                <Button style={[styles.btn, styles.modalDepositBtnOk]} onPress={handleSubmit(onSubmit)}>
+                <Button
+                  style={[styles.btn, styles.modalDepositBtnOk]}
+                  onPress={handleSubmit(onSubmit)}
+                >
                   <Text style={[styles.btnText, styles.btnTextOk]}>OK</Text>
                 </Button>
                 <Button

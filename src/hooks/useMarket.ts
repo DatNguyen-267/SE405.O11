@@ -3,7 +3,7 @@ import { MARKETPLACE_ABI } from 'src/abis'
 import { AppError, DEFAULT_ADDRESS } from 'src/constants'
 import { AskInfo, CollectionItem, NftItem } from 'src/types'
 import { ethers } from 'src/utils'
-import { Address } from 'viem'
+import { Address, TransactionReceipt } from 'viem'
 import { WriteContractResult, prepareWriteContract, writeContract } from 'wagmi/actions'
 import useAppAddress from './useAppAddress'
 import { useApproveErc20 } from './useErc20'
@@ -335,9 +335,10 @@ type BuyNFTUsingWrapTokenParams = {
 
 export function useBuyNFTUsingWrapToken() {
   const approveTokenExchange = useApproveErc20()
+  const listenerTransactionReceipt = useListenerTransactionHash()
 
   const [isLoading, setIsLoading] = useState(false)
-  const [data, setData] = useState<WriteContractResult>()
+  const [data, setData] = useState<TransactionReceipt>()
 
   const marketAddress = useAppAddress('MARKET')
   const wrapTokenAddress = useAppAddress('WUIT')
@@ -347,11 +348,11 @@ export function useBuyNFTUsingWrapToken() {
       try {
         setIsLoading(true)
         try {
-          const receiptApprove = await approveTokenExchange({
+          const writeApprove = await approveTokenExchange({
             nftAddressGuy: marketAddress,
             wad: ethers.utils.parseEther(price).toString(),
           })
-          console.log({ receiptApprove })
+          console.log({ writeApprove })
         } catch (error) {
           console.log(error)
           throw new Error(AppError.APPROVE_TOKEN_EXCHANGE_FAILED)
@@ -363,20 +364,30 @@ export function useBuyNFTUsingWrapToken() {
           args: [collectionAddress, tokenId, ethers.utils.parseEther(price).toString()],
         })
         console.log({ config })
-        const buyTokenUsingWrapTokenReceipt = await writeContract(config)
+        const buyTxInfo = await writeContract(config)
+        const buyReceipt = await listenerTransactionReceipt(buyTxInfo.hash)
 
-        console.log({ buyTokenUsingWrapTokenReceipt })
+        console.log({ buyReceipt })
 
-        setData(buyTokenUsingWrapTokenReceipt)
-        return buyTokenUsingWrapTokenReceipt
+        setData(buyReceipt)
+
+        return buyReceipt
       } catch (error) {
-        console.log(error)
-        setIsLoading(false)
         setData(undefined)
         throw error
+      } finally {
+        setIsLoading(false)
       }
     },
-    [approveTokenExchange, marketAddress, setData, setIsLoading, wrapTokenAddress],
+    [
+      approveTokenExchange,
+      marketAddress,
+      setData,
+      setIsLoading,
+      listenerTransactionReceipt,
+      writeContract,
+      wrapTokenAddress,
+    ],
   )
 
   return {
@@ -426,34 +437,33 @@ export function useCreateAskOrder() {
           throw error
         }
 
-        return new Promise(async (resolve, reject) => {
-          setTimeout(async () => {
-            try {
-              const createAskOrderResponse = await writeContract({
-                abi: MARKETPLACE_ABI,
-                address: marketAddress,
-                functionName: 'createAskOrder',
-                args: [cltAddress, tokenId, ethers.utils.parseEther(price).toString()],
-              })
-              const createAskOrderReceipt = await listenerTransactionReceipt(
-                createAskOrderResponse.hash,
-              )
-              console.log({ createAskOrderReceipt })
-              setData(createAskOrderResponse)
-              resolve(createAskOrderResponse)
-            } catch (error) {
-              reject(error)
-            }
-          }, 2000)
+        const createAskOrderResponse = await writeContract({
+          abi: MARKETPLACE_ABI,
+          address: marketAddress,
+          functionName: 'createAskOrder',
+          args: [cltAddress, tokenId, ethers.utils.parseEther(price).toString()],
         })
+        console.log({ createAskOrderResponse })
+        const createAskOrderReceipt = await listenerTransactionReceipt(createAskOrderResponse.hash)
+        console.log({ createAskOrderReceipt })
+
+        setData(createAskOrderResponse)
       } catch (error) {
         console.log({ error })
-        setIsLoading(false)
         setData(undefined)
         throw error
+      } finally {
+        setIsLoading(false)
       }
     },
-    [approveSpenderToAccessNft, marketAddress, setData, setIsLoading],
+    [
+      approveSpenderToAccessNft,
+      marketAddress,
+      setData,
+      setIsLoading,
+      listenerTransactionReceipt,
+      writeContract,
+    ],
   )
 
   return {
@@ -473,7 +483,6 @@ export function useCreateAskOrder() {
  */
 
 type ImportCollectionParams = {
-  marketAddress: Address
   cltAddress: Address
   creatorAddress: Address
   tradingFee: number
@@ -482,9 +491,13 @@ type ImportCollectionParams = {
 }
 
 export function useImportCollection() {
-  return useCallback(
+  const marketAddress = useAppAddress('MARKET')
+
+  const [data, setData] = useState<TransactionReceipt>()
+  const [isLoading, setIsLoading] = useState(false)
+  const listenerTransactionReceipt = useListenerTransactionHash()
+  const mutate = useCallback(
     async ({
-      marketAddress,
       cltAddress,
       creatorAddress,
       tradingFee = 100,
@@ -492,20 +505,31 @@ export function useImportCollection() {
       whiteListChecker = DEFAULT_ADDRESS,
     }: ImportCollectionParams) => {
       try {
-        const addResponse = await writeContract({
+        setIsLoading(true)
+
+        const txInfo = await writeContract({
           abi: MARKETPLACE_ABI,
           address: marketAddress,
           functionName: 'addCollection',
           args: [cltAddress, creatorAddress, whiteListChecker, tradingFee, creatorFee],
         })
 
-        return addResponse
+        const txReceipt = await listenerTransactionReceipt(txInfo.hash)
+        return txReceipt
       } catch (error) {
         throw error
+      } finally {
+        setIsLoading(false)
       }
     },
-    [],
+    [marketAddress, listenerTransactionReceipt, writeContract],
   )
+
+  return {
+    mutate,
+    isLoading,
+    data,
+  }
 }
 
 /**
@@ -521,30 +545,32 @@ type CancelAskOrderParams = {
 
 export function useCancelAskOrder() {
   const marketAddress = useAppAddress('MARKET')
-
-  const [data, setData] = useState<WriteContractResult>()
+  const [data, setData] = useState<TransactionReceipt>()
   const [isLoading, setIsLoading] = useState(false)
+  const listenerTransactionReceipt = useListenerTransactionHash()
 
   const mutate = useCallback(
     async ({ collectionAddress, tokenId }: CancelAskOrderParams) => {
       setIsLoading(true)
       try {
-        const transaction = await writeContract({
+        const txInfo = await writeContract({
           abi: MARKETPLACE_ABI,
           address: marketAddress,
           functionName: 'cancelAskOrder',
           args: [collectionAddress, tokenId],
         })
-        setData(transaction)
-        return transaction
-      } catch (error) {
-        setIsLoading(false)
-        setData(undefined)
+        const txReceipt = await listenerTransactionReceipt(txInfo.hash)
 
+        setData(txReceipt)
+        return txReceipt
+      } catch (error) {
+        setData(undefined)
         throw error
+      } finally {
+        setIsLoading(false)
       }
     },
-    [marketAddress, setIsLoading, setData],
+    [marketAddress, setIsLoading, setData, listenerTransactionReceipt, writeContract],
   )
 
   return { mutate, isLoading, data }
