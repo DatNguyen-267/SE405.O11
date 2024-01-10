@@ -1,14 +1,16 @@
 import { AntDesign } from '@expo/vector-icons'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Modal, ScrollView, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import { Button } from 'react-native-paper'
+import { SvgUri } from 'react-native-svg'
 import Toast from 'react-native-toast-message'
 import { useDispatch } from 'react-redux'
+import { DEFAULT_ADDRESS } from 'src/constants'
 import { Colors } from 'src/constants/Colors'
 import { useCreateAskOrder } from 'src/hooks/useMarket'
-import { getUrlImage, shorterAddress } from 'src/utils'
-import { onShowToastError, onShowToastSuccess } from 'src/utils/toast'
+import { getAvatarByAddress, getUrlImage, shorterAddress } from 'src/utils'
+import { onShowToastError } from 'src/utils/toast'
 import CustomInput from '../CustomInput'
 import styles from './styles'
 
@@ -39,20 +41,22 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
         price: price,
       })
         .then((res) => {
-          onShowToastSuccess('Sell NFT Successfully')
-          if (setReload) {
-            setReload(!reload)
-          }
+          // onShowToastSuccess("Sell NFT Successfully")
+          ToastAndroid.show('Sell NFT Successfully', ToastAndroid.SHORT)
+          setIsVisible(false)
         })
         .catch((err) => {
           onShowToastError(err.message)
         })
         .finally(() => {})
     } else {
+      onShowToastError('Not found information NFT!!!')
     }
   }
   useEffect(() => {
-    reset()
+    if (isVisible == false) {
+      reset()
+    }
   }, [isVisible])
 
   return (
@@ -84,16 +88,33 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
               </View>
               <View style={styles.modalSellNft}>
                 <View style={styles.modalSellNftImg}>
-                  <Image
-                    resizeMode="cover"
-                    style={{ width: '100%', height: '100%' }}
-                    source={{
-                      uri:
-                        item && item.imageGatewayUrl
-                          ? getUrlImage(item.imageGatewayUrl)
-                          : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
-                    }}
-                  ></Image>
+                  {item && item.imageGatewayUrl ? (
+                    <Image
+                      resizeMode="cover"
+                      style={{ width: '100%', height: '100%' }}
+                      source={{
+                        uri: getUrlImage(item.imageGatewayUrl),
+                      }}
+                    ></Image>
+                  ) : (
+                    <SvgUri
+                      width={'100%'}
+                      height={'100%'}
+                      uri={getAvatarByAddress(
+                        item && item.collectionAddress ? item.collectionAddress : DEFAULT_ADDRESS,
+                      )}
+                    ></SvgUri>
+                  )}
+                  {/* <Image
+                      resizeMode="cover"
+                      style={{ width: '100%', height: '100%' }}
+                      source={{
+                        uri:
+                          item && item.imageGatewayUrl
+                            ? getUrlImage(item.imageGatewayUrl)
+                            : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
+                      }}
+                    ></Image> */}
                 </View>
                 {/* <Image
                   style={styles.modalSellNftImg}

@@ -28,13 +28,13 @@ const Setting = ({ navigation }: { navigation: any }) => {
             </View>
             <AntDesign name="right" size={20} color="black" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.catergory} onPress={() => navigation.navigate('Chains')}>
+          {/* <TouchableOpacity style={styles.catergory} onPress={() => navigation.navigate('Chains')}>
             <View style={styles.catergoryHead}>
               <AntDesign name="swap" size={24} color="black" />
               <Text style={styles.text}>Chains</Text>
             </View>
             <AntDesign name="right" size={20} color="black" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={styles.catergory}
             onPress={() => navigation.navigate('MyCollection')}

@@ -4,8 +4,8 @@ import styles from './styles'
 import { getAvatarByAddress, shorterAddress } from 'src/utils'
 import { SvgUri } from 'react-native-svg'
 import { useGetNameOfCollection } from 'src/hooks/useNFT'
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import { Address } from 'viem'
+import { DEFAULT_ADDRESS } from 'src/constants'
 interface ProfileCardProps {
   item?: any
   index?: number
@@ -52,13 +52,7 @@ const Collection = ({ item, index, navigation, address, search }: ProfileCardPro
           {address ? (
             <SvgUri width={'100%'} height={'100%'} uri={getAvatarByAddress(address)}></SvgUri>
           ) : (
-            <Image
-              resizeMode="cover"
-              style={styles.collectionImage}
-              source={{
-                uri: 'https://img.freepik.com/free-vector/gradient-nft-concept_23-2148964595.jpg',
-              }}
-            ></Image>
+            <SvgUri width={'100%'} height={'100%'} uri={getAvatarByAddress(DEFAULT_ADDRESS)}></SvgUri>
           )}
         </View>
         <View style={styles.collectionContent}>
@@ -83,11 +77,11 @@ const Collection = ({ item, index, navigation, address, search }: ProfileCardPro
                     uri={getAvatarByAddress(item.creatorAddress)}
                   ></SvgUri>
                 ) : (
-                  <Image
-                    resizeMode="cover"
-                    style={{ width: '100%', height: '100%' }}
-                    source={require('./../../assets/images/avatarDefault.png')}
-                  ></Image>
+                  <SvgUri
+                  width={'100%'}
+                  height={'100%'}
+                  uri={getAvatarByAddress(DEFAULT_ADDRESS)}
+                ></SvgUri>
                 )}
               </View>
               <Text style={[styles.text, styles.collectionOwnerAdd]}>

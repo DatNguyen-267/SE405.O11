@@ -14,6 +14,8 @@ import { SvgUri } from 'react-native-svg'
 import PageLoading from 'src/components/PageLoading'
 import { DEFAULT_ADDRESS } from 'src/constants'
 import { useGetNFTsOfCollection } from 'src/hooks/useNFT'
+import Toast from 'react-native-toast-message'
+import { AntDesign, Ionicons } from '@expo/vector-icons'
 
 const Collection = ({ navigation, route }: { navigation?: any; route?: any }) => {
   const [profile, setProfile] = useState(null)
@@ -61,7 +63,8 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
   }
 
   return (
-    <View style={styles.createScreen}>
+    <>
+     <View style={styles.createScreen}>
       <ModalBuy
         isVisible={isVisible}
         setIsVisible={setIsVisible}
@@ -90,11 +93,11 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
                     uri={getAvatarByAddress(collectionAddress)}
                   ></SvgUri>
                 ) : (
-                  <Image
-                    resizeMode="cover"
-                    style={{ width: '100%', height: '100%' }}
-                    source={require('./../../assets/images/avatarDefault.png')}
-                  ></Image>
+                  <SvgUri
+                    width={'100%'}
+                    height={'100%'}
+                    uri={getAvatarByAddress(DEFAULT_ADDRESS)}
+                  ></SvgUri>
                 )}
               </View>
               {/* <Image
@@ -121,7 +124,10 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
             </View>
           </View>
           <View style={styles.nftContent}>
-            <Text style={[styles.text, styles.title]}>All NFT</Text>
+            <View style={styles.nftContentHead}>
+              <Text style={[styles.text, styles.title]}>All NFT</Text>
+              <Ionicons name="reload" size={20} color="black" onPress={()=>{setReLoad(!reload)}} />
+            </View>
             <PageLoading isVisible={isLoadingGetAsk}></PageLoading>
             {!isLoadingGetAsk && (
               <FlatList
@@ -163,6 +169,8 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
         </View>
       </ScrollView>
     </View>
+    <Toast></Toast>
+    </>
   )
 }
 

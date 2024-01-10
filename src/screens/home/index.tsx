@@ -1,22 +1,19 @@
+import { useFocusEffect } from 'expo-router'
 import { default as React, useCallback, useEffect, useMemo, useState } from 'react'
-import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, ScrollView, Text, View } from 'react-native'
+import Toast from 'react-native-toast-message'
 import { useDispatch } from 'react-redux'
 import ModalBuy from 'src/components/ModalBuy'
 import NFTCard from 'src/components/NFTCard'
 import NFTCardHorital from 'src/components/NFTCardHorital'
+import PageLoading from 'src/components/PageLoading'
 import SearchInput from 'src/components/Search'
+import useCurrentChain from 'src/hooks/useCurrentChain'
+import { mappingAsksToNftList, useViewAllAsk } from 'src/hooks/useMarket'
+import { NftItem } from 'src/types'
 import { onHideLoading, onShowLoading } from 'src/utils/loading'
 import styles from './styles'
 import TypingText from './typingText'
-import { useGetNftsOfAddress } from 'src/hooks/useNFT'
-import ModalSell from 'src/components/ModalSell'
-import ModalDeposit from 'src/components/ModalDeposit'
-import ModalImport from 'src/components/ModalImport'
-import { mappingAsksToNftList, useViewAllAsk } from 'src/hooks/useMarket'
-import { useFocusEffect } from 'expo-router'
-import { NftItem } from 'src/types'
-import PageLoading from 'src/components/PageLoading'
-import useCurrentChain from 'src/hooks/useCurrentChain'
 
 interface ProfileCardProps {
   navigation?: any
@@ -45,7 +42,6 @@ const Home = ({ navigation }: ProfileCardProps) => {
         setNftList(undefined)
       }
     })
-
     return () => {
       stale = true
     }
@@ -70,13 +66,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
         {/* <ModalImport isVisible={isVisible} setIsVisible={setIsVisible}></ModalImport> */}
         {/* <ModalDeposit isVisible={isVisible} setIsVisible={setIsVisible}></ModalDeposit> */}
         {/* <ModalSell isVisible={isVisible} setIsVisible={setIsVisible}></ModalSell> */}
-        <ModalBuy
-          isVisible={isVisible}
-          setIsVisible={setIsVisible}
-          item={dataNFT}
-          setReload={setReLoad}
-          reload={reload}
-        ></ModalBuy>
+        <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible} item={dataNFT}></ModalBuy>
         {/* <Loading isVisible={isLoading}></Loading> */}
         <ScrollView
           style={styles.homeContent}
@@ -152,7 +142,11 @@ const Home = ({ navigation }: ProfileCardProps) => {
                   }}
                   scrollEnabled={false}
                   style={styles.listNft}
-                  data={mappingList}
+                  data={mappingList?.filter(
+                    (item) =>
+                      search === '' ||
+                      (item && item.title.toLowerCase().includes(search.toLowerCase())),
+                  )}
                   numColumns={2}
                   renderItem={({ item }) => {
                     if (search === '') {
@@ -188,6 +182,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
           </View>
         </ScrollView>
       </View>
+      <Toast></Toast>
     </>
   )
 }

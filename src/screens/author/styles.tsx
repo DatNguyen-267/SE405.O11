@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     borderWidth: 3,
     borderColor: Colors.color_base_200,
+    overflow: 'hidden',
   },
   headLineContent: {
     fontSize: 28,
@@ -276,9 +277,9 @@ const styles = StyleSheet.create({
   },
 
   nftItem: {
-    flex: 0.5,
-    margin: 1,
     paddingHorizontal: 5,
+    flex: 1,
+    maxWidth: '50%',
   },
 })
 

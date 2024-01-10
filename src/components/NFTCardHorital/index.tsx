@@ -8,6 +8,7 @@ import { ethereumAddressRegex } from 'src/utils/regex'
 import { useGetNameOfCollection, useGetTokenURI } from 'src/hooks/useNFT'
 import { getMetadata, getUrlImage } from 'src/utils'
 import { onShowToastInfo } from 'src/utils/toast'
+import { DEFAULT_ADDRESS } from 'src/constants'
 interface ProfileCardProps {
   item?: any
   index?: number
@@ -16,6 +17,7 @@ interface ProfileCardProps {
 }
 
 const NFTCardHorital = ({ item, index, setDataNFT, onShowModal }: ProfileCardProps) => {
+  const aspectRatio =230/167
   const [metaData, setMetaData] = useState<any>(undefined)
   const { mutate: getTokenURI } = useGetTokenURI()
   const { mutate: handleGetNameOfCollection } = useGetNameOfCollection()
@@ -28,15 +30,10 @@ const NFTCardHorital = ({ item, index, setDataNFT, onShowModal }: ProfileCardPro
     }
   }
   const handleClick = () => {
-    if (!isLoading) {
-      if (setDataNFT !== undefined) {
-        setDataNFT(item)
-      }
-      onShowModal(true)
+    if (setDataNFT !== undefined) {
+      setDataNFT(item)
     }
-    else {
-      onShowToastInfo("Please wait image and name loaded!")
-    }
+    onShowModal(true)
   }
   const handleGetMetadata = async () => {
     setIsLoading(true)
@@ -61,22 +58,29 @@ const NFTCardHorital = ({ item, index, setDataNFT, onShowModal }: ProfileCardPro
     if (item && item.collectionAddress) {
       handleGetMetadata()
     }
-  }, [])
+  }, [item])
   return (
     <TouchableOpacity onPress={() => { handleClick() }}>
       <View style={styles.NFTCardHorital}>
         <View style={styles.cardHead}>
-          <View style={styles.cardImage}>
-            <Image
-              resizeMode="cover"
-              style={{ width: '100%', height: '100%' }}
-              source={{
-                uri:
-                  metaData && metaData.image
-                    ? getUrlImage(metaData.image)
-                    : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
-              }}
-            ></Image>
+          <View style={[styles.cardImage, {aspectRatio: aspectRatio}]}>
+            {
+              metaData && metaData.image ?
+                <Image
+                  resizeMode="cover"
+                  style={{ width: '100%', height: '100%' }}
+                  source={{
+                    uri: getUrlImage(metaData.image)
+                  }}
+                ></Image>
+                : 
+                <SvgUri
+                  width={'100%'}
+                  height={'100%'}
+                  preserveAspectRatio="none"
+                  uri={getAvatarByAddress(item && item.seller ? item.seller : DEFAULT_ADDRESS)}
+                ></SvgUri>
+            }
           </View>
           {/* <Image
           resizeMode="cover"
@@ -113,11 +117,11 @@ const NFTCardHorital = ({ item, index, setDataNFT, onShowModal }: ProfileCardPro
                     uri={getAvatarByAddress(item.seller)}
                   ></SvgUri>
                 ) : (
-                  <Image
-                    resizeMode="cover"
-                    style={{ width: '100%', height: '100%' }}
-                    source={require('./../../assets/images/avatarDefault.png')}
-                  ></Image>
+                  <SvgUri
+                  width={'100%'}
+                  height={'100%'}
+                  uri={getAvatarByAddress(DEFAULT_ADDRESS)}
+                ></SvgUri>
                 )}
               </View>
               {/* <Image

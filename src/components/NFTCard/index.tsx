@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import styles from './styles'
 import { SvgUri } from 'react-native-svg'
@@ -28,8 +28,10 @@ const NFTCard = ({
   isSell,
   setDataNFT,
 }: ProfileCardProps) => {
+  const windowWidth = Dimensions.get('window').width
+  const aspectRatio = (windowWidth / 2 - 25) / 150
   const [metaData, setMetaData] = useState<any>(undefined)
-  const [nft, setNft] = useState<any>(undefined)
+  const [nft, setNft] = useState<any>(item)
   const { mutate: getTokenURI } = useGetTokenURI()
   const { mutate: handleGetNameOfCollection } = useGetNameOfCollection()
   const [isLoading, setIsLoading] = useState(false)
@@ -67,24 +69,18 @@ const NFTCard = ({
         setIsLoading(false)
       })
   }
-
   useEffect(() => {
     if (item && item.collectionAddress) {
+      if (!item.seller) {
+        item.seller = item.owner
+      }
+      setNft(item)
       handleGetMetadata()
     }
-  }, [])
+  }, [item])
   return (
     <TouchableOpacity>
       <View style={styles.NFTCard}>
-        {/* <Image
-          resizeMode="cover"
-          style={styles.cardImage}
-          source={{
-            uri: item
-              ? item.img
-              : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
-          }}
-        ></Image> */}
         <View style={styles.cardHead}>
           {/* {
             metaData && metaData.image
@@ -103,17 +99,25 @@ const NFTCard = ({
                 ></SvgUri>
               </View>
           } */}
-          <View style={styles.cardImage}>
-            <Image
-              resizeMode="cover"
-              style={{ width: '100%', height: '100%' }}
-              source={{
-                uri:
-                  metaData && metaData.image
-                    ? getUrlImage(metaData.image)
-                    : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
-              }}
-            ></Image>
+          <View style={[styles.cardImage, { aspectRatio: aspectRatio }]}>
+            {metaData && metaData.image && isLoading === false ? (
+              <Image
+                resizeMode="cover"
+                style={{ width: '100%', height: '100%' }}
+                source={{
+                  uri: getUrlImage(metaData.image),
+                }}
+              ></Image>
+            ) : (
+              <SvgUri
+                width={'100%'}
+                height={'100%'}
+                preserveAspectRatio="none"
+                uri={getAvatarByAddress(
+                  item && item.collectionAddress ? item.collectionAddress : DEFAULT_ADDRESS,
+                )}
+              ></SvgUri>
+            )}
           </View>
           <View style={styles.cardHeadLine}>
             <Text style={[styles.text, styles.cardAddress]}>
@@ -125,7 +129,7 @@ const NFTCard = ({
           <View style={styles.cardInfo}>
             <View style={styles.cardContentName}>
               <Text numberOfLines={1} ellipsizeMode="tail" style={[styles.text, styles.cardName]}>
-                {metaData && metaData.name ? metaData.name : 'NFT Name'}
+                {metaData && metaData.name && isLoading === false ? metaData.name : 'NFT Name'}
               </Text>
               <Text style={[styles.text, styles.cardId]}>
                 {item.tokenId ? '#' + item.tokenId : '#0'}
@@ -140,11 +144,11 @@ const NFTCard = ({
                     uri={getAvatarByAddress(item.seller)}
                   ></SvgUri>
                 ) : (
-                  <Image
-                    resizeMode="cover"
-                    style={{ width: '100%', height: '100%' }}
-                    source={require('./../../assets/images/avatarDefault.png')}
-                  ></Image>
+                  <SvgUri
+                    width={'100%'}
+                    height={'100%'}
+                    uri={getAvatarByAddress(DEFAULT_ADDRESS)}
+                  ></SvgUri>
                 )}
               </View>
               {/* <Image

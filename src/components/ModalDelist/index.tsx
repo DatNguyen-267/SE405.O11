@@ -1,15 +1,17 @@
 import { AntDesign } from '@expo/vector-icons'
 import React, { useState } from 'react'
-import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Modal, ScrollView, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import { Button } from 'react-native-paper'
 import Toast from 'react-native-toast-message'
 import { onShowToastError, onShowToastSuccess } from 'src/utils/toast'
 import styles from './styles'
 import { Colors } from 'src/constants/Colors'
-import { getUrlImage, shorterAddress } from 'src/utils'
+import { getAvatarByAddress, getUrlImage, shorterAddress } from 'src/utils'
 import { onHideLoading, onShowLoading } from 'src/utils/loading'
 import { useDispatch } from 'react-redux'
 import { useCancelAskOrder } from 'src/hooks/useMarket'
+import { SvgUri } from 'react-native-svg'
+import { DEFAULT_ADDRESS } from 'src/constants'
 
 interface IModal {
   item?: any
@@ -22,24 +24,23 @@ interface IModal {
 const ModalDelist = ({ item, index, isVisible, setIsVisible, setReload, reload }: IModal) => {
   const { mutate: cancelAskOrder } = useCancelAskOrder()
   const handleDelist = () => {
-    if(item){
+    if (item) {
       cancelAskOrder({
         collectionAddress: item.collectionAddress,
         tokenId: item.tokenId,
       }).then((res) => {
-        onShowToastSuccess("Delist NFT Successfully")
-        if(setReload){
-          setReload(!reload)
-        }
+        // onShowToastSuccess("Delist NFT Successfully")
+        ToastAndroid.show('Delist NFT Successfully!', ToastAndroid.SHORT)
+        setIsVisible(false)
       })
-      .catch((err) => {
-        onShowToastError(err.message)
-      })
-      .finally(() => {
-      })
+        .catch((err) => {
+          onShowToastError(err.message)
+        })
+        .finally(() => {
+        })
 
     }
-    else{
+    else {
       onShowToastError("Not found information NFT!!!")
     }
   }
@@ -73,7 +74,22 @@ const ModalDelist = ({ item, index, isVisible, setIsVisible, setReload, reload }
               </View>
               <View style={styles.modalDelistNft}>
                 <View style={styles.modalDelistNftImg}>
-                  <Image
+                  {
+                    item && item.imageGatewayUrl ?
+                      <Image
+                        resizeMode="cover"
+                        style={{ width: '100%', height: '100%' }}
+                        source={{
+                          uri: getUrlImage(item.imageGatewayUrl)
+                        }}
+                      ></Image>
+                      : <SvgUri
+                        width={'100%'}
+                        height={'100%'}
+                        uri={getAvatarByAddress(item && item.collectionAddress ? item.collectionAddress: DEFAULT_ADDRESS)}
+                      ></SvgUri>
+                  }
+                  {/* <Image
                     resizeMode="cover"
                     style={{ width: '100%', height: '100%' }}
                     source={{
@@ -82,7 +98,7 @@ const ModalDelist = ({ item, index, isVisible, setIsVisible, setReload, reload }
                           ? getUrlImage(item.imageGatewayUrl)
                           : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
                     }}
-                  ></Image>
+                  ></Image> */}
                 </View>
                 {/* <Image
                   style={styles.modalDelistNftImg}
