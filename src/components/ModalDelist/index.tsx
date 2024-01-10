@@ -1,6 +1,6 @@
 import { AntDesign } from '@expo/vector-icons'
 import React, { useState } from 'react'
-import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Modal, ScrollView, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import { Button } from 'react-native-paper'
 import Toast from 'react-native-toast-message'
 import { onShowToastError, onShowToastSuccess } from 'src/utils/toast'
@@ -29,7 +29,8 @@ const ModalDelist = ({ item, index, isVisible, setIsVisible, setReload, reload }
         collectionAddress: item.collectionAddress,
         tokenId: item.tokenId,
       }).then((res) => {
-        onShowToastSuccess("Delist NFT Successfully")
+        // onShowToastSuccess("Delist NFT Successfully")
+        ToastAndroid.show('Delist NFT Successfully!', ToastAndroid.SHORT)
         setIsVisible(false)
       })
         .catch((err) => {

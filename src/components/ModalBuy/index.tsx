@@ -1,6 +1,6 @@
 import { AntDesign } from '@expo/vector-icons'
 import React, { useEffect } from 'react'
-import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Modal, ScrollView, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import { Button } from 'react-native-paper'
 import Toast from 'react-native-toast-message'
 import { useDispatch } from 'react-redux'
@@ -33,7 +33,8 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible, setReload, reload }: I
         price: item.price,
       })
         .then((res) => {
-          onShowToastSuccess('Buy NFT Successfully')
+          // onShowToastSuccess('Buy NFT Successfully')
+          ToastAndroid.show('Buy NFT Successfully!', ToastAndroid.SHORT)
           setIsVisible(false)
         })
         .catch((err) => {

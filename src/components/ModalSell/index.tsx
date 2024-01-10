@@ -7,6 +7,7 @@ import {
   ScrollView,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native'
@@ -49,7 +50,8 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
         tokenId: item.tokenId,
         price: price,
       }).then((res) => {
-        onShowToastSuccess("Sell NFT Successfully")
+        // onShowToastSuccess("Sell NFT Successfully")
+        ToastAndroid.show('Sell NFT Successfully', ToastAndroid.SHORT)
         setIsVisible(false)
       })
         .catch((err) => {
