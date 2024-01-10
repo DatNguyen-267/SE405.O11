@@ -64,7 +64,9 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
 
   }
   useEffect(() => {
-    reset()
+    if(isVisible == false) {
+      reset()
+    }
   }, [isVisible])
 
   return (

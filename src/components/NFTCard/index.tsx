@@ -69,9 +69,11 @@ const NFTCard = ({
         setIsLoading(false)
       })
   }
-
   useEffect(() => {
     if (item && item.collectionAddress) {
+      if(!item.seller){
+        item.seller = item.owner
+      }
       setNft(item)
       handleGetMetadata()
     }
@@ -99,7 +101,7 @@ const NFTCard = ({
           } */}
           <View style={[styles.cardImage, {aspectRatio: aspectRatio}]}>
             {
-              metaData && metaData.image ?
+              metaData && metaData.image && isLoading===false ?
               <Image
                 resizeMode="cover"
                 style={{ width: '100%', height: '100%' }}
@@ -126,7 +128,7 @@ const NFTCard = ({
           <View style={styles.cardInfo}>
             <View style={styles.cardContentName}>
               <Text numberOfLines={1} ellipsizeMode="tail" style={[styles.text, styles.cardName]}>
-                {metaData && metaData.name ? metaData.name : 'NFT Name'}
+                {metaData && metaData.name && isLoading===false ? metaData.name : 'NFT Name'}
               </Text>
               <Text style={[styles.text, styles.cardId]}>
                 {item.tokenId ? '#' + item.tokenId : '#0'}
