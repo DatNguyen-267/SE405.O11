@@ -24,21 +24,26 @@ interface IModal {
 }
 const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: IModal) => {
   const [isFocused, setIsFocused] = useState(false)
-  const [price, setPrice] = useState('')
+  // const [price, setPrice] = useState('')
   const { mutate: createAskOrder } = useCreateAskOrder()
   const dispatch = useDispatch()
+
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
     reset,
   } = useForm()
+
+  const price = watch('price')
+
   const onSubmit = (data: any) => {
     if (item) {
       createAskOrder({
         cltAddress: item.collectionAddress,
         tokenId: item.tokenId,
-        price: price,
+        price: data.price,
       })
         .then((res) => {
           // onShowToastSuccess("Sell NFT Successfully")
@@ -148,7 +153,6 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
                       name="price"
                       control={control}
                       placeholder="0"
-                      setValue={setPrice}
                       rules={{
                         required: 'This is required',
                         min: {

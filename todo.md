@@ -1,25 +1,20 @@
-[ ] Đóng modal khi mua, bán, hủy success
+### TASKs
 
-[ ] Không dùng hình ảnh từ local mà dùng hình ảnh chuyển từ address - screen "My Collection" đổi avatar user theo address - Những NFT đang được load thì hiển thị hình theo collection address của NFT đó
+1. [ ] Loading cho các modal khi đang thực hiện transaction
 
-[ ] Load chua xong hinh voi ten van duoc buy sell delist
+   - [ ] Modal sell
+   - [ ] Modal buy
+   - [ ] Modal cancel order
+   - [ ] Modal deposit
 
-[ ] Xoa het loading khi thuc hien mua ban
+2. [ ] Đóng các modal và hiện các thông báo success bằng mặc định của android + reload lại data các page
 
-### End
+   - [ ] Modal sell
+   - [ ] Modal buy
+   - [ ] Modal cancel order
 
-[ ] Bỏ screen chain
+3. [ ] Các thông tin như (tên, địa chỉ NFT,...) chưa có data thì cứ để "..." để biết là đang loading
 
-[ ] Sửa lại screen connect
+4. [ ] Page Collection click icon reload k thấy trạng thái loading (data reload thì đúng)
 
-[ ] Vẫn để screen create nft
-
-[ ] Load thêm thông tin ở page connect wallet
-
-- Khi chưa connect thì không hiện
-- Connected thì hiện địa chỉ ví, chain đang connect
-- Hiện thêm balance và WUIT ở đó luôn
-
-[ ] Them icon reload ở screen collection và my collection để reload lại NFT list
-
-- Đề xuất là hiện ở ngay cái title của list, size: 20px là dc
+5. [ ]

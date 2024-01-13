@@ -419,6 +419,7 @@ export function useCreateAskOrder() {
 
   const mutate = useCallback(
     async ({ cltAddress, tokenId, price }: CreateAskOrderParams) => {
+      console.log({ price })
       try {
         setIsLoading(true)
         try {

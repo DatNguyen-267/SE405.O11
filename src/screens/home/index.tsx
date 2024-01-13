@@ -11,7 +11,6 @@ import SearchInput from 'src/components/Search'
 import useCurrentChain from 'src/hooks/useCurrentChain'
 import { mappingAsksToNftList, useViewAllAsk } from 'src/hooks/useMarket'
 import { NftItem } from 'src/types'
-import { onHideLoading, onShowLoading } from 'src/utils/loading'
 import styles from './styles'
 import TypingText from './typingText'
 
@@ -49,16 +48,16 @@ const Home = ({ navigation }: ProfileCardProps) => {
 
   useFocusEffect(
     useCallback(() => {
-      viewAllAsk()
+      viewAllAsk().then((asks) => {
+        if (asks) {
+          const res = mappingAsksToNftList(asks, [])
+          setNftList(res)
+        } else {
+          setNftList(undefined)
+        }
+      })
     }, [reload]),
   )
-
-  const handleLoading = () => {
-    onShowLoading(dispatch)
-    setTimeout(() => {
-      onHideLoading(dispatch)
-    }, 2000)
-  }
 
   return (
     <>
