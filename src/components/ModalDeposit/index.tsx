@@ -7,6 +7,7 @@ import {
   ScrollView,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native'
@@ -17,6 +18,9 @@ import CustomInput from '../CustomInput'
 import { useForm } from 'react-hook-form'
 import { useDeposit } from 'src/hooks/useErc20'
 import { divide, toBaseDenomAmount } from 'src/utils/big'
+import { onHideLoading, onShowLoading } from 'src/utils/loading'
+import { useDispatch } from 'react-redux'
+import { onShowToastError } from 'src/utils/toast'
 
 interface IModal {
   item?: object
@@ -36,8 +40,17 @@ const ModalDeposit = ({ item, index, isVisible, setIsVisible }: IModal) => {
 
   const onSubmit = (data: any) => {
     console.log(toBaseDenomAmount(divide(data.token, 100000), 18))
+    onShowLoading(dispatch)
     deposit({
       value: toBaseDenomAmount(divide(data.token, 100000), 18),
+    }).then(()=>{
+      ToastAndroid.show('Deposit Token Successfully!', ToastAndroid.SHORT)
+    })
+    .catch((err)=>{
+      ToastAndroid.show(err.message, ToastAndroid.SHORT)
+    })
+    .finally(()=>{
+      onHideLoading(dispatch)
     })
   }
 
@@ -45,6 +58,7 @@ const ModalDeposit = ({ item, index, isVisible, setIsVisible }: IModal) => {
     reset()
   }, [isVisible])
 
+  const dispatch = useDispatch()
   return (
     <Modal transparent={true} visible={isVisible}>
       <View style={styles.container}>

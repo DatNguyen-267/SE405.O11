@@ -65,7 +65,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
         {/* <ModalImport isVisible={isVisible} setIsVisible={setIsVisible}></ModalImport> */}
         {/* <ModalDeposit isVisible={isVisible} setIsVisible={setIsVisible}></ModalDeposit> */}
         {/* <ModalSell isVisible={isVisible} setIsVisible={setIsVisible}></ModalSell> */}
-        <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible} item={dataNFT}></ModalBuy>
+        <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible} item={dataNFT} reload={reload} setReload={setReLoad}></ModalBuy>
         {/* <Loading isVisible={isLoading}></Loading> */}
         <ScrollView
           style={styles.homeContent}

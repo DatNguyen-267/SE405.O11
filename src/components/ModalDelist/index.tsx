@@ -25,6 +25,7 @@ const ModalDelist = ({ item, index, isVisible, setIsVisible, setReload, reload }
   const { mutate: cancelAskOrder } = useCancelAskOrder()
   const handleDelist = () => {
     if (item) {
+      onShowLoading(dispatch)
       cancelAskOrder({
         collectionAddress: item.collectionAddress,
         tokenId: item.tokenId,
@@ -32,16 +33,20 @@ const ModalDelist = ({ item, index, isVisible, setIsVisible, setReload, reload }
         // onShowToastSuccess("Delist NFT Successfully")
         ToastAndroid.show('Delist NFT Successfully!', ToastAndroid.SHORT)
         setIsVisible(false)
+        setReload(!reload)
       })
         .catch((err) => {
-          onShowToastError(err.message)
+          // onShowToastError(err.message)
+          ToastAndroid.show(err.message, ToastAndroid.SHORT)
         })
         .finally(() => {
+          onHideLoading(dispatch)
         })
 
     }
     else {
-      onShowToastError("Not found information NFT!!!")
+      // onShowToastError("Not found information NFT!!!")
+      ToastAndroid.show("Not found information NFT!!!", ToastAndroid.SHORT)
     }
   }
   const dispatch = useDispatch()
@@ -105,10 +110,10 @@ const ModalDelist = ({ item, index, isVisible, setIsVisible, setReload, reload }
                   source={require('../../assets/images/createBg.jpg')}
                 ></Image> */}
                 <Text numberOfLines={1} style={[styles.text, styles.modalDelistNftName]}>
-                  {item && item.title ? item.title : "NFT Name"}
+                  {item && item.title ? item.title : "..."}
                 </Text>
                 <Text style={[styles.text, styles.modalDelistNftAdd]}>
-                  {item && item.collectionAddress ? shorterAddress(item.collectionAddress, 10) : '0x000...000'}
+                  {item && item.collectionAddress ? shorterAddress(item.collectionAddress, 10) : '...'}
                 </Text>
               </View>
               {/* <View style={styles.modalDelistInfo}>

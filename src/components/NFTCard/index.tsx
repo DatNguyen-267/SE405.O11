@@ -43,6 +43,7 @@ const NFTCard = ({
     }
   }
   const handleClick = () => {
+    console.log('nft: ', item)
     if (setDataNFT !== undefined) {
       setDataNFT(nft)
     }
@@ -121,7 +122,7 @@ const NFTCard = ({
           </View>
           <View style={styles.cardHeadLine}>
             <Text style={[styles.text, styles.cardAddress]}>
-              {item.collectionAddress ? shorterAddress(item.collectionAddress) : '0x000...000'}
+              {item.collectionAddress ? shorterAddress(item.collectionAddress) : '...'}
             </Text>
           </View>
         </View>
@@ -129,10 +130,10 @@ const NFTCard = ({
           <View style={styles.cardInfo}>
             <View style={styles.cardContentName}>
               <Text numberOfLines={1} ellipsizeMode="tail" style={[styles.text, styles.cardName]}>
-                {metaData && metaData.name && isLoading === false ? metaData.name : 'NFT Name'}
+                {metaData && metaData.name && isLoading === false ? metaData.name : '...'}
               </Text>
               <Text style={[styles.text, styles.cardId]}>
-                {item.tokenId ? '#' + item.tokenId : '#0'}
+                {item.tokenId || item.tokenId == 0 ? '#' + item.tokenId : '#...'}
               </Text>
             </View>
             <View style={styles.cardCollection}>
@@ -161,11 +162,11 @@ const NFTCard = ({
                 }}
               ></Image> */}
               <Text style={[styles.text, styles.cardCollectionAddress]}>
-                {item.seller ? shorterAddress(item.seller) : '0x000...000'}
+                {item.seller ? shorterAddress(item.seller) : '...'}
               </Text>
             </View>
             <Text style={[styles.text, styles.cardPrice]}>
-              {item.price ? item.price : '0'} WUIT
+              {item.price ? item.price : '...'} WUIT
             </Text>
           </View>
         </View>

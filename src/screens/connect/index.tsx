@@ -192,8 +192,8 @@ const Connect = ({ navigation }: { navigation?: any }) => {
                 </View>
                 <View style={[styles.balanceContainer]}>
                   <Text style={[styles.label]}>Balance</Text>
-                  <Text style={[styles.text, styles.balanceAZ]}>{`${amount} ${displayDenom}`}</Text>
-                  <Text style={[styles.text, styles.balanceWB]}>{`${tokenExchangeAmount} ${tokenExchangeDisplay}`}</Text>
+                  <Text style={[styles.text, styles.balanceAZ]}>{amount && displayDenom ? `${amount} ${displayDenom}`: '...'}</Text>
+                  <Text style={[styles.text, styles.balanceWB]}>{tokenExchangeAmount && tokenExchangeDisplay ? `${tokenExchangeAmount} ${tokenExchangeDisplay}`: '...'}</Text>
                 </View>
               </>
             )

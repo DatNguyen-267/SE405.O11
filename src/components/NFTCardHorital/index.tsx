@@ -94,19 +94,19 @@ const NFTCardHorital = ({ item, index, setDataNFT, onShowModal }: ProfileCardPro
         ></Image> */}
           <View style={styles.cardHeadLine}>
             <Text style={[styles.text, styles.cardAddress]}>
-              {item.collectionAddress ? shorterAddress(item.collectionAddress) : '0x000...000'}
+              {item.collectionAddress ? shorterAddress(item.collectionAddress) : '...'}
             </Text>
             {/* <Text style={[styles.text, styles.cardStatus]}>Not For Sell</Text> */}
-            <Text style={[styles.text, styles.cardPrice]}>{item && item.price ? item.price : '0'} WUIT</Text>
+            <Text style={[styles.text, styles.cardPrice]}>{item && item.price ? item.price : '...'} WUIT</Text>
           </View>
         </View>
         <View style={styles.cardContent}>
           <View style={styles.cardInfo}>
             <View style={styles.cardContentName}>
               <Text numberOfLines={1} ellipsizeMode="tail" style={[styles.text, styles.cardName]}>
-                {metaData && metaData.name ? metaData.name : 'NFT Name'}
+                {metaData && metaData.name ? metaData.name : '...'}
               </Text>
-              <Text style={[styles.text, styles.cardId]}> {item.tokenId ? '#' + item.tokenId : '#0'}</Text>
+              <Text style={[styles.text, styles.cardId]}> {item.tokenId || item.tokenId == 0 ? '#' + item.tokenId : '#...'}</Text>
             </View>
             <View style={styles.cardCollection}>
               <View style={styles.cardAvatar}>
@@ -134,7 +134,7 @@ const NFTCardHorital = ({ item, index, setDataNFT, onShowModal }: ProfileCardPro
               }}
             ></Image> */}
               <Text style={[styles.text, styles.cardCollectionAddress]}>
-                {item.seller ? shorterAddress(item.seller) : '0x000...000'}
+                {item.seller ? shorterAddress(item.seller) : '...'}
               </Text>
             </View>
           </View>

@@ -24,6 +24,7 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
   const [isVisible, setIsVisible] = useState(false)
   const [dataNFT, setDataNFT] = useState(undefined)
   const [reload, setReLoad] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   // const item = route.params.item
   const params = useLocalSearchParams<{ address: string; item: any }>()
   const collectionAddress = params.address
@@ -45,7 +46,7 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
 
   useEffect(() => {
     const newAddress = collectionAddress.slice(2)
-
+    setIsLoading(true)
     handleGetByCollectionAddress({
       marketAddress: marketAddress,
       collectionAddress: `0x${newAddress}`,
@@ -55,6 +56,10 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
 
     handleGetAllNftOfCollection({
       cltAddress: `0x${newAddress}`,
+    }).then(() => {})
+    .catch(() => {})
+    .finally(() => {
+      setIsLoading(false)
     })
   }, [reload])
 
@@ -128,8 +133,8 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
               <Text style={[styles.text, styles.title]}>All NFT</Text>
               <Ionicons name="reload" size={20} color="black" onPress={()=>{setReLoad(!reload)}} />
             </View>
-            <PageLoading isVisible={isLoadingGetAsk}></PageLoading>
-            {!isLoadingGetAsk && (
+            <PageLoading isVisible={isLoadingGetAsk || isLoading}></PageLoading>
+            {(!isLoadingGetAsk && !isLoading) && (
               <FlatList
                 columnWrapperStyle={{
                   justifyContent: 'space-between',

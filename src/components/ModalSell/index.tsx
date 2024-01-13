@@ -13,6 +13,7 @@ import { getAvatarByAddress, getUrlImage, shorterAddress } from 'src/utils'
 import { onShowToastError } from 'src/utils/toast'
 import CustomInput from '../CustomInput'
 import styles from './styles'
+import { onHideLoading, onShowLoading } from 'src/utils/loading'
 
 interface IModal {
   item?: any
@@ -40,6 +41,7 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
 
   const onSubmit = (data: any) => {
     if (item) {
+      onShowLoading(dispatch)
       createAskOrder({
         cltAddress: item.collectionAddress,
         tokenId: item.tokenId,
@@ -49,13 +51,18 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
           // onShowToastSuccess("Sell NFT Successfully")
           ToastAndroid.show('Sell NFT Successfully', ToastAndroid.SHORT)
           setIsVisible(false)
+          setReload(!reload)
         })
         .catch((err) => {
-          onShowToastError(err.message)
+          // onShowToastError(err.message)
+          ToastAndroid.show(err.message, ToastAndroid.SHORT)
         })
-        .finally(() => {})
+        .finally(() => {
+          onHideLoading(dispatch)
+        })
     } else {
-      onShowToastError('Not found information NFT!!!')
+      // onShowToastError('Not found information NFT!!!')
+      ToastAndroid.show('Not found information NFT!!!', ToastAndroid.SHORT)
     }
   }
   useEffect(() => {
@@ -126,12 +133,12 @@ const ModalSell = ({ item, index, isVisible, setIsVisible, setReload, reload }: 
                   source={require('../../assets/images/createBg.jpg')}
                 ></Image> */}
                 <Text numberOfLines={1} style={[styles.text, styles.modalSellNftName]}>
-                  {item && item.title ? item.title : 'NFT Name'}
+                  {item && item.title ? item.title : '...'}
                 </Text>
                 <Text style={[styles.text, styles.modalSellNftAdd]}>
                   {item && item.collectionAddress
                     ? shorterAddress(item.collectionAddress, 10)
-                    : '0x000...000'}
+                    : '...'}
                 </Text>
               </View>
               <View style={styles.modalSellInfo}>
