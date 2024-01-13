@@ -166,7 +166,7 @@ const NFTCard = ({
               </Text>
             </View>
             <Text style={[styles.text, styles.cardPrice]}>
-              {item.price ? item.price : '...'} WUIT
+              {item.price ? item.price : item.status == 'NotForSale' ? '0': '...'} WUIT
             </Text>
           </View>
         </View>

@@ -97,7 +97,7 @@ const NFTCardHorital = ({ item, index, setDataNFT, onShowModal }: ProfileCardPro
               {item.collectionAddress ? shorterAddress(item.collectionAddress) : '...'}
             </Text>
             {/* <Text style={[styles.text, styles.cardStatus]}>Not For Sell</Text> */}
-            <Text style={[styles.text, styles.cardPrice]}>{item && item.price ? item.price : '...'} WUIT</Text>
+            <Text style={[styles.text, styles.cardPrice]}>{item && item.price ? item.price : item.status == 'NotForSale' ? '0': '...'} WUIT</Text>
           </View>
         </View>
         <View style={styles.cardContent}>
