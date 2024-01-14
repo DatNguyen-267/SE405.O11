@@ -56,7 +56,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
           setNftList(undefined)
         }
       })
-    }, [reload]),
+    }, [reload, currentChain.id]),
   )
 
   return (

@@ -43,7 +43,6 @@ const NFTCard = ({
     }
   }
   const handleClick = () => {
-    console.log('nft: ', item)
     if (setDataNFT !== undefined) {
       setDataNFT(nft)
     }
