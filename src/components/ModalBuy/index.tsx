@@ -82,21 +82,23 @@ const ModalBuy = ({ item, index, isVisible, setIsVisible, setReload, reload }: I
               <View style={styles.modalBuyNft}>
                 {/* <Image style={styles.modalBuyNftImg}></Image> */}
                 <View style={styles.modalBuyNftImg}>
-                  {
-                    item && item.imageGatewayUrl ?
+                  {item && item.imageGatewayUrl ? (
                     <Image
                       resizeMode="cover"
                       style={{ width: '100%', height: '100%' }}
                       source={{
-                        uri:getUrlImage(item.imageGatewayUrl)                     
+                        uri: getUrlImage(item.imageGatewayUrl),
                       }}
                     ></Image>
-                    :<SvgUri
+                  ) : (
+                    <SvgUri
                       width={'100%'}
                       height={'100%'}
-                      uri={getAvatarByAddress(item && item.collectionAddress ? item.collectionAddress: DEFAULT_ADDRESS)}
+                      uri={getAvatarByAddress(
+                        item && item.collectionAddress ? item.collectionAddress : DEFAULT_ADDRESS,
+                      )}
                     ></SvgUri>
-                  }
+                  )}
                   {/* <Image
                     resizeMode="cover"
                     style={{ width: '100%', height: '100%' }}

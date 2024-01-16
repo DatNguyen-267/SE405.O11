@@ -73,7 +73,7 @@ const Explore = ({ navigation }: { navigation: any }) => {
                     listCollection.map((item, index) => {
                       return (
                         <Collection
-                          key={index}
+                          key={item.collectionAddress}
                           navigation={navigation}
                           item={item}
                           address={item.collectionAddress}

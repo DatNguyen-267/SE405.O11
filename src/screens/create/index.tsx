@@ -15,7 +15,7 @@ import {
 import { Button } from 'react-native-paper'
 import { Colors } from 'src/constants/Colors'
 import styles from './styles'
-import { usePinIPFSAndMintNFT } from 'src/hooks/useNFT'
+import { usePinIPFSAndMintNFT } from 'src/hooks/useMarket'
 import { useAccount } from 'wagmi'
 import useAppAddress from 'src/hooks/useAppAddress'
 
@@ -57,7 +57,6 @@ const Create = ({}) => {
   }
 
   const handleCreate = async () => {
-    console.log('create')
     if (!isConnected || !address) {
       // TODO: Toast message here
       alert('Please connect wallet')
@@ -76,7 +75,6 @@ const Create = ({}) => {
         addressTo: address,
         cltAddress: publicCollectionAddress,
       })
-      console.log({ receipt })
     } catch (error) {}
   }
 

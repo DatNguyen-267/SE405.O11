@@ -11,7 +11,7 @@ import Tabs from 'src/components/Tabs'
 import styles from './styles'
 import ModalDelist from 'src/components/ModalDelist'
 import { DEFAULT_ADDRESS } from 'src/constants'
-import { useGetNftsOfAddress } from 'src/hooks/useNFT'
+import { useGetNftsOfAddress } from 'src/hooks/useMarket'
 import { useFocusEffect } from 'expo-router'
 import { useAccount, useBalance } from 'wagmi'
 import { getAvatarByAddress, shorterAddress } from 'src/utils'
@@ -31,7 +31,7 @@ const Author = ({ navigation }: { navigation?: any }) => {
   const [reload, setReLoad] = useState(true)
   const [tab, setTab] = useState('All')
   const { data: nfts, mutate: getAllNftOfAddress } = useGetNftsOfAddress()
- 
+
   const tabs = [
     {
       title: 'All',
@@ -83,8 +83,20 @@ const Author = ({ navigation }: { navigation?: any }) => {
       <View style={styles.createScreen}>
         <ModalDeposit isVisible={isDeposit} setIsVisible={setIsDeposit}></ModalDeposit>
         <ModalImport isVisible={isImport} setIsVisible={setIsImport}></ModalImport>
-        <ModalDelist isVisible={isDelist} setIsVisible={setIsDelist} item={dataNFT} reload={reload} setReload={setReLoad}></ModalDelist>
-        <ModalSell isVisible={isSell} setIsVisible={setIsSell} item={dataNFT} reload={reload} setReload={setReLoad}></ModalSell>
+        <ModalDelist
+          isVisible={isDelist}
+          setIsVisible={setIsDelist}
+          item={dataNFT}
+          reload={reload}
+          setReload={setReLoad}
+        ></ModalDelist>
+        <ModalSell
+          isVisible={isSell}
+          setIsVisible={setIsSell}
+          item={dataNFT}
+          reload={reload}
+          setReload={setReLoad}
+        ></ModalSell>
         {/* <ModalSend></ModalSend> */}
         {/* <Header
                 title={"Create NFT"}
@@ -172,11 +184,13 @@ const Author = ({ navigation }: { navigation?: any }) => {
                 </View>
                 <View style={[styles.balanceContainer]}>
                   <Text style={[styles.label]}>Balance</Text>
-                  <Text style={[styles.text, styles.balanceAZ]}>{amount && displayDenom ? `${amount} ${displayDenom}`: '...'}</Text>
-                  <Text
-                    style={[styles.text, styles.balanceWB]}
-                  >
-                    {tokenExchangeAmount && tokenExchangeDisplay ? `${tokenExchangeAmount} ${tokenExchangeDisplay}`: '...'}
+                  <Text style={[styles.text, styles.balanceAZ]}>
+                    {amount && displayDenom ? `${amount} ${displayDenom}` : '...'}
+                  </Text>
+                  <Text style={[styles.text, styles.balanceWB]}>
+                    {tokenExchangeAmount && tokenExchangeDisplay
+                      ? `${tokenExchangeAmount} ${tokenExchangeDisplay}`
+                      : '...'}
                   </Text>
                 </View>
               </View>
@@ -201,6 +215,7 @@ const Author = ({ navigation }: { navigation?: any }) => {
                         return (
                           <View style={styles.nftItem}>
                             <NFTCard
+                              key={item.collectionAddress + item.tokenId}
                               item={item}
                               isDelist={item.status === 'Sale'}
                               isSell={item.status !== 'Sale'}
@@ -217,6 +232,7 @@ const Author = ({ navigation }: { navigation?: any }) => {
                           return (
                             <View style={styles.nftItem}>
                               <NFTCard
+                                key={item.collectionAddress + item.tokenId}
                                 item={item}
                                 isDelist={true}
                                 onShowModal={setIsDelist}
@@ -232,6 +248,7 @@ const Author = ({ navigation }: { navigation?: any }) => {
                           return (
                             <View style={styles.nftItem}>
                               <NFTCard
+                                key={item.collectionAddress + item.tokenId}
                                 item={item}
                                 isSell={true}
                                 onShowModal={setIsSell}

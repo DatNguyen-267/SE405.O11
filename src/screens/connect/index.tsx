@@ -4,9 +4,10 @@ import React, { useEffect } from 'react'
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Button } from 'react-native-paper'
 import { getMetadata } from 'src/hooks/useIPFS'
-import { useGetNameOfCollection, useGetNftsOfAddress, useGetTokenURI } from 'src/hooks/useNFT'
+import { useGetNameOfCollection, useGetNftsOfAddress, useGetTokenURI } from 'src/hooks/useMarket'
 import {
   Chain,
+  sepolia,
   useAccount,
   useBalance,
   useChainId,
@@ -24,17 +25,19 @@ import {
 import { ethers } from 'ethers'
 import { toDisplayDenomAmount } from 'src/utils/big'
 import useAppAddress from 'src/hooks/useAppAddress'
-import { aiozChain } from 'src/constants'
+import { CHAINS, aiozChain } from 'src/constants'
 import { useToken } from 'wagmi'
 import { shorterAddress } from 'src/utils'
 
 const Connect = ({ navigation }: { navigation?: any }) => {
+  const { connect, connectors } = useConnect()
   const { address, connector, isConnected } = useAccount()
   const { chains, error, isLoading, pendingChainId, switchNetwork } = useSwitchNetwork()
   const { data: walletClient } = useWalletClient()
   const { mutate: getTokenURI } = useGetTokenURI()
   const chainId = useChainId()
-  const chainName = "Sepolia"
+  console.log({ chainId })
+  const chainName = CHAINS.find((chain) => chain.id === chainId)?.name
   const { mutate: handleGetNameOfCollection } = useGetNameOfCollection()
   const { mutate: createAskOrder } = useCreateAskOrder()
   const { mutate: buyWithWrapToken } = useBuyNFTUsingWrapToken()
@@ -54,9 +57,14 @@ const Connect = ({ navigation }: { navigation?: any }) => {
   })
   const tokenExchangeAmount = tokenExchangeBalanceData?.formatted
   const tokenExchangeDisplay = tokenExchangeBalanceData?.symbol
-  const { connect, connectors } = useConnect()
-  
 
+  // useEffect(() => {
+  //   console.log({ connectors })
+  //   connect({
+  //     chainId: sepolia.id,
+  //     connector: connectors[2],
+  //   })
+  // }, [])
   // const handleGetMetadata = async () => {
   //   getTokenURI({
   //     cltAddress: '0x772b21c128f759F75A352568B1F7b4fF331d1162',
@@ -113,7 +121,7 @@ const Connect = ({ navigation }: { navigation?: any }) => {
 
   // const wuitAddress = useAppAddress('WUIT')
   // const handleAddWUIT = async ()=> {
-  //   const success = await walletClient?.watchAsset({ 
+  //   const success = await walletClient?.watchAsset({
   //     type: 'ERC20',
   //     options: {
   //       address: wuitAddress,
@@ -140,64 +148,61 @@ const Connect = ({ navigation }: { navigation?: any }) => {
           <Button onPress={handleAddChain}>handle add chain</Button>
           <Button onPress={handleAddWUIT}>handle add WUIT</Button> */}
 
-          {
-            !isConnected && (
-              <>
-                <Image
-                  style={styles.connectImage}
-                  source={require('../../assets/images/wallet.png')}
-                ></Image>
-                <Text style={[styles.text, styles.connectTitle]}>Connect Your Wallet</Text>
-                <Text style={[styles.text, styles.connectDes]}>
-                  Choose a wallet you want to connect. There are several wallet providers.dasda
-                </Text>
-              </>
-            )
-          }
+          {!isConnected && (
+            <>
+              <Image
+                style={styles.connectImage}
+                source={require('../../assets/images/wallet.png')}
+              ></Image>
+              <Text style={[styles.text, styles.connectTitle]}>Connect Your Wallet</Text>
+              <Text style={[styles.text, styles.connectDes]}>
+                Choose a wallet you want to connect. There are several wallet providers.dasda
+              </Text>
+            </>
+          )}
           <View style={styles.connectBtn}>
             <W3mButton connectStyle={styles.connectStyle} />
           </View>
-          {
-            isConnected &&
-            (
-              <>
-                <View style={styles.information}>
-                  <Text
-                    style={[styles.text, styles.label]}
-                  >
-                    Information
-                  </Text>
-                  <View style={styles.content}>
-                    <View style={[styles.connectAddress]}>
-                      <Text style={[styles.text, styles.connectAddressTitle]}>Address: </Text>
-                      <Text
-                        style={[styles.text, styles.connectAddressValue]}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                      >
-                        {isConnected && address ? shorterAddress(address)  : 'No connection'}
-                      </Text>
-                    </View>
-                    <View style={[styles.connectAddress]}>
-                      <Text style={[styles.text, styles.connectAddressTitle]}>Chain: </Text>
-                      <Text
-                        style={[styles.text, styles.connectAddressValue]}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                      >
-                        {isConnected && chainName ? chainName : 'No Chain'}
-                      </Text>
-                    </View>
+          {isConnected && (
+            <>
+              <View style={styles.information}>
+                <Text style={[styles.text, styles.label]}>Information</Text>
+                <View style={styles.content}>
+                  <View style={[styles.connectAddress]}>
+                    <Text style={[styles.text, styles.connectAddressTitle]}>Address: </Text>
+                    <Text
+                      style={[styles.text, styles.connectAddressValue]}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {isConnected && address ? shorterAddress(address) : 'No connection'}
+                    </Text>
+                  </View>
+                  <View style={[styles.connectAddress]}>
+                    <Text style={[styles.text, styles.connectAddressTitle]}>Chain: </Text>
+                    <Text
+                      style={[styles.text, styles.connectAddressValue]}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {isConnected && chainName ? chainName : 'No Chain'}
+                    </Text>
                   </View>
                 </View>
-                <View style={[styles.balanceContainer]}>
-                  <Text style={[styles.label]}>Balance</Text>
-                  <Text style={[styles.text, styles.balanceAZ]}>{amount && displayDenom ? `${amount} ${displayDenom}`: '...'}</Text>
-                  <Text style={[styles.text, styles.balanceWB]}>{tokenExchangeAmount && tokenExchangeDisplay ? `${tokenExchangeAmount} ${tokenExchangeDisplay}`: '...'}</Text>
-                </View>
-              </>
-            )
-          }
+              </View>
+              <View style={[styles.balanceContainer]}>
+                <Text style={[styles.label]}>Balance</Text>
+                <Text style={[styles.text, styles.balanceAZ]}>
+                  {amount && displayDenom ? `${amount} ${displayDenom}` : '...'}
+                </Text>
+                <Text style={[styles.text, styles.balanceWB]}>
+                  {tokenExchangeAmount && tokenExchangeDisplay
+                    ? `${tokenExchangeAmount} ${tokenExchangeDisplay}`
+                    : '...'}
+                </Text>
+              </View>
+            </>
+          )}
         </View>
       </ScrollView>
     </View>

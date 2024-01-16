@@ -29,6 +29,7 @@ createWeb3Modal({
   projectId,
   chains,
   wagmiConfig,
+  defaultChain: sepolia,
 })
 
 export default function WagmiProvider({ children }: { children: ReactNode }) {

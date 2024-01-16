@@ -5,7 +5,7 @@ import { shorterAddress } from 'src/utils/common'
 import { SvgUri } from 'react-native-svg'
 import { getAvatarByAddress } from 'src/utils/avatar'
 import { ethereumAddressRegex } from 'src/utils/regex'
-import { useGetNameOfCollection, useGetTokenURI } from 'src/hooks/useNFT'
+import { useGetNameOfCollection, useGetTokenURI } from 'src/hooks/useMarket'
 import { getMetadata, getUrlImage } from 'src/utils'
 import { onShowToastInfo } from 'src/utils/toast'
 import { DEFAULT_ADDRESS } from 'src/constants'
@@ -17,7 +17,7 @@ interface ProfileCardProps {
 }
 
 const NFTCardHorital = ({ item, index, setDataNFT, onShowModal }: ProfileCardProps) => {
-  const aspectRatio =230/167
+  const aspectRatio = 230 / 167
   const [metaData, setMetaData] = useState<any>(undefined)
   const { mutate: getTokenURI } = useGetTokenURI()
   const { mutate: handleGetNameOfCollection } = useGetNameOfCollection()
@@ -41,17 +41,19 @@ const NFTCardHorital = ({ item, index, setDataNFT, onShowModal }: ProfileCardPro
     getTokenURI({
       cltAddress: item.collectionAddress,
       tokenId: item.tokenId,
-    }).then(async (res) => {
-      const data = await getMetadata(res)
-      if (data) {
-        item.title = data.name
-        item.imageGatewayUrl = data.image
-      }
-      setMetaData(data)
-      setIsLoading(false)
-    }).catch(() => {
-      setIsLoading(false)
-    });
+    })
+      .then(async (res) => {
+        const data = await getMetadata(res)
+        if (data) {
+          item.title = data.name
+          item.imageGatewayUrl = data.image
+        }
+        setMetaData(data)
+        setIsLoading(false)
+      })
+      .catch(() => {
+        setIsLoading(false)
+      })
   }
 
   useEffect(() => {
@@ -60,27 +62,30 @@ const NFTCardHorital = ({ item, index, setDataNFT, onShowModal }: ProfileCardPro
     }
   }, [item])
   return (
-    <TouchableOpacity onPress={() => { handleClick() }}>
+    <TouchableOpacity
+      onPress={() => {
+        handleClick()
+      }}
+    >
       <View style={styles.NFTCardHorital}>
         <View style={styles.cardHead}>
-          <View style={[styles.cardImage, {aspectRatio: aspectRatio}]}>
-            {
-              metaData && metaData.image ?
-                <Image
-                  resizeMode="cover"
-                  style={{ width: '100%', height: '100%' }}
-                  source={{
-                    uri: getUrlImage(metaData.image)
-                  }}
-                ></Image>
-                : 
-                <SvgUri
-                  width={'100%'}
-                  height={'100%'}
-                  preserveAspectRatio="none"
-                  uri={getAvatarByAddress(item && item.seller ? item.seller : DEFAULT_ADDRESS)}
-                ></SvgUri>
-            }
+          <View style={[styles.cardImage, { aspectRatio: aspectRatio }]}>
+            {metaData && metaData.image ? (
+              <Image
+                resizeMode="cover"
+                style={{ width: '100%', height: '100%' }}
+                source={{
+                  uri: getUrlImage(metaData.image),
+                }}
+              ></Image>
+            ) : (
+              <SvgUri
+                width={'100%'}
+                height={'100%'}
+                preserveAspectRatio="none"
+                uri={getAvatarByAddress(item && item.seller ? item.seller : DEFAULT_ADDRESS)}
+              ></SvgUri>
+            )}
           </View>
           {/* <Image
           resizeMode="cover"
@@ -97,7 +102,9 @@ const NFTCardHorital = ({ item, index, setDataNFT, onShowModal }: ProfileCardPro
               {item.collectionAddress ? shorterAddress(item.collectionAddress) : '...'}
             </Text>
             {/* <Text style={[styles.text, styles.cardStatus]}>Not For Sell</Text> */}
-            <Text style={[styles.text, styles.cardPrice]}>{item && item.price ? item.price : item.status == 'NotForSale' ? '0': '...'} WUIT</Text>
+            <Text style={[styles.text, styles.cardPrice]}>
+              {item && item.price ? item.price : item.status == 'NotForSale' ? '0' : '...'} WUIT
+            </Text>
           </View>
         </View>
         <View style={styles.cardContent}>
@@ -106,7 +113,10 @@ const NFTCardHorital = ({ item, index, setDataNFT, onShowModal }: ProfileCardPro
               <Text numberOfLines={1} ellipsizeMode="tail" style={[styles.text, styles.cardName]}>
                 {metaData && metaData.name ? metaData.name : '...'}
               </Text>
-              <Text style={[styles.text, styles.cardId]}> {item.tokenId || item.tokenId == 0 ? '#' + item.tokenId : '#...'}</Text>
+              <Text style={[styles.text, styles.cardId]}>
+                {' '}
+                {item.tokenId || item.tokenId == 0 ? '#' + item.tokenId : '#...'}
+              </Text>
             </View>
             <View style={styles.cardCollection}>
               <View style={styles.cardAvatar}>
@@ -118,10 +128,10 @@ const NFTCardHorital = ({ item, index, setDataNFT, onShowModal }: ProfileCardPro
                   ></SvgUri>
                 ) : (
                   <SvgUri
-                  width={'100%'}
-                  height={'100%'}
-                  uri={getAvatarByAddress(DEFAULT_ADDRESS)}
-                ></SvgUri>
+                    width={'100%'}
+                    height={'100%'}
+                    uri={getAvatarByAddress(DEFAULT_ADDRESS)}
+                  ></SvgUri>
                 )}
               </View>
               {/* <Image

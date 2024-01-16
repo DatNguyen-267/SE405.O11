@@ -15,9 +15,7 @@ export const useListenerTransactionHash = () => {
         })
 
         return transaction
-      } catch (error) {
-        console.log(error)
-      }
+      } catch (error) {}
     },
     [publicClient],
   )

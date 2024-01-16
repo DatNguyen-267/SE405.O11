@@ -39,19 +39,19 @@ const ModalDeposit = ({ item, index, isVisible, setIsVisible }: IModal) => {
   } = useForm()
 
   const onSubmit = (data: any) => {
-    console.log(toBaseDenomAmount(divide(data.token, 100000), 18))
     onShowLoading(dispatch)
     deposit({
       value: toBaseDenomAmount(divide(data.token, 100000), 18),
-    }).then(()=>{
-      ToastAndroid.show('Deposit Token Successfully!', ToastAndroid.SHORT)
     })
-    .catch((err)=>{
-      ToastAndroid.show(err.message, ToastAndroid.SHORT)
-    })
-    .finally(()=>{
-      onHideLoading(dispatch)
-    })
+      .then(() => {
+        ToastAndroid.show('Deposit Token Successfully!', ToastAndroid.SHORT)
+      })
+      .catch((err) => {
+        ToastAndroid.show(err.message, ToastAndroid.SHORT)
+      })
+      .finally(() => {
+        onHideLoading(dispatch)
+      })
   }
 
   useEffect(() => {

@@ -20,7 +20,7 @@ const TypingText = () => {
     let forwards = true
     let skipCount = 0
     const skipDelay = 15
-    const speed = 70
+    const speed = 4000
 
     const updateSentence = () => {
       setText(sentences[currentIndex].substring(0, offset))

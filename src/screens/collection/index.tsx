@@ -13,7 +13,7 @@ import useAppAddress from 'src/hooks/useAppAddress'
 import { SvgUri } from 'react-native-svg'
 import PageLoading from 'src/components/PageLoading'
 import { DEFAULT_ADDRESS } from 'src/constants'
-import { useGetNFTsOfCollection } from 'src/hooks/useNFT'
+import { useGetNFTsOfCollection } from 'src/hooks/useMarket'
 import Toast from 'react-native-toast-message'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 
@@ -56,11 +56,12 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
 
     handleGetAllNftOfCollection({
       cltAddress: `0x${newAddress}`,
-    }).then(() => {})
-    .catch(() => {})
-    .finally(() => {
-      setIsLoading(false)
     })
+      .then(() => {})
+      .catch(() => {})
+      .finally(() => {
+        setIsLoading(false)
+      })
   }, [reload])
 
   const changeConnect = () => {
@@ -69,43 +70,43 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
 
   return (
     <>
-     <View style={styles.createScreen}>
-      <ModalBuy
-        isVisible={isVisible}
-        setIsVisible={setIsVisible}
-        item={dataNFT}
-        reload={reload}
-        setReload={setReLoad}
-      ></ModalBuy>
-      <ScrollView
-        style={styles.createContent}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-      >
-        <View style={styles.container}>
-          <View style={styles.headLine}>
-            <ImageBackground
-              imageStyle={{ borderRadius: 10, opacity: 0.75, justifyContent: 'center' }}
-              source={require('../../assets/images/createBg2.jpg')}
-              resizeMode="cover"
-              style={styles.headLineBg}
-            >
-              <View style={styles.headLineAvatar}>
-                {collectionAddress ? (
-                  <SvgUri
-                    width={'100%'}
-                    height={'100%'}
-                    uri={getAvatarByAddress(collectionAddress)}
-                  ></SvgUri>
-                ) : (
-                  <SvgUri
-                    width={'100%'}
-                    height={'100%'}
-                    uri={getAvatarByAddress(DEFAULT_ADDRESS)}
-                  ></SvgUri>
-                )}
-              </View>
-              {/* <Image
+      <View style={styles.createScreen}>
+        <ModalBuy
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+          item={dataNFT}
+          reload={reload}
+          setReload={setReLoad}
+        ></ModalBuy>
+        <ScrollView
+          style={styles.createContent}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+        >
+          <View style={styles.container}>
+            <View style={styles.headLine}>
+              <ImageBackground
+                imageStyle={{ borderRadius: 10, opacity: 0.75, justifyContent: 'center' }}
+                source={require('../../assets/images/createBg2.jpg')}
+                resizeMode="cover"
+                style={styles.headLineBg}
+              >
+                <View style={styles.headLineAvatar}>
+                  {collectionAddress ? (
+                    <SvgUri
+                      width={'100%'}
+                      height={'100%'}
+                      uri={getAvatarByAddress(collectionAddress)}
+                    ></SvgUri>
+                  ) : (
+                    <SvgUri
+                      width={'100%'}
+                      height={'100%'}
+                      uri={getAvatarByAddress(DEFAULT_ADDRESS)}
+                    ></SvgUri>
+                  )}
+                </View>
+                {/* <Image
                 style={styles.headLineAvatar}
                 source={{
                   uri: item
@@ -113,68 +114,78 @@ const Collection = ({ navigation, route }: { navigation?: any; route?: any }) =>
                     : 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
                 }}
               ></Image> */}
-            </ImageBackground>
-          </View>
-          <View style={[styles.walletInfo]}>
-            <Text style={[styles.text, styles.walletAddress]}>
-              {collectionAddress ? shorterAddress(collectionAddress.toString(), 10) : '0x000...000'}
-            </Text>
-            <View style={[styles.walletOwnerContainer]}>
-              <Text style={[styles.walletOwnerTitle, styles.label]}>Owner Of:</Text>
-              <Text style={[styles.text, styles.walletOwnerAddress]}>
-                {collectionDetail
-                  ? shorterAddress(collectionDetail.creatorAddress, 10)
+              </ImageBackground>
+            </View>
+            <View style={[styles.walletInfo]}>
+              <Text style={[styles.text, styles.walletAddress]}>
+                {collectionAddress
+                  ? shorterAddress(collectionAddress.toString(), 10)
                   : '0x000...000'}
               </Text>
+              <View style={[styles.walletOwnerContainer]}>
+                <Text style={[styles.walletOwnerTitle, styles.label]}>Owner Of:</Text>
+                <Text style={[styles.text, styles.walletOwnerAddress]}>
+                  {collectionDetail
+                    ? shorterAddress(collectionDetail.creatorAddress, 10)
+                    : '0x000...000'}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.nftContent}>
+              <View style={styles.nftContentHead}>
+                <Text style={[styles.text, styles.title]}>All NFT</Text>
+                <Ionicons
+                  name="reload"
+                  size={20}
+                  color="black"
+                  onPress={() => {
+                    setReLoad(!reload)
+                  }}
+                />
+              </View>
+              <PageLoading isVisible={isLoadingGetAsk || isLoading}></PageLoading>
+              {!isLoadingGetAsk && !isLoading && (
+                <FlatList
+                  columnWrapperStyle={{
+                    justifyContent: 'space-between',
+                  }}
+                  scrollEnabled={false}
+                  style={styles.listNft}
+                  data={mappingList}
+                  numColumns={2}
+                  renderItem={({ item }) => {
+                    return (
+                      <View style={styles.nftItem}>
+                        <NFTCard
+                          key={item.collectionAddress + item.tokenId}
+                          item={item}
+                          onShowModal={setIsVisible}
+                          isBuy={item.status === 'Sale'}
+                          setDataNFT={setDataNFT}
+                        ></NFTCard>
+                      </View>
+                    )
+                    // if (item.status.toLowerCase() === 'on sale') {
+                    //   return (
+                    //     <View style={styles.nftItem}>
+                    //       <NFTCard item={item} onShowModal={setIsVisible} isBuy={true}></NFTCard>
+                    //     </View>
+                    //   )
+                    // } else {
+                    //   return (
+                    //     <View style={styles.nftItem}>
+                    //       <NFTCard item={item}></NFTCard>
+                    //     </View>
+                    //   )
+                    // }
+                  }}
+                />
+              )}
             </View>
           </View>
-          <View style={styles.nftContent}>
-            <View style={styles.nftContentHead}>
-              <Text style={[styles.text, styles.title]}>All NFT</Text>
-              <Ionicons name="reload" size={20} color="black" onPress={()=>{setReLoad(!reload)}} />
-            </View>
-            <PageLoading isVisible={isLoadingGetAsk || isLoading}></PageLoading>
-            {(!isLoadingGetAsk && !isLoading) && (
-              <FlatList
-                columnWrapperStyle={{
-                  justifyContent: 'space-between',
-                }}
-                scrollEnabled={false}
-                style={styles.listNft}
-                data={mappingList}
-                numColumns={2}
-                renderItem={({ item }) => {
-                  return (
-                    <View style={styles.nftItem}>
-                      <NFTCard
-                        item={item}
-                        onShowModal={setIsVisible}
-                        isBuy={item.status === 'Sale'}
-                        setDataNFT={setDataNFT}
-                      ></NFTCard>
-                    </View>
-                  )
-                  // if (item.status.toLowerCase() === 'on sale') {
-                  //   return (
-                  //     <View style={styles.nftItem}>
-                  //       <NFTCard item={item} onShowModal={setIsVisible} isBuy={true}></NFTCard>
-                  //     </View>
-                  //   )
-                  // } else {
-                  //   return (
-                  //     <View style={styles.nftItem}>
-                  //       <NFTCard item={item}></NFTCard>
-                  //     </View>
-                  //   )
-                  // }
-                }}
-              />
-            )}
-          </View>
-        </View>
-      </ScrollView>
-    </View>
-    <Toast></Toast>
+        </ScrollView>
+      </View>
+      <Toast></Toast>
     </>
   )
 }

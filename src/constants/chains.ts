@@ -3,8 +3,8 @@ import { goerli } from 'viem/chains'
 
 export const aiozChain = defineChain({
   id: 4102,
-  network: 'AIOZ Testnet',
-  name: 'AIOZ Testnet',
+  network: 'AIOZ Network',
+  name: 'AIOZ Network',
   nativeCurrency: {
     name: 'AIOZ',
     symbol: 'AIOZ',

@@ -65,7 +65,13 @@ const Home = ({ navigation }: ProfileCardProps) => {
         {/* <ModalImport isVisible={isVisible} setIsVisible={setIsVisible}></ModalImport> */}
         {/* <ModalDeposit isVisible={isVisible} setIsVisible={setIsVisible}></ModalDeposit> */}
         {/* <ModalSell isVisible={isVisible} setIsVisible={setIsVisible}></ModalSell> */}
-        <ModalBuy isVisible={isVisible} setIsVisible={setIsVisible} item={dataNFT} reload={reload} setReload={setReLoad}></ModalBuy>
+        <ModalBuy
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+          item={dataNFT}
+          reload={reload}
+          setReload={setReLoad}
+        ></ModalBuy>
         {/* <Loading isVisible={isLoading}></Loading> */}
         <ScrollView
           style={styles.homeContent}
@@ -80,9 +86,9 @@ const Home = ({ navigation }: ProfileCardProps) => {
               {/* <Text style={styles.headLineContent} id=''>
                                 Wellcome To NFT Marketplace
                             </Text> */}
-              <Text style={styles.headLineContent}>DISCOVER, COLLECT AND</Text>
+              <Text style={styles.headLineContent}>DISCOVER, COLLECT, SELL & CREATE YOUR NFTs</Text>
               {/* <Text style={styles.headLineContent} id='sentence'></Text> */}
-              <TypingText></TypingText>
+              {/* <TypingText></TypingText> */}
             </View>
             {/* <View style={styles.search}>
                         <SearchInput />
@@ -105,8 +111,8 @@ const Home = ({ navigation }: ProfileCardProps) => {
                         if (index < 5) {
                           return (
                             <NFTCardHorital
+                              key={item.collectionAddress + item.tokenId}
                               item={item}
-                              key={index}
                               onShowModal={setIsVisible}
                               setDataNFT={setDataNFT}
                             ></NFTCardHorital>
@@ -150,8 +156,9 @@ const Home = ({ navigation }: ProfileCardProps) => {
                   renderItem={({ item }) => {
                     if (search === '') {
                       return (
-                        <View style={styles.nftItem}>
+                        <View style={styles.nftItem} key={item.collectionAddress + item.tokenId}>
                           <NFTCard
+                            key={item.collectionAddress + item.tokenId}
                             item={item}
                             onShowModal={setIsVisible}
                             isBuy={true}
@@ -164,6 +171,7 @@ const Home = ({ navigation }: ProfileCardProps) => {
                         return (
                           <View style={styles.nftItem}>
                             <NFTCard
+                              key={item.collectionAddress + item.tokenId}
                               item={item}
                               onShowModal={setIsVisible}
                               isBuy={true}

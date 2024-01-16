@@ -24,11 +24,11 @@ export function useApproveErc20() {
           functionName: 'approve',
           args: [nftAddressGuy, wad],
         })
-        console.log({ approveHash: writeApprove.hash })
         const approveReceipt = await listenerTransactionReceipt(writeApprove.hash)
-
+        console.log({ approveReceipt })
         return approveReceipt
       } catch (error) {
+        console.log(error)
         throw error
       }
     },
@@ -48,7 +48,6 @@ export function useDeposit() {
 
   const mutate = useCallback(
     async ({ value }: DepositParams) => {
-      console.log(value)
       try {
         setIsLoading(true)
         const txInfo = await writeContract({
@@ -58,7 +57,6 @@ export function useDeposit() {
           value: BigInt(value),
         })
         const txReceipt = await listenerTransactionReceipt(txInfo.hash)
-        console.log({ txReceipt })
         setData(txReceipt)
         return txReceipt
       } catch (error) {

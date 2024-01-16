@@ -19,12 +19,10 @@ const ModalImport = ({ item, index, isVisible, setIsVisible }: IModal) => {
   const {
     control,
     handleSubmit,
-    formState: { errors }, reset
+    formState: { errors },
+    reset,
   } = useForm()
-  const onSubmit = (data: any) => {
-    console.log(data);
-
-  }
+  const onSubmit = (data: any) => {}
   useEffect(() => {
     reset()
   }, [isVisible])
@@ -83,19 +81,21 @@ const ModalImport = ({ item, index, isVisible, setIsVisible }: IModal) => {
                       styleInput={styles.input}
                       name="collectionAddress"
                       control={control}
-                      placeholder='Enter Address'
+                      placeholder="Enter Address"
                       rules={{
                         required: 'This is required',
-                        
                       }}
-                      keyboardType='default'
+                      keyboardType="default"
                     ></CustomInput>
                   </View>
                 </View>
               </View>
 
               <View style={styles.modalImportAction}>
-                <Button style={[styles.btn, styles.modalImportBtnOk]} onPress={handleSubmit(onSubmit)}>
+                <Button
+                  style={[styles.btn, styles.modalImportBtnOk]}
+                  onPress={handleSubmit(onSubmit)}
+                >
                   <Text style={[styles.btnText, styles.btnTextOk]}>OK</Text>
                 </Button>
                 <Button
