@@ -7,10 +7,11 @@ import SearchInput from 'src/components/Search'
 import useAppAddress from 'src/hooks/useAppAddress'
 import { useViewMarketCollections } from 'src/hooks/useMarket'
 import styles from './styles'
+import useCurrentChain from 'src/hooks/useCurrentChain'
 
 const Explore = ({ navigation }: { navigation: any }) => {
   const [search, setSearch] = useState('')
-
+  const currentChain = useCurrentChain()
   const {
     mutate: handleGetAllCollection,
     data: collections,
@@ -28,7 +29,7 @@ const Explore = ({ navigation }: { navigation: any }) => {
         cursor: 0,
         size: 20,
       })
-    }, []),
+    }, [currentChain.id]),
   )
 
   return (

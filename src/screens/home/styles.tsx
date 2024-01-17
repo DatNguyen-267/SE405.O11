@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
   headLine: {
     marginTop: 30,
     paddingVertical: 20,
-    height: 110,
     marginBottom: 20,
   },
   headLineContent: {
