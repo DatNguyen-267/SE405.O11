@@ -1,13 +1,18 @@
 import { W3mButton, useWeb3Modal } from '@web3modal/wagmi-react-native'
 
-import React, { useEffect } from 'react'
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import { Button } from 'react-native-paper'
-import { getMetadata } from 'src/hooks/useIPFS'
-import { useGetNameOfCollection, useGetNftsOfAddress, useGetTokenURI } from 'src/hooks/useMarket'
+import React from 'react'
+import { Image, ScrollView, Text, View } from 'react-native'
+import { CHAINS } from 'src/constants'
+import useAppAddress from 'src/hooks/useAppAddress'
 import {
-  Chain,
-  sepolia,
+  useBuyNFTUsingWrapToken,
+  useCancelAskOrder,
+  useCreateAskOrder,
+  useGetNameOfCollection,
+  useGetTokenURI,
+} from 'src/hooks/useMarket'
+import { shorterAddress } from 'src/utils'
+import {
   useAccount,
   useBalance,
   useChainId,
@@ -16,18 +21,6 @@ import {
   useWalletClient,
 } from 'wagmi'
 import styles from './styles'
-import {
-  useBuyNFTUsingWrapToken,
-  useCancelAskOrder,
-  useCreateAskOrder,
-  useViewAllAsk,
-} from 'src/hooks/useMarket'
-import { ethers } from 'ethers'
-import { toDisplayDenomAmount } from 'src/utils/big'
-import useAppAddress from 'src/hooks/useAppAddress'
-import { CHAINS, aiozChain } from 'src/constants'
-import { useToken } from 'wagmi'
-import { shorterAddress } from 'src/utils'
 
 const Connect = ({ navigation }: { navigation?: any }) => {
   const { connect, connectors } = useConnect()
@@ -130,6 +123,7 @@ const Connect = ({ navigation }: { navigation?: any }) => {
   //     },
   //   })
   // }
+  const { open } = useWeb3Modal()
   return (
     <View style={styles.createScreen}>
       <ScrollView
